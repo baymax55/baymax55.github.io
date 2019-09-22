@@ -78,7 +78,7 @@ ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "明天会更好"
+sidebar-about-description: "you are the best"
 sidebar-avatar: /img/avatar-baymax.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
