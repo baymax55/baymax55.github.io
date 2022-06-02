@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>docker网络模式</title>
+    <link href="/2022/06/02/mysql/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2022/06/02/mysql/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Bridge模式"><a href="#Bridge模式" class="headerlink" title="Bridge模式"></a>Bridge模式</h3><p>当Docker进程启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。<br>虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。<br>从docker0子网中分配一个 IP 给容器使用，并设置 docker0 的 IP 地址为容器的默认网关。<br>在主机上创建一对虚拟网卡veth pair设备，Docker 将 veth pair 设备的一端放在新创建的容器中，并命名为eth0（容器的网卡），另一端放在主机中，以vethxxx这样类似的名字命名，并将这个网络设备加入到 docker0 网桥中。<br>bridge模式是 docker 的默认网络模式，不写–net参数，就是bridge模式。使用docker run -p时，docker 实际是在iptables做了DNAT规则，实现端口转发功能。</p><p>bridge模式如下图所示：<br><img src="1.png"></p><h3 id="Host-模式"><a href="#Host-模式" class="headerlink" title="Host 模式"></a>Host 模式</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个 Network Namespace。<br>容器将不会虚拟出自己的网卡，配置自己的 IP 等，而是使用宿主机的 IP 和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p><p>Host模式如下图所示：<br><img src="2.png"></p><h3 id="Container-模式"><a href="#Container-模式" class="headerlink" title="Container 模式"></a>Container 模式</h3><p>这个模式指定新创建的容器和已经存在的一个容器共享一个 Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的 IP，而是和一个指定的容器共享 IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过 lo 网卡设备通信。</p><p>Container模式示意图：<br><img src="3.png"></p><h3 id="None模式"><a href="#None模式" class="headerlink" title="None模式"></a>None模式</h3><p>使用none模式，Docker 容器拥有自己的 Network Namespace，但是，并不为Docker 容器进行任何网络配置。也就是说，这个 Docker 容器没有网卡、IP、路由等信息。需要我们自己为 Docker 容器添加网卡、配置 IP 等。</p><p>None模式示意图:<br><img src="4.png"></p><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul><li><a href="https://www.qikqiak.com/k8s-book/docs/7.Docker%E7%9A%84%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F.html">Docker 的网络模式</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>docker网络</tag>
+      
+      <tag>docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2022/06/02/hello-world/"/>
     <url>/2022/06/02/hello-world/</url>
@@ -26,7 +53,7 @@
     
     <categories>
       
-      <category>mysql</category>
+      <category>IT</category>
       
     </categories>
     
@@ -53,7 +80,7 @@
     
     <categories>
       
-      <category>链接</category>
+      <category>IT</category>
       
     </categories>
     

@@ -16,25 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="回表,覆盖索引,最左前缀原则,索引下推">
+    <meta name="description" content="Bridge模式,Host 模式,Container 模式,None模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql索引">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/01/mysql/mysql%E7%B4%A2%E5%BC%95/index.html">
+<meta property="og:title" content="docker网络模式">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/02/mysql/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="回表,覆盖索引,最左前缀原则,索引下推">
+<meta property="og:description" content="Bridge模式,Host 模式,Container 模式,None模式">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/mysql.png">
-<meta property="article:published_time" content="2022-06-01T13:15:46.000Z">
-<meta property="article:modified_time" content="2022-06-02T06:43:08.114Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/docker.png">
+<meta property="article:published_time" content="2022-06-02T06:20:46.000Z">
+<meta property="article:modified_time" content="2022-06-02T06:47:30.061Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="mysql">
-<meta property="article:tag" content="索引">
+<meta property="article:tag" content="docker网络">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/mysql.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/docker.png">
   
   
   
-  <title>mysql索引 - Baymax55&#39;s Blog</title>
+  <title>docker网络模式 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="mysql索引"></span>
+            <span id="subtitle" data-typed-text="docker网络模式"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-01 21:15" pubdate>
-          2022年6月1日 晚上
+        <time datetime="2022-06-02 14:20" pubdate>
+          2022年6月2日 下午
         </time>
       </span>
     
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          534 字
+          881 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          5 分钟
+          8 分钟
         
       </span>
     
@@ -277,7 +277,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">mysql索引</h1>
+            <h1 style="display: none">docker网络模式</h1>
             
               <p class="note note-info">
                 
@@ -289,16 +289,16 @@
             
             <div class="markdown-body">
               
-              <h3 id="回表"><a href="#回表" class="headerlink" title="回表"></a>回表</h3><p>通过使用索引(非主键索引)查询到数据后,仍需通过主键id在主键索引上查询数据的过程,称为回表</p>
-<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>通过使用索引(非主键索引)查询到数据后,不需通过主键id在主键索引上查询数据,索引已经“覆盖了”我们的查询需求,我们称为覆盖索引<br><strong>由于覆盖索引可以减少树的搜索次数，显著提升查询性能，所以使用覆盖索引是一个常用的性能优化手段</strong></p>
-<h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>按照最左匹配原则进行判断是否使用索引<br>创建索引（name）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;张%&#x27;; # 使用索引<br></code></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;%张&#x27;; # 未使用索引<br></code></pre></td></tr></table></figure>
-<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><p>创建联合索引（name, age）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;张%&#x27; and age=10 and isMale=1;<br></code></pre></td></tr></table></figure>
-<p>在 MySQL 5.6 之前，待找到第一个符合张前缀的用户后开始一个个回表。到主键索引上找出数据行，再对比字段值<br><img src="1.jpg" srcset="/img/loading.gif" lazyload><br>而 MySQL 5.6 引入的索引下推优化（index condition pushdown)， 可以在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数<br><img src="2.jpg" srcset="/img/loading.gif" lazyload></p>
+              <h3 id="Bridge模式"><a href="#Bridge模式" class="headerlink" title="Bridge模式"></a>Bridge模式</h3><p>当Docker进程启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。<br>虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。<br>从docker0子网中分配一个 IP 给容器使用，并设置 docker0 的 IP 地址为容器的默认网关。<br>在主机上创建一对虚拟网卡veth pair设备，Docker 将 veth pair 设备的一端放在新创建的容器中，并命名为eth0（容器的网卡），另一端放在主机中，以vethxxx这样类似的名字命名，并将这个网络设备加入到 docker0 网桥中。<br>bridge模式是 docker 的默认网络模式，不写–net参数，就是bridge模式。使用docker run -p时，docker 实际是在iptables做了DNAT规则，实现端口转发功能。</p>
+<p>bridge模式如下图所示：<br><img src="1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Host-模式"><a href="#Host-模式" class="headerlink" title="Host 模式"></a>Host 模式</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个 Network Namespace。<br>容器将不会虚拟出自己的网卡，配置自己的 IP 等，而是使用宿主机的 IP 和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
+<p>Host模式如下图所示：<br><img src="2.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Container-模式"><a href="#Container-模式" class="headerlink" title="Container 模式"></a>Container 模式</h3><p>这个模式指定新创建的容器和已经存在的一个容器共享一个 Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的 IP，而是和一个指定的容器共享 IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过 lo 网卡设备通信。</p>
+<p>Container模式示意图：<br><img src="3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="None模式"><a href="#None模式" class="headerlink" title="None模式"></a>None模式</h3><p>使用none模式，Docker 容器拥有自己的 Network Namespace，但是，并不为Docker 容器进行任何网络配置。也就是说，这个 Docker 容器没有网卡、IP、路由等信息。需要我们自己为 Docker 容器添加网卡、配置 IP 等。</p>
+<p>None模式示意图:<br><img src="4.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
-<li>MySQL实战45讲</li>
+<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/k8s-book/docs/7.Docker%E7%9A%84%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F.html">Docker 的网络模式</a></li>
 </ul>
 
               
@@ -332,9 +332,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/mysql/">#mysql</a>
+        <a href="/tags/docker%E7%BD%91%E7%BB%9C/">#docker网络</a>
       
-        <a href="/tags/%E7%B4%A2%E5%BC%95/">#索引</a>
+        <a href="/tags/docker/">#docker</a>
       
     </div>
   
@@ -346,8 +346,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>mysql索引</div>
-      <div>https://baymax55.github.io/2022/06/01/mysql/mysql索引/</div>
+      <div>docker网络模式</div>
+      <div>https://baymax55.github.io/2022/06/02/mysql/docker/docker网络模式/</div>
     </div>
     <div class="license-meta">
       
@@ -359,7 +359,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月1日</div>
+          <div>2022年6月2日</div>
         </div>
       
       
@@ -389,18 +389,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/02/hello-world/" title="Hello World">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Hello World</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/05/31/Mockito-%E6%8C%87%E5%8D%97/" title="Mockito 指南">
-                        <span class="hidden-mobile">Mockito 指南</span>
+                      <a href="/2022/06/02/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
