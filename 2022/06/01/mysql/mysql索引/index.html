@@ -16,21 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="回表,覆盖索引,最左前缀原则,索引下推">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://baymax55.github.io/2022/05/30/hello-world/index.html">
+<meta property="og:title" content="mysql索引">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/01/mysql/mysql%E7%B4%A2%E5%BC%95/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="回表,覆盖索引,最左前缀原则,索引下推">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-30T00:47:52.829Z">
-<meta property="article:modified_time" content="2022-05-30T00:47:52.829Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/mysql.png">
+<meta property="article:published_time" content="2022-06-01T13:15:46.000Z">
+<meta property="article:modified_time" content="2022-06-02T03:35:20.522Z">
 <meta property="article:author" content="baymax55">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="索引">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/mysql.png">
   
   
   
-  <title>Hello World - Baymax55&#39;s Blog</title>
+  <title>mysql索引 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="mysql索引"></span>
           
         </div>
 
@@ -204,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-05-30 08:47" pubdate>
-          2022年5月30日 早上
+        <time datetime="2022-06-01 21:15" pubdate>
+          2022年6月1日 晚上
         </time>
       </span>
     
@@ -216,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          367 字
+          534 字
         
       </span>
     
@@ -227,7 +231,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -273,23 +277,29 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">mysql索引</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年6月2日 中午
+                  
+                
+              </p>
             
             <div class="markdown-body">
               
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <h3 id="回表"><a href="#回表" class="headerlink" title="回表"></a>回表</h3><p>通过使用索引(非主键索引)查询到数据后,仍需通过主键id在主键索引上查询数据的过程,称为回表</p>
+<h3 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h3><p>通过使用索引(非主键索引)查询到数据后,不需通过主键id在主键索引上查询数据,索引已经“覆盖了”我们的查询需求,我们称为覆盖索引<br><strong>由于覆盖索引可以减少树的搜索次数，显著提升查询性能，所以使用覆盖索引是一个常用的性能优化手段</strong></p>
+<h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>按照最左匹配原则进行判断是否使用索引<br>创建索引（name）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;张%&#x27;; # 使用索引<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;%张&#x27;; # 未使用索引<br></code></pre></td></tr></table></figure>
+<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><p>创建联合索引（name, age）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">select * from user where name like &#x27;张%&#x27; and age=10 and isMale=1;<br></code></pre></td></tr></table></figure>
+<p>在 MySQL 5.6 之前，待找到第一个符合张前缀的用户后开始一个个回表。到主键索引上找出数据行，再对比字段值<br><img src="1.jpg" srcset="/img/loading.gif" lazyload><br>而 MySQL 5.6 引入的索引下推优化（index condition pushdown)， 可以在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数<br><img src="2.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
+<li>MySQL实战45讲</li>
+</ul>
 
               
             </div>
@@ -297,6 +307,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/mysql/" class="category-chain-item">mysql</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/mysql/">#mysql</a>
+      
+        <a href="/tags/%E7%B4%A2%E5%BC%95/">#索引</a>
+      
+    </div>
   
 </div>
 
@@ -306,8 +346,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://baymax55.github.io/2022/05/30/hello-world/</div>
+      <div>mysql索引</div>
+      <div>https://baymax55.github.io/2022/06/01/mysql/mysql索引/</div>
     </div>
     <div class="license-meta">
       
@@ -319,7 +359,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年5月30日</div>
+          <div>2022年6月1日</div>
         </div>
       
       
@@ -349,15 +389,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/05/31/Mockito-%E6%8C%87%E5%8D%97/" title="Mockito 指南">
+                      <a href="/2022/06/02/hello-world/" title="Hello World">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Mockito 指南</span>
+                        <span class="hidden-mobile">Hello World</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022/05/31/Mockito-%E6%8C%87%E5%8D%97/" title="Mockito 指南">
+                        <span class="hidden-mobile">Mockito 指南</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
