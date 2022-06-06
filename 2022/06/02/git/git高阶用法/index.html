@@ -16,25 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Bridge模式,Host 模式,Container 模式,None模式">
+    <meta name="description" content="git rebase,git stash,git filter-branch,git cherry-pick">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker网络模式">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/02/mysql/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="git高阶用法">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/02/git/git%E9%AB%98%E9%98%B6%E7%94%A8%E6%B3%95/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="Bridge模式,Host 模式,Container 模式,None模式">
+<meta property="og:description" content="git rebase,git stash,git filter-branch,git cherry-pick">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/docker.png">
-<meta property="article:published_time" content="2022-06-02T06:20:46.000Z">
-<meta property="article:modified_time" content="2022-06-02T06:47:30.061Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/git.png">
+<meta property="article:published_time" content="2022-06-02T08:11:46.000Z">
+<meta property="article:modified_time" content="2022-06-06T06:25:56.626Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="docker网络">
-<meta property="article:tag" content="docker">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/docker.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/git.png">
   
   
   
-  <title>docker网络模式 - Baymax55&#39;s Blog</title>
+  <title>git高阶用法 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="docker网络模式"></span>
+            <span id="subtitle" data-typed-text="git高阶用法"></span>
           
         </div>
 
@@ -208,7 +207,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-02 14:20" pubdate>
+        <time datetime="2022-06-02 16:11" pubdate>
           2022年6月2日 下午
         </time>
       </span>
@@ -220,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          881 字
+          1.7k 字
         
       </span>
     
@@ -231,7 +230,7 @@
         
         
         
-          8 分钟
+          14 分钟
         
       </span>
     
@@ -277,28 +276,47 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">docker网络模式</h1>
+            <h1 style="display: none">git高阶用法</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月2日 下午
+                    本文最后更新于：2022年6月6日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h3 id="Bridge模式"><a href="#Bridge模式" class="headerlink" title="Bridge模式"></a>Bridge模式</h3><p>当Docker进程启动时，会在主机上创建一个名为docker0的虚拟网桥，此主机上启动的Docker容器会连接到这个虚拟网桥上。<br>虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。<br>从docker0子网中分配一个 IP 给容器使用，并设置 docker0 的 IP 地址为容器的默认网关。<br>在主机上创建一对虚拟网卡veth pair设备，Docker 将 veth pair 设备的一端放在新创建的容器中，并命名为eth0（容器的网卡），另一端放在主机中，以vethxxx这样类似的名字命名，并将这个网络设备加入到 docker0 网桥中。<br>bridge模式是 docker 的默认网络模式，不写–net参数，就是bridge模式。使用docker run -p时，docker 实际是在iptables做了DNAT规则，实现端口转发功能。</p>
-<p>bridge模式如下图所示：<br><img src="1.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="Host-模式"><a href="#Host-模式" class="headerlink" title="Host 模式"></a>Host 模式</h3><p>如果启动容器的时候使用host模式，那么这个容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个 Network Namespace。<br>容器将不会虚拟出自己的网卡，配置自己的 IP 等，而是使用宿主机的 IP 和端口。但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</p>
-<p>Host模式如下图所示：<br><img src="2.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="Container-模式"><a href="#Container-模式" class="headerlink" title="Container 模式"></a>Container 模式</h3><p>这个模式指定新创建的容器和已经存在的一个容器共享一个 Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的 IP，而是和一个指定的容器共享 IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过 lo 网卡设备通信。</p>
-<p>Container模式示意图：<br><img src="3.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="None模式"><a href="#None模式" class="headerlink" title="None模式"></a>None模式</h3><p>使用none模式，Docker 容器拥有自己的 Network Namespace，但是，并不为Docker 容器进行任何网络配置。也就是说，这个 Docker 容器没有网卡、IP、路由等信息。需要我们自己为 Docker 容器添加网卡、配置 IP 等。</p>
-<p>None模式示意图:<br><img src="4.png" srcset="/img/loading.gif" lazyload></p>
+              <p><img src="1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h3><h4 id="常用功能"><a href="#常用功能" class="headerlink" title="常用功能:"></a>常用功能:</h4><ul>
+<li>从上游分支获取最新commit信息，并有机的将当前分支和上游分支进行合并</li>
+<li>对当前分支的历史commit进行修改，合并，删除等操作</li>
+</ul>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><ul>
+<li>你的分支和master冲突<ul>
+<li>如果你git merge master就会留下一个merge的commit。在这种情况下，我们推荐使用git rebase master，就能不留commit将当前分支和master有机的合并。</li>
+</ul>
+</li>
+<li>之前某次提交，改错了一个变量<ul>
+<li>如果你修改那个变量然后再提交一个commit，这显然不是最优的。如果能将某次的提交挑出来修改就好了。</li>
+<li>当然git提供了这个功能，你可以使用git rebase -i [git-hash| head~n],其中git-hash是你要开始进行rebase的commit的hash，而head~n则是从HEAD向前推n个commit.</li>
+</ul>
+</li>
+</ul>
+<h3 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h3><h4 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h4><p>暂存当前没有提交的更改</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">save</span> <span class="hljs-string">保存当前更改</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">保存当前更改</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">pop</span> <span class="hljs-string">推出之前stash的内容更改</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">apply</span> <span class="hljs-string">推出之前stash的内容更改</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">save</span> <span class="hljs-string">--keep-index</span> <span class="hljs-string">只stash没有被add的内容</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">save</span> <span class="hljs-string">--include-untracked</span> <span class="hljs-string">stash还未加入git记录的文件</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">list</span> <span class="hljs-string">--stat</span> <span class="hljs-string">显示stash堆栈</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">show</span> <span class="hljs-string">stash@&#123;0&#125;</span> <span class="hljs-string">显示第x次的更改</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">show</span> <span class="hljs-string">显示最近一次stash的更改</span><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">show</span> <span class="hljs-string">--patch</span> <span class="hljs-string">显示最近一次stash的详细更改</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">save</span> <span class="hljs-string">&quot;stash msg&quot;</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">stash</span> <span class="hljs-string">branch</span> <span class="hljs-string">new_brach</span> <span class="hljs-string">stash@&#123;0&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h4><p>当做了更改之后没有编辑完，这个时候发现线上有个bug，你需要停下当前分支去修bug，这个时候你可以提一个commit到当前分支，或则使用git stash</p>
+<h3 id="filter-branch"><a href="#filter-branch" class="headerlink" title="filter-branch"></a>filter-branch</h3><h4 id="主要功能-1"><a href="#主要功能-1" class="headerlink" title="主要功能"></a>主要功能</h4><p>过滤所有提交记录，进行相应的操作</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">git</span> <span class="hljs-string">filter-branch</span> <span class="hljs-string">--tree-filter</span> <span class="hljs-string">&#x27;rm -rf .vscode&#x27;</span> <span class="hljs-string">删除所有分支的.vscode文件夹</span><br><span class="hljs-string">git</span> <span class="hljs-string">filter-branch</span> <span class="hljs-string">--tree-filter</span> <span class="hljs-string">&#x27;rm -f xxx&#x27;</span> <span class="hljs-string">xxx不存在，不报错</span><br><span class="hljs-string">git</span> <span class="hljs-string">filter-branch</span> <span class="hljs-string">--tree-filter</span> <span class="hljs-string">&#x27;rm -rf .vscoe&#x27;</span> <span class="hljs-string">--</span> <span class="hljs-string">--all(所有分支所有提交)</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">filter-branch</span> <span class="hljs-string">--index-filter</span> <span class="hljs-string">&#x27;git rm --cached --ignore-unmatch password.txt&#x27;</span> <span class="hljs-string">(只检查password.txt</span> <span class="hljs-string">一个文件)</span><br><span class="hljs-string">git</span> <span class="hljs-string">filter-branch</span> <span class="hljs-string">-f</span> <span class="hljs-string">--prune-empty</span> <span class="hljs-string">--</span> <span class="hljs-string">--all</span><br></code></pre></td></tr></table></figure>
+<h4 id="使用场景-2"><a href="#使用场景-2" class="headerlink" title="使用场景"></a>使用场景</h4><p>当发现你错误的将一个不应该提交的文件提交，然后已经过了很久，已经累计了无数次提交。<br>这个时候就可以使用git filter-branch将所有提交全部过滤一遍删除掉那个不应该提交的文件</p>
+<h3 id="cherry-pick"><a href="#cherry-pick" class="headerlink" title="cherry-pick"></a>cherry-pick</h3><h4 id="主要功能-2"><a href="#主要功能-2" class="headerlink" title="主要功能"></a>主要功能</h4><p>从任何分支，抽取提交到当前分支</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">git</span> <span class="hljs-string">cherry-pick</span> <span class="hljs-string">git-hash</span> <br><br><span class="hljs-string">git</span> <span class="hljs-string">cherry-pick</span> <span class="hljs-string">--edit</span> <span class="hljs-string">git-hash</span><br><br><span class="hljs-string">pick</span> <span class="hljs-string">多个</span><br><span class="hljs-string">git</span> <span class="hljs-string">cherry-pick</span> <span class="hljs-string">--no-commit</span> <span class="hljs-string">git-hash</span> <span class="hljs-string">git-hash</span><br><br><span class="hljs-string">git</span> <span class="hljs-string">cherry-pick</span> <span class="hljs-string">-x</span> <span class="hljs-string">git-hash</span> <span class="hljs-string">(添加cherry</span> <span class="hljs-string">pick</span> <span class="hljs-string">from</span> <span class="hljs-string">那个branch)</span><br><span class="hljs-string">git</span> <span class="hljs-string">cherry-pick</span> <span class="hljs-string">--signoff</span> <span class="hljs-string">git-hash不修改author</span><br></code></pre></td></tr></table></figure>
+<h4 id="使用场景-3"><a href="#使用场景-3" class="headerlink" title="使用场景"></a>使用场景</h4><p>当需要将多个分支上的提交合在一个分支合并到master的时候，显然如果这3个分支有关联，一次合并更为合理。<br>这个时候就可以使用git cherry-pick进行精细化的commit的操作。</p>
+<h3 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h3><p>☐ submodule<br>☐ reflog </p>
 <h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/k8s-book/docs/7.Docker%E7%9A%84%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F.html">Docker 的网络模式</a></li>
+<li><a target="_blank" rel="noopener" href="http://hiluluke.cn/2017/07/23/git-senior/">git 高阶用法</a></li>
 </ul>
 
               
@@ -332,9 +350,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/docker%E7%BD%91%E7%BB%9C/">#docker网络</a>
-      
-        <a href="/tags/docker/">#docker</a>
+        <a href="/tags/git/">#git</a>
       
     </div>
   
@@ -346,8 +362,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>docker网络模式</div>
-      <div>https://baymax55.github.io/2022/06/02/mysql/docker/docker网络模式/</div>
+      <div>git高阶用法</div>
+      <div>https://baymax55.github.io/2022/06/02/git/git高阶用法/</div>
     </div>
     <div class="license-meta">
       
@@ -389,9 +405,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/02/mysql/git/git%E9%AB%98%E9%98%B6%E7%94%A8%E6%B3%95/" title="git高阶用法">
+                      <a href="/2022/06/03/spring/BeanFactory/" title="BeanFactory">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">git高阶用法</span>
+                        <span class="hidden-mobile">BeanFactory</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -399,8 +415,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/02/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/06/02/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/" title="docker网络模式">
+                        <span class="hidden-mobile">docker网络模式</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -16,23 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Create a new post,Run server,Generate static files,Deploy to remote sites">
+    <meta name="description" content="BeanFactory interface provides a simple, yet flexible configuration mechanism to manage objects of any nature via the Spring IoC container.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/02/hello-world/index.html">
+<meta property="og:title" content="BeanFactory">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/03/spring/BeanFactory/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="Create a new post,Run server,Generate static files,Deploy to remote sites">
+<meta property="og:description" content="BeanFactory interface provides a simple, yet flexible configuration mechanism to manage objects of any nature via the Spring IoC container.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/hello.png">
-<meta property="article:published_time" content="2022-06-02T03:35:20.518Z">
-<meta property="article:modified_time" content="2022-06-02T03:57:39.112Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/spring.png">
+<meta property="article:published_time" content="2022-06-03T07:53:46.000Z">
+<meta property="article:modified_time" content="2022-06-06T06:25:56.639Z">
 <meta property="article:author" content="baymax55">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="BeanFactory">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/hello.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/spring.png">
   
   
   
-  <title>Hello World - Baymax55&#39;s Blog</title>
+  <title>BeanFactory - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="BeanFactory"></span>
           
         </div>
 
@@ -206,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-02 11:35" pubdate>
-          2022年6月2日 中午
+        <time datetime="2022-06-03 15:53" pubdate>
+          2022年6月3日 下午
         </time>
       </span>
     
@@ -218,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          367 字
+          3k 字
         
       </span>
     
@@ -229,7 +231,7 @@
         
         
         
-          4 分钟
+          26 分钟
         
       </span>
     
@@ -275,31 +277,50 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">BeanFactory</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月2日 中午
+                    本文最后更新于：2022年6月6日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+              <p><img src="beanFactory.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>BeanFactory interface provides a simple, yet flexible configuration mechanism to manage objects of any nature via the Spring IoC container.</p>
+<h3 id="The-BeanFactory-Interface"><a href="#The-BeanFactory-Interface" class="headerlink" title="The BeanFactory Interface"></a>The BeanFactory Interface</h3><p>It’s interesting to start by having a look at the <a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-framework/blob/main/spring-beans/src/main/java/org/springframework/beans/factory/BeanFactory.java">interface definition</a> in org.springframework.beans.factory package and discuss some of its important APIs here.</p>
+<h4 id="The-getBean-APIs"><a href="#The-getBean-APIs" class="headerlink" title="The getBean() APIs"></a>The getBean() APIs</h4><p>Various versions of <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.0.x/javadoc-api/org/springframework/beans/factory/BeanFactory.html#getBean-java.lang.String-">getBean()</a> method return an instance of the specified bean, which may be shared or independent across the application.</p>
+<h4 id="The-containsBean-API"><a href="#The-containsBean-API" class="headerlink" title="The containsBean() API"></a>The containsBean() API</h4><p>This method confirms if this bean factory contains a bean with the given name. More specifically, it confirms if the <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.x/javadoc-api/org/springframework/beans/factory/BeanFactory.html#getBean-java.lang.String-">getBean(java.lang.String)</a> able to obtain a bean instance with the given name.</p>
+<h4 id="The-isSingleton-API"><a href="#The-isSingleton-API" class="headerlink" title="The isSingleton() API"></a>The isSingleton() API</h4><p>The isSingleton API can be used to query if this bean is a shared singleton. That is if <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.0.x/javadoc-api/org/springframework/beans/factory/BeanFactory.html#getBean-java.lang.String-">getBean(java.lang.String)</a> will always return the same instance.</p>
+<h4 id="The-isPrototype-API"><a href="#The-isPrototype-API" class="headerlink" title="The isPrototype() API"></a>The isPrototype() API</h4><p>This API will confirm if <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.x/javadoc-api/org/springframework/beans/factory/BeanFactory.html#getBean-java.lang.String-">getBean(java.lang.String)</a> returns independent instances – meaning a bean configured with the prototype scope, or not.</p>
+<p>The important thing to note is this method returning false does not clearly indicate a singleton object. It indicates non-independent instances, which may correspond to other scopes as well.</p>
+<p>We need to use the <a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/5.0.x/javadoc-api/org/springframework/beans/factory/BeanFactory.html#isSingleton-java.lang.String-">isSingleton(java.lang.String)</a> operation to explicitly check for a shared singleton instance.</p>
+<h4 id="Other-APIs"><a href="#Other-APIs" class="headerlink" title="Other APIs"></a>Other APIs</h4><p>While the isTypeMatch(String name, Class targetType) method checks whether the bean with the given name matches the specified type, getType(String name) is useful in identifying the type of the bean with the given name.</p>
+<p>Finally, getAliases(String name) return the aliases for the given bean name, if any.</p>
+<h3 id="BeanFactory-API"><a href="#BeanFactory-API" class="headerlink" title="BeanFactory API"></a>BeanFactory API</h3><p>BeanFactory holds bean definitions and instantiates them whenever asked for by the client application – which means:</p>
+<ul>
+<li>It takes care of the lifecycle of a bean by instantiating it and calling appropriate destruction methods</li>
+<li>It is capable of creating associations between dependent object while instantiating them</li>
+<li>It is important to point that BeanFactory does not support the Annotation-based dependency Injection whereas ApplicationContext, a superset of BeanFactory does</li>
+</ul>
+<p>Do have a read on <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/3.0.0.M3/reference/html/ch04s08.html">Application Context</a> to find out what it can do extra.</p>
+<h3 id="Defining-the-Bean"><a href="#Defining-the-Bean" class="headerlink" title="Defining the Bean"></a>Defining the Bean</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Employee</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> age;<br>    <br>    <span class="hljs-comment">// standard constructors, getters and setters</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
+<h3 id="Configuring-the-BeanFactory-with-XML"><a href="#Configuring-the-BeanFactory-with-XML" class="headerlink" title="Configuring the BeanFactory with XML"></a>Configuring the BeanFactory with XML</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;employee&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.baeldung.beanfactory.Employee&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;Hello! My name is Java&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;age&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;18&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>    <br><span class="hljs-tag">&lt;<span class="hljs-name">alias</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;employee&quot;</span> <span class="hljs-attr">alias</span>=<span class="hljs-string">&quot;empalias&quot;</span>/&gt;</span><br></code></pre></td></tr></table></figure>
+<h3 id="BeanFactory-with-ClassPathResource"><a href="#BeanFactory-with-ClassPathResource" class="headerlink" title="BeanFactory with ClassPathResource"></a>BeanFactory with ClassPathResource</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BeanFactoryWithClassPathResourceTest</span> &#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createBeanFactoryAndCheckEmployeeBean</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Resource</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;beanfactory-example.xml&quot;</span>);<br>        <span class="hljs-type">BeanFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XmlBeanFactory</span>(res);<br>        <span class="hljs-type">Employee</span> <span class="hljs-variable">emp</span> <span class="hljs-operator">=</span> (Employee) factory.getBean(<span class="hljs-string">&quot;employee&quot;</span>);<br><br>        assertTrue(factory.isSingleton(<span class="hljs-string">&quot;employee&quot;</span>));<br>        assertTrue(factory.getBean(<span class="hljs-string">&quot;employee&quot;</span>) <span class="hljs-keyword">instanceof</span> Employee);<br>        assertTrue(factory.isTypeMatch(<span class="hljs-string">&quot;employee&quot;</span>, Employee.class));<br>        assertTrue(factory.getAliases(<span class="hljs-string">&quot;employee&quot;</span>).length &gt; <span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+
+
+
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/spring-beanfactory">Guide to the Spring BeanFactory</a></li>
+</ul>
 
               
             </div>
@@ -307,6 +328,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+        <a href="/tags/BeanFactory/">#BeanFactory</a>
+      
+    </div>
   
 </div>
 
@@ -316,8 +367,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>https://baymax55.github.io/2022/06/02/hello-world/</div>
+      <div>BeanFactory</div>
+      <div>https://baymax55.github.io/2022/06/03/spring/BeanFactory/</div>
     </div>
     <div class="license-meta">
       
@@ -329,7 +380,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月2日</div>
+          <div>2022年6月3日</div>
         </div>
       
       
@@ -359,9 +410,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/02/docker/docker%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F/" title="docker网络模式">
+                      <a href="/2022/06/04/k8s/k8s%E9%87%8D%E5%90%AFpod%E6%96%B9%E5%BC%8F/" title="k8s重启pod方式">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">docker网络模式</span>
+                        <span class="hidden-mobile">k8s重启pod方式</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -369,8 +420,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/01/mysql/mysql%E7%B4%A2%E5%BC%95/" title="mysql索引">
-                        <span class="hidden-mobile">mysql索引</span>
+                      <a href="/2022/06/02/git/git%E9%AB%98%E9%98%B6%E7%94%A8%E6%B3%95/" title="git高阶用法">
+                        <span class="hidden-mobile">git高阶用法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
