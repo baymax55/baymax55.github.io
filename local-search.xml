@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>使用docker搭建dnsmasq</title>
+    <link href="/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/"/>
+    <url>/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/</url>
+    
+    <content type="html"><![CDATA[<h3 id="关闭默认dns服务解决53端口被占用问题"><a href="#关闭默认dns服务解决53端口被占用问题" class="headerlink" title="关闭默认dns服务解决53端口被占用问题"></a>关闭默认dns服务解决53端口被占用问题</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl stop systemd-resolved<br>systemctl start systemd-resolved<br></code></pre></td></tr></table></figure><h3 id="docker启动命令"><a href="#docker启动命令" class="headerlink" title="docker启动命令"></a>docker启动命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run --name dnsmasq -d  --net=host \<br>--cap-add=NET_ADMIN  \<br>-v /home/baymax/dns/dnsmasq.conf:/etc/dnsmasq.conf \<br>-v /home/baymax/dns/resolv.conf:/etc/resolv.conf \<br> --log-opt &quot;max-size=100m&quot;   -e &quot;HTTP_USER=admin&quot;  -e &quot;HTTP_PASS=admin&quot; \<br>  --restart always jpillora/dnsmasq<br></code></pre></td></tr></table></figure><h4 id="注意"><a href="#注意" class="headerlink" title="注意:"></a>注意:</h4><p>本文未使用 –privileged,使用–cap-add和–cap-drop对功能进行细粒度控制</p><h3 id="DNS配置"><a href="#DNS配置" class="headerlink" title="DNS配置"></a>DNS配置</h3><p>修改/etc/resolv.conf目录下的nameserver为本机ip</p><h3 id="登录-http-localhost-8080-进行配置"><a href="#登录-http-localhost-8080-进行配置" class="headerlink" title="登录(http://localhost:8080)进行配置"></a>登录(<a href="http://localhost:8080)进行配置">http://localhost:8080)进行配置</a></h3><h4 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h4><p>配置成功后直接在页面进行修改保存,启动即可</p><h4 id="配置文件demo"><a href="#配置文件demo" class="headerlink" title="配置文件demo"></a>配置文件demo</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">配置上行DNS</span><br>resolv-file=/etc/resolv.conf<br><span class="hljs-meta prompt_"># </span><span class="language-bash">resolv.conf DNS寻址从上到下</span><br>strict-order<br><span class="hljs-meta prompt_"># </span><span class="language-bash">DNS解析hosts时对应的hosts文件，对应no-hosts</span><br>addn-hosts=/etc/hosts<br>cache-size=1024 <br><span class="hljs-meta prompt_"># </span><span class="language-bash">多个IP用逗号分隔，192.168.x.x表示本机的ip地址，只有127.0.0.1的时候表示只有本机可以访问。</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">通过这个设置就可以实现同一局域网内的设备，通过把网络DNS设置为本机IP从而实现局域网范围内的DNS泛解析(注：无效IP有可能导至服务无法启动）</span><br>listen-address=127.0.0.1,192.168.168.4<br><span class="hljs-meta prompt_"># </span><span class="language-bash">重要！！这一行就是你想要泛解析的域名配置.</span><br>address=/baymax.bb/192.168.168.1<br>address=/blog.bb/192.168.168.1<br>address=/103.bb/192.168.168.2<br>address=/dns.bb/192.168.168.4<br>address=/gitlab.bb/192.168.168.4<br><span class="hljs-meta prompt_">#</span><span class="language-bash">指定使用哪个DNS服务器进行解析，对于不同的网站可以使用不同的域名对应解析。</span><br>server=/google.com/8.8.8.8<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">国内指定DNS</span><br>server=/bb/192.168.168.4<br>server=/cn/114.114.114.114<br>server=/com/8.8.8.8<br></code></pre></td></tr></table></figure><h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><ul><li>nslookup</li><li>dig</li><li>ping</li></ul><h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul><li><a href="https://www.qikqiak.com/post/capabilities-on-k8s/">在 Kubernetes 中配置 Container Capabilities</a></li><li><a href="https://www.yisu.com/zixun/161163.html">Docker 1分钟搭建DNS服务器的方法</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络</tag>
+      
+      <tag>dns</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>设计模式之设计原则</title>
     <link href="/2022/06/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
     <url>/2022/06/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</url>
