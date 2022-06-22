@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>rabbitMQ实现延迟消息队列</title>
+    <link href="/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+    <url>/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
+    
+    <content type="html"><![CDATA[<h3 id="延迟消息实现的两种方式"><a href="#延迟消息实现的两种方式" class="headerlink" title="延迟消息实现的两种方式"></a>延迟消息实现的两种方式</h3><ul><li>通过Rabbitmq本身队列的特性来实现，需要使用Rabbitmq的死信交换机（Exchange）和消息的存活时间TTL</li><li>通过插件（rabbitmq-delayed-message-exchange）来实现</li></ul><h3 id="消息的TTL"><a href="#消息的TTL" class="headerlink" title="消息的TTL"></a>消息的TTL</h3><p>RabbitMQ可以针对Queue和Message设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为dead letter</p><h4 id="针对队列的过期时间"><a href="#针对队列的过期时间" class="headerlink" title="针对队列的过期时间"></a>针对队列的过期时间</h4><p>通过队列属性设置，队列中所有消息都有相同的过期时间。</p><h4 id="针对消息的过期时间"><a href="#针对消息的过期时间" class="headerlink" title="针对消息的过期时间"></a>针对消息的过期时间</h4><p>对消息进行单独设置，每条消息TTL可以不同。</p><h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>如果同时使用，则消息的过期时间以两者之间TTL较小的那个数值为准。消息在队列的生存时间一旦超过设置的TTL值，就成为dead letter</p><h3 id="DLX-Dead-Letter-Exchange"><a href="#DLX-Dead-Letter-Exchange" class="headerlink" title="DLX (Dead-Letter-Exchange)"></a>DLX (Dead-Letter-Exchange)</h3><p>Queue可以配置x-dead-letter-exchange 和x-dead-letter-routing-key（可选）两个参数，如果队列内出现了dead letter，则按照这两个参数重新路由</p><p>x-dead-letter-exchange: 出现dead letter之后将dead letter重新发送到指定exchange<br>x-dead-letter-routing-key:指定routing-key发送</p><h3 id="队列出现dead-letter的情况"><a href="#队列出现dead-letter的情况" class="headerlink" title="队列出现dead letter的情况"></a>队列出现dead letter的情况</h3><ul><li>消息或者队列的TTL过期</li><li>队列达到最大长度</li><li>消息被消费端拒绝（basic.reject or basic.nack）并且requeue=false</li></ul><h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul><li><a href="https://cloud.tencent.com/developer/article/1877502">rabbitmq 怎么实现延迟消息队列？</a></li><li>RabbitMQ实战指南</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>rabbitmq</tag>
+      
+      <tag>延迟队列</tag>
+      
+      <tag>mq</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>使用docker搭建dnsmasq</title>
     <link href="/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/"/>
     <url>/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/</url>

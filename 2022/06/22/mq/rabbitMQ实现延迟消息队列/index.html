@@ -16,25 +16,26 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="主要记录搭建dns服务时遇到的一些问题">
+    <meta name="description" content="使用rabbitmq实现延时功能">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用docker搭建dnsmasq">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/index.html">
+<meta property="og:title" content="rabbitMQ实现延迟消息队列">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="主要记录搭建dns服务时遇到的一些问题">
+<meta property="og:description" content="使用rabbitmq实现延时功能">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/dnsmasq.png">
-<meta property="article:published_time" content="2022-06-21T09:16:03.261Z">
-<meta property="article:modified_time" content="2022-06-21T09:52:07.088Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/rabbitmq.png">
+<meta property="article:published_time" content="2022-06-22T01:30:59.363Z">
+<meta property="article:modified_time" content="2022-06-22T01:58:06.959Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="网络">
-<meta property="article:tag" content="dns">
+<meta property="article:tag" content="rabbitmq">
+<meta property="article:tag" content="延迟队列">
+<meta property="article:tag" content="mq">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/dnsmasq.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/rabbitmq.png">
   
   
   
-  <title>使用docker搭建dnsmasq - Baymax55&#39;s Blog</title>
+  <title>rabbitMQ实现延迟消息队列 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用docker搭建dnsmasq"></span>
+            <span id="subtitle" data-typed-text="rabbitMQ实现延迟消息队列"></span>
           
         </div>
 
@@ -208,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-21 17:16" pubdate>
-          2022年6月21日 下午
+        <time datetime="2022-06-22 09:30" pubdate>
+          2022年6月22日 上午
         </time>
       </span>
     
@@ -220,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          678 字
         
       </span>
     
@@ -231,7 +232,7 @@
         
         
         
-          11 分钟
+          6 分钟
         
       </span>
     
@@ -277,35 +278,36 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">使用docker搭建dnsmasq</h1>
+            <h1 style="display: none">rabbitMQ实现延迟消息队列</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月21日 下午
+                    本文最后更新于：2022年6月22日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h3 id="关闭默认dns服务解决53端口被占用问题"><a href="#关闭默认dns服务解决53端口被占用问题" class="headerlink" title="关闭默认dns服务解决53端口被占用问题"></a>关闭默认dns服务解决53端口被占用问题</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl stop systemd-resolved<br>systemctl start systemd-resolved<br></code></pre></td></tr></table></figure>
-
-<h3 id="docker启动命令"><a href="#docker启动命令" class="headerlink" title="docker启动命令"></a>docker启动命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run --name dnsmasq -d  --net=host \<br>--cap-add=NET_ADMIN  \<br>-v /home/baymax/dns/dnsmasq.conf:/etc/dnsmasq.conf \<br>-v /home/baymax/dns/resolv.conf:/etc/resolv.conf \<br> --log-opt &quot;max-size=100m&quot;   -e &quot;HTTP_USER=admin&quot;  -e &quot;HTTP_PASS=admin&quot; \<br>  --restart always jpillora/dnsmasq<br></code></pre></td></tr></table></figure>
-
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意:"></a>注意:</h4><p>本文未使用 –privileged,使用–cap-add和–cap-drop对功能进行细粒度控制</p>
-<h3 id="DNS配置"><a href="#DNS配置" class="headerlink" title="DNS配置"></a>DNS配置</h3><p>修改/etc/resolv.conf目录下的nameserver为本机ip</p>
-<h3 id="登录-http-localhost-8080-进行配置"><a href="#登录-http-localhost-8080-进行配置" class="headerlink" title="登录(http://localhost:8080)进行配置"></a>登录(<a href="http://localhost:8080)进行配置">http://localhost:8080)进行配置</a></h3><h4 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h4><p>配置成功后直接在页面进行修改保存,启动即可</p>
-<h4 id="配置文件demo"><a href="#配置文件demo" class="headerlink" title="配置文件demo"></a>配置文件demo</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">配置上行DNS</span><br>resolv-file=/etc/resolv.conf<br><span class="hljs-meta prompt_"># </span><span class="language-bash">resolv.conf DNS寻址从上到下</span><br>strict-order<br><span class="hljs-meta prompt_"># </span><span class="language-bash">DNS解析hosts时对应的hosts文件，对应no-hosts</span><br>addn-hosts=/etc/hosts<br>cache-size=1024 <br><span class="hljs-meta prompt_"># </span><span class="language-bash">多个IP用逗号分隔，192.168.x.x表示本机的ip地址，只有127.0.0.1的时候表示只有本机可以访问。</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">通过这个设置就可以实现同一局域网内的设备，通过把网络DNS设置为本机IP从而实现局域网范围内的DNS泛解析(注：无效IP有可能导至服务无法启动）</span><br>listen-address=127.0.0.1,192.168.168.4<br><span class="hljs-meta prompt_"># </span><span class="language-bash">重要！！这一行就是你想要泛解析的域名配置.</span><br>address=/baymax.bb/192.168.168.1<br>address=/blog.bb/192.168.168.1<br>address=/103.bb/192.168.168.2<br>address=/dns.bb/192.168.168.4<br>address=/gitlab.bb/192.168.168.4<br><span class="hljs-meta prompt_">#</span><span class="language-bash">指定使用哪个DNS服务器进行解析，对于不同的网站可以使用不同的域名对应解析。</span><br>server=/google.com/8.8.8.8<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">国内指定DNS</span><br>server=/bb/192.168.168.4<br>server=/cn/114.114.114.114<br>server=/com/8.8.8.8<br></code></pre></td></tr></table></figure>
-
-<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><ul>
-<li>nslookup</li>
-<li>dig</li>
-<li>ping</li>
+              <h3 id="延迟消息实现的两种方式"><a href="#延迟消息实现的两种方式" class="headerlink" title="延迟消息实现的两种方式"></a>延迟消息实现的两种方式</h3><ul>
+<li>通过Rabbitmq本身队列的特性来实现，需要使用Rabbitmq的死信交换机（Exchange）和消息的存活时间TTL</li>
+<li>通过插件（rabbitmq-delayed-message-exchange）来实现</li>
+</ul>
+<h3 id="消息的TTL"><a href="#消息的TTL" class="headerlink" title="消息的TTL"></a>消息的TTL</h3><p>RabbitMQ可以针对Queue和Message设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为dead letter</p>
+<h4 id="针对队列的过期时间"><a href="#针对队列的过期时间" class="headerlink" title="针对队列的过期时间"></a>针对队列的过期时间</h4><p>通过队列属性设置，队列中所有消息都有相同的过期时间。</p>
+<h4 id="针对消息的过期时间"><a href="#针对消息的过期时间" class="headerlink" title="针对消息的过期时间"></a>针对消息的过期时间</h4><p>对消息进行单独设置，每条消息TTL可以不同。</p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>如果同时使用，则消息的过期时间以两者之间TTL较小的那个数值为准。消息在队列的生存时间一旦超过设置的TTL值，就成为dead letter</p>
+<h3 id="DLX-Dead-Letter-Exchange"><a href="#DLX-Dead-Letter-Exchange" class="headerlink" title="DLX (Dead-Letter-Exchange)"></a>DLX (Dead-Letter-Exchange)</h3><p>Queue可以配置x-dead-letter-exchange 和x-dead-letter-routing-key（可选）两个参数，如果队列内出现了dead letter，则按照这两个参数重新路由</p>
+<p>x-dead-letter-exchange: 出现dead letter之后将dead letter重新发送到指定exchange<br>x-dead-letter-routing-key:指定routing-key发送</p>
+<h3 id="队列出现dead-letter的情况"><a href="#队列出现dead-letter的情况" class="headerlink" title="队列出现dead letter的情况"></a>队列出现dead letter的情况</h3><ul>
+<li>消息或者队列的TTL过期</li>
+<li>队列达到最大长度</li>
+<li>消息被消费端拒绝（basic.reject or basic.nack）并且requeue=false</li>
 </ul>
 <h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/post/capabilities-on-k8s/">在 Kubernetes 中配置 Container Capabilities</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.yisu.com/zixun/161163.html">Docker 1分钟搭建DNS服务器的方法</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1877502">rabbitmq 怎么实现延迟消息队列？</a></li>
+<li>RabbitMQ实战指南</li>
 </ul>
 
               
@@ -339,9 +341,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E7%BD%91%E7%BB%9C/">#网络</a>
+        <a href="/tags/rabbitmq/">#rabbitmq</a>
       
-        <a href="/tags/dns/">#dns</a>
+        <a href="/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/">#延迟队列</a>
+      
+        <a href="/tags/mq/">#mq</a>
       
     </div>
   
@@ -353,8 +357,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>使用docker搭建dnsmasq</div>
-      <div>https://baymax55.github.io/2022/06/21/dns/使用docker搭建dnsmasq/使用docker搭建dnsmasq/</div>
+      <div>rabbitMQ实现延迟消息队列</div>
+      <div>https://baymax55.github.io/2022/06/22/mq/rabbitMQ实现延迟消息队列/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +370,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月21日</div>
+          <div>2022年6月22日</div>
         </div>
       
       
@@ -396,18 +400,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" title="rabbitMQ实现延迟消息队列">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">rabbitMQ实现延迟消息队列</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" title="设计模式之设计原则">
-                        <span class="hidden-mobile">设计模式之设计原则</span>
+                      <a href="/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/" title="使用docker搭建dnsmasq">
+                        <span class="hidden-mobile">使用docker搭建dnsmasq</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
