@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>黑群晖系统安装</title>
+    <link href="/2022/06/23/nas/%E9%BB%91%E7%BE%A4%E6%99%96%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/"/>
+    <url>/2022/06/23/nas/%E9%BB%91%E7%BE%A4%E6%99%96%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/</url>
+    
+    <content type="html"><![CDATA[<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>使用u盘作为引导盘,后续要一直插着,拔掉后会无法进行系统</p><ol><li>插入u盘,打开rufus软件,待识别u盘后,选择img镜像文件成功写入u盘</li><li>将u盘插入闲置主机,启动电脑并调试bios第一启动项为U盘</li><li>待出现如下图后,在另一设备操作<br><img src="1.png"></li><li>在浏览器打开 闲置主机的ip:5000 等待响应 </li><li>按浏览器提示操作即可,中间会提示选择系统,安装.pat文件即可</li></ol><h3 id="安装注意点"><a href="#安装注意点" class="headerlink" title="安装注意点"></a>安装注意点</h3><ol><li>我这边使用u盘作为引导盘,使用ssd作为引导时会报错(Failed to format the disk. (35))</li><li>修改bios设置第一启动项为u盘启动(否则每次手动选择启动项很烦)</li><li>安装其他群晖系统时无法进入系统,我这边只能适合ds3617_6.1版本</li><li>一定要设置u盘为默认的第一启动项(即电脑开机后默认选择u盘进入),否则系统安装完,需要重启,会出现无法进行系统问题</li></ol><h3 id="其他nas系统"><a href="#其他nas系统" class="headerlink" title="其他nas系统"></a>其他nas系统</h3><ol><li>TrueNAS</li><li>Unraid</li></ol><h3 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h3><p>用到的工具及系统文件下载地址:<br><a href="https://pan.baidu.com/share/init?surl=EqJ8s2YedADjV9zCX_LwRQ">https://pan.baidu.com/share/init?surl=EqJ8s2YedADjV9zCX_LwRQ</a><br>提取码: ifb5</p><h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul><li><a href="https://post.smzdm.com/p/aqx07xmk/">文菌装NAS 篇五：手把手教您安装黑群晖918+ 6.2保姆级教程，这应该是装黑群晖NAS最详细的教程了，含群晖设置</a></li><li><a href="https://new.qq.com/omn/20210129/20210129A0C4S900.html">如何通过bios设置u盘启动项实现U盘启动</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nas</tag>
+      
+      <tag>群晖</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>rabbitMQ实现延迟消息队列</title>
     <link href="/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
     <url>/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>

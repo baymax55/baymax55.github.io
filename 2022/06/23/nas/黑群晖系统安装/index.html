@@ -16,26 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="使用rabbitmq实现延时功能">
+    <meta name="description" content="搭建黑群晖">
 <meta property="og:type" content="article">
-<meta property="og:title" content="rabbitMQ实现延迟消息队列">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.html">
+<meta property="og:title" content="黑群晖系统安装">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/23/nas/%E9%BB%91%E7%BE%A4%E6%99%96%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="使用rabbitmq实现延时功能">
+<meta property="og:description" content="搭建黑群晖">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/rabbitmq.png">
-<meta property="article:published_time" content="2022-06-22T01:30:59.363Z">
-<meta property="article:modified_time" content="2022-06-22T01:58:06.959Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/synology.png">
+<meta property="article:published_time" content="2022-06-23T03:11:21.092Z">
+<meta property="article:modified_time" content="2022-06-23T03:54:57.524Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="rabbitmq">
-<meta property="article:tag" content="延迟队列">
-<meta property="article:tag" content="mq">
+<meta property="article:tag" content="nas">
+<meta property="article:tag" content="群晖">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/rabbitmq.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/synology.png">
   
   
   
-  <title>rabbitMQ实现延迟消息队列 - Baymax55&#39;s Blog</title>
+  <title>黑群晖系统安装 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="rabbitMQ实现延迟消息队列"></span>
+            <span id="subtitle" data-typed-text="黑群晖系统安装"></span>
           
         </div>
 
@@ -209,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-22 09:30" pubdate>
-          2022年6月22日 上午
+        <time datetime="2022-06-23 11:11" pubdate>
+          2022年6月23日 上午
         </time>
       </span>
     
@@ -221,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          678 字
+          541 字
         
       </span>
     
@@ -232,7 +231,7 @@
         
         
         
-          6 分钟
+          5 分钟
         
       </span>
     
@@ -278,36 +277,40 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">rabbitMQ实现延迟消息队列</h1>
+            <h1 style="display: none">黑群晖系统安装</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月22日 上午
+                    本文最后更新于：2022年6月23日 中午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h3 id="延迟消息实现的两种方式"><a href="#延迟消息实现的两种方式" class="headerlink" title="延迟消息实现的两种方式"></a>延迟消息实现的两种方式</h3><ul>
-<li>通过Rabbitmq本身队列的特性来实现，需要使用Rabbitmq的死信交换机（Exchange）和消息的存活时间TTL</li>
-<li>通过插件（rabbitmq-delayed-message-exchange）来实现</li>
-</ul>
-<h3 id="消息的TTL"><a href="#消息的TTL" class="headerlink" title="消息的TTL"></a>消息的TTL</h3><p>RabbitMQ可以针对Queue和Message设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为dead letter</p>
-<h4 id="针对队列的过期时间"><a href="#针对队列的过期时间" class="headerlink" title="针对队列的过期时间"></a>针对队列的过期时间</h4><p>通过队列属性设置，队列中所有消息都有相同的过期时间。</p>
-<h4 id="针对消息的过期时间"><a href="#针对消息的过期时间" class="headerlink" title="针对消息的过期时间"></a>针对消息的过期时间</h4><p>对消息进行单独设置，每条消息TTL可以不同。</p>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>如果同时使用，则消息的过期时间以两者之间TTL较小的那个数值为准。消息在队列的生存时间一旦超过设置的TTL值，就成为dead letter</p>
-<h3 id="DLX-Dead-Letter-Exchange"><a href="#DLX-Dead-Letter-Exchange" class="headerlink" title="DLX (Dead-Letter-Exchange)"></a>DLX (Dead-Letter-Exchange)</h3><p>Queue可以配置x-dead-letter-exchange 和x-dead-letter-routing-key（可选）两个参数，如果队列内出现了dead letter，则按照这两个参数重新路由</p>
-<p>x-dead-letter-exchange: 出现dead letter之后将dead letter重新发送到指定exchange<br>x-dead-letter-routing-key:指定routing-key发送</p>
-<h3 id="队列出现dead-letter的情况"><a href="#队列出现dead-letter的情况" class="headerlink" title="队列出现dead letter的情况"></a>队列出现dead letter的情况</h3><ul>
-<li>消息或者队列的TTL过期</li>
-<li>队列达到最大长度</li>
-<li>消息被消费端拒绝（basic.reject or basic.nack）并且requeue=false</li>
-</ul>
+              <h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><p>使用u盘作为引导盘,后续要一直插着,拔掉后会无法进行系统</p>
+<ol>
+<li>插入u盘,打开rufus软件,待识别u盘后,选择img镜像文件成功写入u盘</li>
+<li>将u盘插入闲置主机,启动电脑并调试bios第一启动项为U盘</li>
+<li>待出现如下图后,在另一设备操作<br><img src="1.png" srcset="/img/loading.gif" lazyload></li>
+<li>在浏览器打开 闲置主机的ip:5000 等待响应 </li>
+<li>按浏览器提示操作即可,中间会提示选择系统,安装.pat文件即可</li>
+</ol>
+<h3 id="安装注意点"><a href="#安装注意点" class="headerlink" title="安装注意点"></a>安装注意点</h3><ol>
+<li>我这边使用u盘作为引导盘,使用ssd作为引导时会报错(Failed to format the disk. (35))</li>
+<li>修改bios设置第一启动项为u盘启动(否则每次手动选择启动项很烦)</li>
+<li>安装其他群晖系统时无法进入系统,我这边只能适合ds3617_6.1版本</li>
+<li>一定要设置u盘为默认的第一启动项(即电脑开机后默认选择u盘进入),否则系统安装完,需要重启,会出现无法进行系统问题</li>
+</ol>
+<h3 id="其他nas系统"><a href="#其他nas系统" class="headerlink" title="其他nas系统"></a>其他nas系统</h3><ol>
+<li>TrueNAS</li>
+<li>Unraid</li>
+</ol>
+<h3 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h3><p>用到的工具及系统文件下载地址:<br><a target="_blank" rel="noopener" href="https://pan.baidu.com/share/init?surl=EqJ8s2YedADjV9zCX_LwRQ">https://pan.baidu.com/share/init?surl=EqJ8s2YedADjV9zCX_LwRQ</a><br>提取码: ifb5</p>
 <h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1877502">rabbitmq 怎么实现延迟消息队列？</a></li>
-<li>RabbitMQ实战指南</li>
+<li><a target="_blank" rel="noopener" href="https://post.smzdm.com/p/aqx07xmk/">文菌装NAS 篇五：手把手教您安装黑群晖918+ 6.2保姆级教程，这应该是装黑群晖NAS最详细的教程了，含群晖设置</a></li>
+<li><a target="_blank" rel="noopener" href="https://new.qq.com/omn/20210129/20210129A0C4S900.html">如何通过bios设置u盘启动项实现U盘启动</a></li>
 </ul>
 
               
@@ -341,11 +344,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/rabbitmq/">#rabbitmq</a>
+        <a href="/tags/nas/">#nas</a>
       
-        <a href="/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/">#延迟队列</a>
-      
-        <a href="/tags/mq/">#mq</a>
+        <a href="/tags/%E7%BE%A4%E6%99%96/">#群晖</a>
       
     </div>
   
@@ -357,8 +358,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>rabbitMQ实现延迟消息队列</div>
-      <div>https://baymax55.github.io/2022/06/22/mq/rabbitMQ实现延迟消息队列/</div>
+      <div>黑群晖系统安装</div>
+      <div>https://baymax55.github.io/2022/06/23/nas/黑群晖系统安装/</div>
     </div>
     <div class="license-meta">
       
@@ -370,7 +371,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月22日</div>
+          <div>2022年6月23日</div>
         </div>
       
       
@@ -400,18 +401,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/23/nas/%E9%BB%91%E7%BE%A4%E6%99%96%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/" title="黑群晖系统安装">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">黑群晖系统安装</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/21/dns/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAdnsmasq/" title="使用docker搭建dnsmasq">
-                        <span class="hidden-mobile">使用docker搭建dnsmasq</span>
+                      <a href="/2022/06/22/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" title="rabbitMQ实现延迟消息队列">
+                        <span class="hidden-mobile">rabbitMQ实现延迟消息队列</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
