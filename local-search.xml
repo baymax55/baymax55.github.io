@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Raft 动画演示</title>
+    <link href="/2022/06/28/Raft%20%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA/"/>
+    <url>/2022/06/28/Raft%20%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA/</url>
+    
+    <content type="html"><![CDATA[<h3 id="raft算法"><a href="#raft算法" class="headerlink" title="raft算法"></a>raft算法</h3><p>Raft 是一种为了管理复制日志的一致性算法。它提供了和 Paxos 算法相同的功能和性能，但是它的算法结构和 Paxos 不同，使得 Raft 算法更加容易理解并且更容易构建实际的系统。<br>为了提升可理解性，Raft 将一致性算法分解成了几个关键模块，如领导人选举、日志复制。这个演示动画就是为了方便理解这几个关键模块而设计的。</p><h3 id="动画演示地址"><a href="#动画演示地址" class="headerlink" title="动画演示地址"></a>动画演示地址</h3><ul><li><a href="http://www.kailing.pub/raft/index.html#home">中文</a></li><li><a href="http://thesecretlivesofdata.com/raft/">英文</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Raft</tag>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>dubbo自定义路由设置</title>
     <link href="/2022/06/27/dubbo/router/dubbo%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE/"/>
     <url>/2022/06/27/dubbo/router/dubbo%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE/</url>

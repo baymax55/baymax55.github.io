@@ -16,25 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="扩展dubbo自定义路由">
+    <meta name="description" content="Raft 动画演示">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dubbo自定义路由设置">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/27/dubbo/router/dubbo%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE/index.html">
+<meta property="og:title" content="Raft 动画演示">
+<meta property="og:url" content="https://baymax55.github.io/2022/06/28/Raft%20%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="扩展dubbo自定义路由">
+<meta property="og:description" content="Raft 动画演示">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/dubbo.png">
-<meta property="article:published_time" content="2022-06-27T08:08:28.975Z">
-<meta property="article:modified_time" content="2022-06-27T08:43:50.563Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/key.png">
+<meta property="article:published_time" content="2022-06-28T02:19:45.872Z">
+<meta property="article:modified_time" content="2022-06-28T02:31:37.992Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="dubbo">
-<meta property="article:tag" content="router">
+<meta property="article:tag" content="Raft">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/dubbo.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/key.png">
   
   
   
-  <title>dubbo自定义路由设置 - Baymax55&#39;s Blog</title>
+  <title>Raft 动画演示 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="dubbo自定义路由设置"></span>
+            <span id="subtitle" data-typed-text="Raft 动画演示"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-27 16:08" pubdate>
-          2022年6月27日 下午
+        <time datetime="2022-06-28 10:19" pubdate>
+          2022年6月28日 上午
         </time>
       </span>
     
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          171 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          26 分钟
+          2 分钟
         
       </span>
     
@@ -277,30 +277,22 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">dubbo自定义路由设置</h1>
+            <h1 style="display: none">Raft 动画演示</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月27日 下午
+                    本文最后更新于：2022年6月28日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>开发人员进行本地开发时,经常会出现接口调到k8s容器内的服务上,我们本地和k8s共用一个nacos服务.</p>
-<p>根据调研,打算使用dubbo的自定义路由实现.本地服务调接口时,使用路由过滤掉k8s内部的provider地址,从而实现,本地consumer能够一直本地provider服务.</p>
-<p>由于过滤了k8s内部实例的ip,因此需要,将此路由只能在本地生效,在k8s环境内失效,通过spring.profiles实现.</p>
-<h3 id="实现自定义路由"><a href="#实现自定义路由" class="headerlink" title="实现自定义路由"></a>实现自定义路由</h3><h4 id="继承AbstractRouter"><a href="#继承AbstractRouter" class="headerlink" title="继承AbstractRouter"></a>继承AbstractRouter</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.apache.dubbo.common.URL;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.Invocation;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.Invoker;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.RpcException;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.cluster.router.AbstractRouter;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.function.Predicate;<br><span class="hljs-keyword">import</span> java.util.stream.Collectors;<br><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IpRouter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractRouter</span> &#123;<br><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">IpRouter</span><span class="hljs-params">(URL url)</span> &#123;<br>        <span class="hljs-built_in">super</span>(url);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> &lt;T&gt; List&lt;Invoker&lt;T&gt;&gt; <span class="hljs-title function_">route</span><span class="hljs-params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="hljs-keyword">throws</span> RpcException &#123;<br><br>        <span class="hljs-keyword">if</span> (!SpringContextUtil.isLocal()) &#123; <span class="hljs-comment">//仅在本地进行路由</span><br>            <span class="hljs-keyword">return</span> invokers;<br>        &#125;<br>        <br>        log.info(<span class="hljs-string">&quot; before route :&#123;&#125;,&#123;&#125;&quot;</span>, invokers.size(), invokers);<br>        <span class="hljs-keyword">if</span> (invokers.size() &lt;= <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">//存在少于一个provider时不进行路由,可选</span><br>            <span class="hljs-keyword">return</span> invokers;<br>        &#125;<br><br>        <span class="hljs-comment">//存在多个provider时,过滤掉属于k8s内服务的provider,保留本地服务</span><br>        Predicate&lt;Invoker&lt;T&gt;&gt; useLocalIP = str -&gt; !str.getUrl().toServiceString().contains(<span class="hljs-string">&quot;10.0.80.9&quot;</span>);<br>        List&lt;Invoker&lt;T&gt;&gt; collect = invokers.stream().filter(useLocalIP).collect(Collectors.toList());<br><br>        log.info(<span class="hljs-string">&quot; after route:&#123;&#125;,&#123;&#125;&quot;</span>, collect.size(), collect);<br>        <span class="hljs-keyword">return</span> collect;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<h4 id="实现RouterFactory"><a href="#实现RouterFactory" class="headerlink" title="实现RouterFactory"></a>实现RouterFactory</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">import</span> org.apache.dubbo.common.URL;<br><span class="hljs-keyword">import</span> org.apache.dubbo.common.extension.Activate;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.cluster.Router;<br><span class="hljs-keyword">import</span> org.apache.dubbo.rpc.cluster.RouterFactory;<br><br><span class="hljs-meta">@Activate(group = &quot;consumer&quot;)</span><span class="hljs-comment">//只在consumer侧激活</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IpRouterFactory</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">RouterFactory</span> &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Router <span class="hljs-title function_">getRouter</span><span class="hljs-params">(URL url)</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IpRouter</span>(url);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="加载RouterFactory"><a href="#加载RouterFactory" class="headerlink" title="加载RouterFactory"></a>加载RouterFactory</h4><p>在resources 目录下创建目录META-INF\dubbo<br>创建文件:org.apache.dubbo.rpc.cluster.RouterFactory,<br>值为:ip=com.wtt.demo.app.route.IpRouterFactory</p>
-<h3 id="解决只在本地生效"><a href="#解决只在本地生效" class="headerlink" title="解决只在本地生效"></a>解决只在本地生效</h3><h4 id="创建SpringContextUtil工具类"><a href="#创建SpringContextUtil工具类" class="headerlink" title="创建SpringContextUtil工具类"></a>创建SpringContextUtil工具类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><br><span class="hljs-keyword">import</span> lombok.extern.slf4j.Slf4j;<br><span class="hljs-keyword">import</span> org.springframework.beans.BeansException;<br><span class="hljs-keyword">import</span> org.springframework.context.ApplicationContext;<br><span class="hljs-keyword">import</span> org.springframework.context.ApplicationContextAware;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> java.util.Arrays;<br><span class="hljs-keyword">import</span> java.util.function.Predicate;<br><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringContextUtil</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ApplicationContextAware</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">ApplicationContext</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String[] getActiveProfileList() &#123;<br>        <span class="hljs-keyword">return</span> context.getEnvironment().getActiveProfiles();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Boolean <span class="hljs-title function_">isLocal</span><span class="hljs-params">()</span> &#123;<br>        String[] activeProfileList = getActiveProfileList();<br>        Predicate&lt;String&gt; containsLocalProfile = m -&gt; m.contains(<span class="hljs-string">&quot;local&quot;</span>);<br>        <span class="hljs-keyword">return</span> Arrays.stream(activeProfileList).anyMatch(containsLocalProfile);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setApplicationContext</span><span class="hljs-params">(ApplicationContext applicationContext)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        <span class="hljs-built_in">this</span>.context = applicationContext;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-
-<h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul>
-<li>深入理解Apache Dubbo与实战</li>
-<li><a target="_blank" rel="noopener" href="https://zzshuo.github.io/2021/05/21/005-dubbo-tag-invoker-chain/">dubbo自定义标签路由</a></li>
+              <h3 id="raft算法"><a href="#raft算法" class="headerlink" title="raft算法"></a>raft算法</h3><p>Raft 是一种为了管理复制日志的一致性算法。它提供了和 Paxos 算法相同的功能和性能，但是它的算法结构和 Paxos 不同，使得 Raft 算法更加容易理解并且更容易构建实际的系统。<br>为了提升可理解性，Raft 将一致性算法分解成了几个关键模块，如领导人选举、日志复制。这个演示动画就是为了方便理解这几个关键模块而设计的。</p>
+<h3 id="动画演示地址"><a href="#动画演示地址" class="headerlink" title="动画演示地址"></a>动画演示地址</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.kailing.pub/raft/index.html#home">中文</a></li>
+<li><a target="_blank" rel="noopener" href="http://thesecretlivesofdata.com/raft/">英文</a></li>
 </ul>
 
               
@@ -334,9 +326,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/dubbo/">#dubbo</a>
+        <a href="/tags/Raft/">#Raft</a>
       
-        <a href="/tags/router/">#router</a>
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
       
     </div>
   
@@ -348,8 +340,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>dubbo自定义路由设置</div>
-      <div>https://baymax55.github.io/2022/06/27/dubbo/router/dubbo自定义路由设置/</div>
+      <div>Raft 动画演示</div>
+      <div>https://baymax55.github.io/2022/06/28/Raft 动画演示/</div>
     </div>
     <div class="license-meta">
       
@@ -361,7 +353,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月27日</div>
+          <div>2022年6月28日</div>
         </div>
       
       
@@ -391,18 +383,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/28/Raft%20%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA/" title="Raft 动画演示">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Raft 动画演示</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/23/nas/%E9%BB%91%E7%BE%A4%E6%99%96%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/" title="黑群晖系统安装">
-                        <span class="hidden-mobile">黑群晖系统安装</span>
+                      <a href="/2022/06/27/dubbo/router/dubbo%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E8%AE%BE%E7%BD%AE/" title="dubbo自定义路由设置">
+                        <span class="hidden-mobile">dubbo自定义路由设置</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
