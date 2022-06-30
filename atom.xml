@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-06-29T02:20:18.834Z</updated>
+  <updated>2022-06-30T02:32:57.788Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Structs</title>
+    <link href="https://baymax55.github.io/2022/06/30/go/Structs/"/>
+    <id>https://baymax55.github.io/2022/06/30/go/Structs/</id>
+    <published>2022-06-30T01:59:08.890Z</published>
+    <updated>2022-06-30T02:32:57.788Z</updated>
+    
+    <content type="html"><![CDATA[<p>Go’s structs are typed collections of fields. They’re useful for grouping data together to form records.</p><h2 id="The-Go-Playground"><a href="#The-Go-Playground" class="headerlink" title="The Go Playground"></a><a href="https://go.dev/play/p/n7jt1x3iw4Z">The Go Playground</a></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-comment">// This `person` struct type has `name` and `age` fields.</span><br><span class="hljs-keyword">type</span> person <span class="hljs-keyword">struct</span> &#123;<br>name <span class="hljs-type">string</span><br>age  <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-comment">// `newPerson` constructs a new person struct with the given name.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">newPerson</span><span class="hljs-params">(name <span class="hljs-type">string</span>)</span></span> *person &#123;<br><span class="hljs-comment">// You can safely return a pointer to local variable</span><br><span class="hljs-comment">// as a local variable will survive the scope of the function.</span><br>p := person&#123;name: name&#125;<br>p.age = <span class="hljs-number">42</span><br><span class="hljs-keyword">return</span> &amp;p<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br><span class="hljs-comment">// This syntax creates a new struct.</span><br>fmt.Println(person&#123;<span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-number">20</span>&#125;)<br><br><span class="hljs-comment">// You can name the fields when initializing a struct.</span><br>fmt.Println(person&#123;name: <span class="hljs-string">&quot;Alice&quot;</span>, age: <span class="hljs-number">30</span>&#125;)<br><br><span class="hljs-comment">// Omitted fields will be zero-valued.</span><br>fmt.Println(person&#123;name: <span class="hljs-string">&quot;Fred&quot;</span>&#125;)<br><br><span class="hljs-comment">// An `&amp;` prefix yields a pointer to the struct.</span><br>fmt.Println(&amp;person&#123;name: <span class="hljs-string">&quot;Ann&quot;</span>, age: <span class="hljs-number">40</span>&#125;)<br><br><span class="hljs-comment">// It&#x27;s idiomatic to encapsulate new struct creation in constructor functions</span><br>fmt.Println(newPerson(<span class="hljs-string">&quot;Jon&quot;</span>))<br><br><span class="hljs-comment">// Access struct fields with a dot.</span><br>s := person&#123;name: <span class="hljs-string">&quot;Sean&quot;</span>, age: <span class="hljs-number">50</span>&#125;<br>fmt.Println(s.name)<br><br><span class="hljs-comment">// You can also use dots with struct pointers - the</span><br><span class="hljs-comment">// pointers are automatically dereferenced.</span><br>sp := &amp;s<br>fmt.Println(sp.age)<br><br><span class="hljs-comment">// Structs are mutable.</span><br>sp.age = <span class="hljs-number">51</span><br>fmt.Println(sp.age)<br>&#125;<br><br></code></pre></td></tr></table></figure><h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul><li><a href="https://gobyexample.com/structs">Go by Example: Structs</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Go’s structs are typed collections of fields. They’re useful for grouping data together to form records.</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="GO" scheme="https://baymax55.github.io/tags/GO/"/>
+    
+    <category term="Structs" scheme="https://baymax55.github.io/tags/Structs/"/>
+    
+  </entry>
   
   <entry>
     <title>常用的创建对象方式及存在问题</title>

@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Structs</title>
+    <link href="/2022/06/30/go/Structs/"/>
+    <url>/2022/06/30/go/Structs/</url>
+    
+    <content type="html"><![CDATA[<p>Go’s structs are typed collections of fields. They’re useful for grouping data together to form records.</p><h2 id="The-Go-Playground"><a href="#The-Go-Playground" class="headerlink" title="The Go Playground"></a><a href="https://go.dev/play/p/n7jt1x3iw4Z">The Go Playground</a></h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-comment">// This `person` struct type has `name` and `age` fields.</span><br><span class="hljs-keyword">type</span> person <span class="hljs-keyword">struct</span> &#123;<br>name <span class="hljs-type">string</span><br>age  <span class="hljs-type">int</span><br>&#125;<br><br><span class="hljs-comment">// `newPerson` constructs a new person struct with the given name.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">newPerson</span><span class="hljs-params">(name <span class="hljs-type">string</span>)</span></span> *person &#123;<br><span class="hljs-comment">// You can safely return a pointer to local variable</span><br><span class="hljs-comment">// as a local variable will survive the scope of the function.</span><br>p := person&#123;name: name&#125;<br>p.age = <span class="hljs-number">42</span><br><span class="hljs-keyword">return</span> &amp;p<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br><span class="hljs-comment">// This syntax creates a new struct.</span><br>fmt.Println(person&#123;<span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-number">20</span>&#125;)<br><br><span class="hljs-comment">// You can name the fields when initializing a struct.</span><br>fmt.Println(person&#123;name: <span class="hljs-string">&quot;Alice&quot;</span>, age: <span class="hljs-number">30</span>&#125;)<br><br><span class="hljs-comment">// Omitted fields will be zero-valued.</span><br>fmt.Println(person&#123;name: <span class="hljs-string">&quot;Fred&quot;</span>&#125;)<br><br><span class="hljs-comment">// An `&amp;` prefix yields a pointer to the struct.</span><br>fmt.Println(&amp;person&#123;name: <span class="hljs-string">&quot;Ann&quot;</span>, age: <span class="hljs-number">40</span>&#125;)<br><br><span class="hljs-comment">// It&#x27;s idiomatic to encapsulate new struct creation in constructor functions</span><br>fmt.Println(newPerson(<span class="hljs-string">&quot;Jon&quot;</span>))<br><br><span class="hljs-comment">// Access struct fields with a dot.</span><br>s := person&#123;name: <span class="hljs-string">&quot;Sean&quot;</span>, age: <span class="hljs-number">50</span>&#125;<br>fmt.Println(s.name)<br><br><span class="hljs-comment">// You can also use dots with struct pointers - the</span><br><span class="hljs-comment">// pointers are automatically dereferenced.</span><br>sp := &amp;s<br>fmt.Println(sp.age)<br><br><span class="hljs-comment">// Structs are mutable.</span><br>sp.age = <span class="hljs-number">51</span><br>fmt.Println(sp.age)<br>&#125;<br><br></code></pre></td></tr></table></figure><h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul><li><a href="https://gobyexample.com/structs">Go by Example: Structs</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>Structs</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>常用的创建对象方式及存在问题</title>
     <link href="/2022/06/29/java/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98/"/>
     <url>/2022/06/29/java/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98/</url>
