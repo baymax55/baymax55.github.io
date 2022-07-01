@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-07-01T02:23:32.220Z</updated>
+  <updated>2022-07-01T08:31:12.007Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Network</title>
+    <link href="https://baymax55.github.io/2022/07/01/network/network/"/>
+    <id>https://baymax55.github.io/2022/07/01/network/network/</id>
+    <published>2022-07-01T08:19:54.495Z</published>
+    <updated>2022-07-01T08:31:12.007Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul><li><a href="https://github.com/bregman-arie/devops-exercises#Network">Network</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Network</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="network" scheme="https://baymax55.github.io/tags/network/"/>
+    
+  </entry>
   
   <entry>
     <title>Interfaces</title>
