@@ -16,25 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Oh My Posh 是一個主題引擎,可以用来美化PowerShell 7(pwsh)">
+    <meta name="description" content="做人还是平常点好，争这个争那个，争来争去赔了自己的命。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Oh My Posh插件美化PowerShell">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/04/%E4%BD%BF%E7%94%A8Oh%20My%20Posh%E6%8F%92%E4%BB%B6%E7%BE%8E%E5%8C%96PowerShell/index.html">
+<meta property="og:title" content="活着">
+<meta property="og:url" content="https://baymax55.github.io/2022/07/05/book/%E6%B4%BB%E7%9D%80/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="Oh My Posh 是一個主題引擎,可以用来美化PowerShell 7(pwsh)">
+<meta property="og:description" content="做人还是平常点好，争这个争那个，争来争去赔了自己的命。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/posh.png">
-<meta property="article:published_time" content="2022-06-04T12:34:46.000Z">
-<meta property="article:modified_time" content="2022-06-06T06:25:56.672Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/book.png">
+<meta property="article:published_time" content="2022-07-05T00:24:31.449Z">
+<meta property="article:modified_time" content="2022-07-05T00:24:31.449Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="Posh">
-<meta property="article:tag" content="PowerShell">
+<meta property="article:tag" content="文学">
+<meta property="article:tag" content="余华">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/posh.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/book.png">
   
   
   
-  <title>使用Oh My Posh插件美化PowerShell - Baymax55&#39;s Blog</title>
+  <title>活着 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用Oh My Posh插件美化PowerShell"></span>
+            <span id="subtitle" data-typed-text="活着"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-04 20:34" pubdate>
-          2022年6月4日 晚上
+        <time datetime="2022-07-05 08:24" pubdate>
+          2022年7月5日 早上
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          272 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          13 分钟
+          3 分钟
         
       </span>
     
@@ -278,52 +278,31 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">使用Oh My Posh插件美化PowerShell</h1>
+            <h1 style="display: none">活着</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月6日 下午
+                    本文最后更新于：2022年7月5日 早上
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>PowerShell 输入以下命令进行安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">winget install oh-my-posh<br></code></pre></td></tr></table></figure>
-<h4 id="设置自动启动初始化oh-my-posh"><a href="#设置自动启动初始化oh-my-posh" class="headerlink" title="设置自动启动初始化oh-my-posh"></a>设置自动启动初始化oh-my-posh</h4><p>安装完成后，为了使每次启动PowerShell后自动初始化oh-my-posh,继续在当前命令输入：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">notepad <span class="hljs-variable">$Profile</span><br></code></pre></td></tr></table></figure>
-<p>添加以下内容至打开的记事本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">oh-my-posh init pwsh --config <span class="hljs-string">&quot;<span class="hljs-variable">$env</span>:POSH_THEMES_PATH\jandedobbeleer.omp.json&quot;</span> | Invoke-Expression<br></code></pre></td></tr></table></figure>
-
-<h3 id="切换主题"><a href="#切换主题" class="headerlink" title="切换主题"></a>切换主题</h3><p>输入以下命令查看主题列表:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Get-PoshThemes<br></code></pre></td></tr></table></figure>
-<p>在PowerShell终端下使用 notepad $Profile 命令打开记事本,修改完主题名称后<br>继续在当前目录 执行 .$Profile 命令 使之生效<br><img src="2.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><h4 id="ZLocation"><a href="#ZLocation" class="headerlink" title="ZLocation"></a>ZLocation</h4><p>使用ZLocation命令可以用关键字直接跳到想去的資料夾,比使用 cd 更快速</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Install-Module ZLocation -Scope CurrentUser<br></code></pre></td></tr></table></figure>
-<h4 id="PSReadLine"><a href="#PSReadLine" class="headerlink" title="PSReadLine"></a>PSReadLine</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">Install-Module PSReadLine<br></code></pre></td></tr></table></figure>
-
-<h4 id="TERMINAL-ICONS"><a href="#TERMINAL-ICONS" class="headerlink" title="TERMINAL-ICONS"></a>TERMINAL-ICONS</h4><p>使输出的目录或文件带颜色</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">Install-Module -Name Terminal-Icons -Repository PSGallery<br></code></pre></td></tr></table></figure>
-
-<p>安装完以上插件后修改配置文件使之生效:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">Set-PSReadLineOption -PredictionSource History # 设置预测文本来源为历史记录<br><br>Import-Module -Name Terminal-Icons<br><br>Import-Module ZLocation<br></code></pre></td></tr></table></figure>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><h4 id="1-PowerShell显示图标会乱码"><a href="#1-PowerShell显示图标会乱码" class="headerlink" title="1.PowerShell显示图标会乱码"></a>1.PowerShell显示图标会乱码</h4><p>安裝Patched字体</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf">MesloLGS NF Regular.ttf</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Bold.ttf">MesloLGS NF Bold.ttf</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Italic.ttf">MesloLGS NF Italic.ttf</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Bold%20Italic.ttf">MesloLGS NF Bold Italic.ttf</a></li>
+              <p><img src="%E6%B4%BB%E7%9D%80.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p>余华</p>
+<h2 id="原文摘录"><a href="#原文摘录" class="headerlink" title="原文摘录"></a>原文摘录</h2><ul>
+<li><p><strong>作为一个词语，“活着”在我们中国的语言中充满了力量，它的力量不是来自于喊叫，也不是来自于进攻，而是忍受，去忍受生命赋予我们的责任，去忍受现实给予我们的幸福和苦难、无聊和平庸。</strong></p>
+</li>
+<li><p><strong>做人不能忘记四条，话不要说错，床不要睡错，门槛不要踏错，口袋不要摸错。</strong></p>
+</li>
+<li><p><strong>做人还是平常点好，争这个争那个，争来争去赔了自己的命。</strong></p>
+</li>
 </ul>
-<p>修改PowerShell的字体为刚安装的字体(MesloLGS NF),使字体生效<br><img src="1.png" srcset="/img/loading.gif" lazyload></p>
-<h4 id="2-出现以下信息显示模块安装的oh-my-posh不再支持"><a href="#2-出现以下信息显示模块安装的oh-my-posh不再支持" class="headerlink" title="2.出现以下信息显示模块安装的oh-my-posh不再支持"></a>2.出现以下信息显示模块安装的oh-my-posh不再支持</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">Hey friend<br>In an effort to grow oh-my-posh, the decision was made to no<br>longer support the PowerShell module. Over the past year, the<br>added benefit of the module disappeared, while the burden of<br>maintaining it increased.<br>However, this doesn&#x27;t mean oh-my-posh disappears from your<br>terminal, it just means that you&#x27;ll have to use a different<br>tool to install it.<br>All you need to do, is follow the migration guide here:<br>https://ohmyposh.dev/docs/migrating<br></code></pre></td></tr></table></figure>
-<p>表示你过去是用 Install-Module 的方式安裝 Oh My Posh<br>根据迁移建议，彻底卸载，然后使用官方建议安装方式安装<br>卸载命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Uninstall-Module oh-my-posh -AllVersions<br></code></pre></td></tr></table></figure>
-<h3 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://ohmyposh.dev/docs/installation/windows">Install Oh My Posh on Windows</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.kwchang0831.dev/dev-env/pwsh/oh-my-posh">安裝新版 Oh My Posh 與插件來美化 PowerShell</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal">My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal</a></li>
+<h2 id="短评"><a href="#短评" class="headerlink" title="短评"></a>短评</h2><p><strong>一个长寿的悲剧，生命本就是孤孤单单的来，最后只落得和一头牛为友，让它象征自己生命中走过的人们。这位曾经的富家子弟现在的垂垂老者，一生之中谨守本份，随波逐流，就像每个平凡的中国人，皆是有起有落的生活。</strong></p>
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/1082154/">豆瓣读书</a></li>
 </ul>
 
               
@@ -342,7 +321,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  <a href="/categories/book/" class="category-chain-item">book</a>
   
   
 
@@ -357,9 +336,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Posh/">#Posh</a>
+        <a href="/tags/%E6%96%87%E5%AD%A6/">#文学</a>
       
-        <a href="/tags/PowerShell/">#PowerShell</a>
+        <a href="/tags/%E4%BD%99%E5%8D%8E/">#余华</a>
       
     </div>
   
@@ -371,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>使用Oh My Posh插件美化PowerShell</div>
-      <div>https://baymax55.github.io/2022/06/04/使用Oh My Posh插件美化PowerShell/</div>
+      <div>活着</div>
+      <div>https://baymax55.github.io/2022/07/05/book/活着/</div>
     </div>
     <div class="license-meta">
       
@@ -384,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月4日</div>
+          <div>2022年7月5日</div>
         </div>
       
       
@@ -414,18 +393,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/06/windows/win10%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" title="win10终端设置代理">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">win10终端设置代理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/04/k8s/k8s%E9%87%8D%E5%90%AFpod%E6%96%B9%E5%BC%8F/" title="k8s重启pod方式">
-                        <span class="hidden-mobile">k8s重启pod方式</span>
+                      <a href="/2022/07/01/network/network/" title="Network">
+                        <span class="hidden-mobile">Network</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
