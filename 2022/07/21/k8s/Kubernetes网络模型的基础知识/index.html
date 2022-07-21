@@ -16,25 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这是一本从架构视角讲解如何构建大型分布式系统的著作，是超级畅销书《深入理解Java虚拟机》的作者周志明多年架构和研发经验的总结，得到了多位行业资深架构专家的联袂推荐。">
+    <meta name="description" content="网络是 Kubernetes 的核心和必要组成部分，了解 Kubernetes 网络模型可以使你能够正确运行、监控和排查应用程序故障。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="凤凰架构">
-<meta property="og:url" content="https://baymax55.github.io/2022/07/08/book/%E5%87%A4%E5%87%B0%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:title" content="Kubernetes网络模型的基础知识">
+<meta property="og:url" content="https://baymax55.github.io/2022/07/21/k8s/Kubernetes%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="这是一本从架构视角讲解如何构建大型分布式系统的著作，是超级畅销书《深入理解Java虚拟机》的作者周志明多年架构和研发经验的总结，得到了多位行业资深架构专家的联袂推荐。">
+<meta property="og:description" content="网络是 Kubernetes 的核心和必要组成部分，了解 Kubernetes 网络模型可以使你能够正确运行、监控和排查应用程序故障。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/book.png">
-<meta property="article:published_time" content="2022-07-08T09:50:19.940Z">
-<meta property="article:modified_time" content="2022-07-08T09:50:19.941Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/k8s.png">
+<meta property="article:published_time" content="2022-07-21T06:46:03.174Z">
+<meta property="article:modified_time" content="2022-07-21T07:21:40.428Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="计算机">
-<meta property="article:tag" content="周志明">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="network">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/book.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/k8s.png">
   
   
   
-  <title>凤凰架构 - Baymax55&#39;s Blog</title>
+  <title>Kubernetes网络模型的基础知识 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="凤凰架构"></span>
+            <span id="subtitle" data-typed-text="Kubernetes网络模型的基础知识"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-07-08 17:50" pubdate>
-          2022年7月8日 下午
+        <time datetime="2022-07-21 14:46" pubdate>
+          2022年7月21日 下午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          69 字
+          630 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          1 分钟
+          6 分钟
         
       </span>
     
@@ -278,24 +278,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">凤凰架构</h1>
+            <h1 style="display: none">Kubernetes网络模型的基础知识</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月8日 下午
+                    本文最后更新于：2022年7月21日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <p><img src="1.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p>周志明</p>
-<h2 id="原文摘录"><a href="#原文摘录" class="headerlink" title="原文摘录"></a>原文摘录</h2><h2 id="短评"><a href="#短评" class="headerlink" title="短评"></a>短评</h2><p><strong>作者一如既往的高屋建瓴、用词严谨、逻辑清晰，深度与广度并存，适合一气读完。</strong></p>
-<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/35492898/">豆瓣读书</a></li>
-<li><a target="_blank" rel="noopener" href="https://icyfenix.cn/">官方电子书链接</a></li>
+              <h2 id="1、Kubernetes基础知识"><a href="#1、Kubernetes基础知识" class="headerlink" title="1、Kubernetes基础知识"></a>1、Kubernetes基础知识</h2><h3 id="1-1、Kubernetes-API-server"><a href="#1-1、Kubernetes-API-server" class="headerlink" title="1.1、Kubernetes API server"></a>1.1、Kubernetes API server</h3><h3 id="1-2、Controllers"><a href="#1-2、Controllers" class="headerlink" title="1.2、Controllers"></a>1.2、Controllers</h3><h3 id="1-3、Pods"><a href="#1-3、Pods" class="headerlink" title="1.3、Pods"></a>1.3、Pods</h3><h3 id="1-4、Nodes"><a href="#1-4、Nodes" class="headerlink" title="1.4、Nodes"></a>1.4、Nodes</h3><h2 id="2、Kubernetes网络模型"><a href="#2、Kubernetes网络模型" class="headerlink" title="2、Kubernetes网络模型"></a>2、Kubernetes网络模型</h2><h2 id="3、容器和容器之间网络通信"><a href="#3、容器和容器之间网络通信" class="headerlink" title="3、容器和容器之间网络通信"></a>3、容器和容器之间网络通信</h2><h2 id="4、Pod和Pod之间网络通信"><a href="#4、Pod和Pod之间网络通信" class="headerlink" title="4、Pod和Pod之间网络通信"></a>4、Pod和Pod之间网络通信</h2><h3 id="4-1、同节点Pod通信"><a href="#4-1、同节点Pod通信" class="headerlink" title="4.1、同节点Pod通信"></a>4.1、同节点Pod通信</h3><h3 id="4-2、跨节点Pod通信"><a href="#4-2、跨节点Pod通信" class="headerlink" title="4.2、跨节点Pod通信"></a>4.2、跨节点Pod通信</h3><h2 id="5、Pod和Service之间网络通信"><a href="#5、Pod和Service之间网络通信" class="headerlink" title="5、Pod和Service之间网络通信"></a>5、Pod和Service之间网络通信</h2><h3 id="5-1、netfilter-和-iptables"><a href="#5-1、netfilter-和-iptables" class="headerlink" title="5.1、netfilter 和 iptables"></a>5.1、netfilter 和 iptables</h3><h3 id="5-2、IPVS"><a href="#5-2、IPVS" class="headerlink" title="5.2、IPVS"></a>5.2、IPVS</h3><h3 id="5-3、Pod和Service通信"><a href="#5-3、Pod和Service通信" class="headerlink" title="5.3、Pod和Service通信"></a>5.3、Pod和Service通信</h3><h3 id="5-4、Service和Pod通信"><a href="#5-4、Service和Pod通信" class="headerlink" title="5.4、Service和Pod通信"></a>5.4、Service和Pod通信</h3><h3 id="5-5、使用DNS"><a href="#5-5、使用DNS" class="headerlink" title="5.5、使用DNS"></a>5.5、使用DNS</h3><h2 id="6、Internet和Service之间网络通信"><a href="#6、Internet和Service之间网络通信" class="headerlink" title="6、Internet和Service之间网络通信"></a>6、Internet和Service之间网络通信</h2><h3 id="6-1、Egress-将Kubernetes流量转发到Internet"><a href="#6-1、Egress-将Kubernetes流量转发到Internet" class="headerlink" title="6.1、Egress-将Kubernetes流量转发到Internet"></a>6.1、Egress-将Kubernetes流量转发到Internet</h3><h4 id="6-1-1、Node和Internet通信"><a href="#6-1-1、Node和Internet通信" class="headerlink" title="6.1.1、Node和Internet通信"></a>6.1.1、Node和Internet通信</h4><h3 id="6-2、Ingress-将Internet流量转发到Kubernetes"><a href="#6-2、Ingress-将Internet流量转发到Kubernetes" class="headerlink" title="6.2、Ingress-将Internet流量转发到Kubernetes"></a>6.2、Ingress-将Internet流量转发到Kubernetes</h3><h4 id="6-2-1、四层转发-Loadbalancer"><a href="#6-2-1、四层转发-Loadbalancer" class="headerlink" title="6.2.1、四层转发-Loadbalancer"></a>6.2.1、四层转发-Loadbalancer</h4><h4 id="6-2-2、Loadbalancer和Service通信"><a href="#6-2-2、Loadbalancer和Service通信" class="headerlink" title="6.2.2、Loadbalancer和Service通信"></a>6.2.2、Loadbalancer和Service通信</h4><h4 id="6-2-3、七层转发-Ingress-Controller"><a href="#6-2-3、七层转发-Ingress-Controller" class="headerlink" title="6.2.3、七层转发-Ingress Controller"></a>6.2.3、七层转发-Ingress Controller</h4><h4 id="6-2-4、Ingress和Service通信"><a href="#6-2-4、Ingress和Service通信" class="headerlink" title="6.2.4、Ingress和Service通信"></a>6.2.4、Ingress和Service通信</h4><h2 id="7、总结"><a href="#7、总结" class="headerlink" title="7、总结"></a>7、总结</h2><h2 id="8、网络术语"><a href="#8、网络术语" class="headerlink" title="8、网络术语"></a>8、网络术语</h2><h3 id="二层网络"><a href="#二层网络" class="headerlink" title="二层网络"></a>二层网络</h3><h3 id="四层网络"><a href="#四层网络" class="headerlink" title="四层网络"></a>四层网络</h3><h3 id="七层网络"><a href="#七层网络" class="headerlink" title="七层网络"></a>七层网络</h3><h3 id="Nat网络地址转换"><a href="#Nat网络地址转换" class="headerlink" title="Nat网络地址转换"></a>Nat网络地址转换</h3><h4 id="snat-源地址转换"><a href="#snat-源地址转换" class="headerlink" title="snat-源地址转换"></a>snat-源地址转换</h4><h4 id="dnat-目标地址转换"><a href="#dnat-目标地址转换" class="headerlink" title="dnat-目标地址转换"></a>dnat-目标地址转换</h4><h3 id="网络名称空间"><a href="#网络名称空间" class="headerlink" title="网络名称空间"></a>网络名称空间</h3><h3 id="veth虚拟网卡对"><a href="#veth虚拟网卡对" class="headerlink" title="veth虚拟网卡对"></a>veth虚拟网卡对</h3><h3 id="网络桥接"><a href="#网络桥接" class="headerlink" title="网络桥接"></a>网络桥接</h3><h3 id="CIDR"><a href="#CIDR" class="headerlink" title="CIDR"></a>CIDR</h3><h3 id="CNI"><a href="#CNI" class="headerlink" title="CNI"></a>CNI</h3><h3 id="VIP地址"><a href="#VIP地址" class="headerlink" title="VIP地址"></a>VIP地址</h3><h3 id="netfilter"><a href="#netfilter" class="headerlink" title="netfilter"></a>netfilter</h3><h3 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h3><h3 id="conntrack"><a href="#conntrack" class="headerlink" title="conntrack"></a>conntrack</h3><h3 id="IPVS"><a href="#IPVS" class="headerlink" title="IPVS"></a>IPVS</h3><h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://m.elecfans.com/article/1863588.html">Kubernetes网络模型的基础知识</a></li>
+<li><a target="_blank" rel="noopener" href="https://sookocheff.com/post/kubernetes/understanding-kubernetes-networking-model/">A Guide to the Kubernetes Networking Model</a></li>
 </ul>
 
               
@@ -314,7 +311,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/book/" class="category-chain-item">book</a>
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
   
   
 
@@ -329,9 +326,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/">#计算机</a>
+        <a href="/tags/k8s/">#k8s</a>
       
-        <a href="/tags/%E5%91%A8%E5%BF%97%E6%98%8E/">#周志明</a>
+        <a href="/tags/network/">#network</a>
       
     </div>
   
@@ -343,8 +340,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>凤凰架构</div>
-      <div>https://baymax55.github.io/2022/07/08/book/凤凰架构/</div>
+      <div>Kubernetes网络模型的基础知识</div>
+      <div>https://baymax55.github.io/2022/07/21/k8s/Kubernetes网络模型的基础知识/</div>
     </div>
     <div class="license-meta">
       
@@ -356,7 +353,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年7月8日</div>
+          <div>2022年7月21日</div>
         </div>
       
       
@@ -386,9 +383,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/21/book/%E8%8B%8F%E6%A0%BC%E6%8B%89%E5%BA%95%E7%9A%84%E7%94%B3%E8%BE%A9/" title="苏格拉底的申辩">
+                      <a href="/2022/07/21/java/Using%20@JsonTypeInfo%20annotation%20to%20handle%20polymorphic%20types/" title="JsonTypeInfo annotation usage">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">苏格拉底的申辩</span>
+                        <span class="hidden-mobile">JsonTypeInfo annotation usage</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -396,8 +393,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/07/07/book/%E4%BA%BA%E4%BA%BA%E9%83%BD%E6%98%AF%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%862.0/" title="人人都是产品经理2.0">
-                        <span class="hidden-mobile">人人都是产品经理2.0</span>
+                      <a href="/2022/07/21/book/%E8%8B%8F%E6%A0%BC%E6%8B%89%E5%BA%95%E7%9A%84%E7%94%B3%E8%BE%A9/" title="苏格拉底的申辩">
+                        <span class="hidden-mobile">苏格拉底的申辩</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

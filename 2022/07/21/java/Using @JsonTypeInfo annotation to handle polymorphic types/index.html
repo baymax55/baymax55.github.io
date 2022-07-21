@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Using @JsonTypeInfo annotation to handle polymorphic types">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JsonTypeInfo annotation usage">
+<meta property="og:url" content="https://baymax55.github.io/2022/07/21/java/Using%20@JsonTypeInfo%20annotation%20to%20handle%20polymorphic%20types/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="Using @JsonTypeInfo annotation to handle polymorphic types">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta property="article:published_time" content="2022-07-21T07:28:21.103Z">
+<meta property="article:modified_time" content="2022-07-21T08:08:43.556Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="Jackson">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+  
+  
+  
+  <title>JsonTypeInfo annotation usage - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JsonTypeInfo annotation usage"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-21 15:28" pubdate>
+          2022年7月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          57 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JsonTypeInfo annotation usage</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年7月21日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>In cases where polymorphic types are persisted to JSON, there’s no way for Jackson to figure out the right type during deserialization. Let’s understand that with an example.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Shape</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Rectangle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Shape</span> &#123;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> w;<br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> h;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Circle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Shape</span> &#123;<br>  <span class="hljs-type">int</span> radius;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">View</span> &#123;<br>  <span class="hljs-keyword">private</span> List&lt;Shape&gt; shapes;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Let’s serialize and then deserialize a View object:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExampleMain</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>      <span class="hljs-type">View</span> <span class="hljs-variable">v</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>();<br>      v.setShapes(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(List.of(Rectangle.of(<span class="hljs-number">3</span>, <span class="hljs-number">6</span>), Circle.of(<span class="hljs-number">5</span>))));<br><br>      System.out.println(<span class="hljs-string">&quot;-- serializing --&quot;</span>);<br>      <span class="hljs-type">ObjectMapper</span> <span class="hljs-variable">om</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectMapper</span>();<br>      <span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> om.writeValueAsString(v);<br>      System.out.println(s);<br><br>      System.out.println(<span class="hljs-string">&quot;-- deserializing --&quot;</span>);<br>      <span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> om.readValue(s, View.class);<br>      System.out.println(view);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">--</span> <span class="hljs-string">serializing</span> <span class="hljs-string">--</span><br>&#123;<span class="hljs-string">&quot;shapes&quot;</span><span class="hljs-string">:</span>[&#123;<span class="hljs-string">&quot;w&quot;</span><span class="hljs-string">:3</span>,<span class="hljs-string">&quot;h&quot;</span><span class="hljs-string">:6</span>&#125;,&#123;<span class="hljs-string">&quot;radius&quot;</span><span class="hljs-string">:5</span>&#125;]&#125;<br><span class="hljs-string">--</span> <span class="hljs-string">deserializing</span> <span class="hljs-string">--</span><br><span class="hljs-string">Exception</span> <span class="hljs-string">in</span> <span class="hljs-string">thread</span> <span class="hljs-string">&quot;main&quot;</span> <span class="hljs-attr">com.fasterxml.jackson.databind.exc.InvalidDefinitionException:</span> <span class="hljs-string">Cannot</span> <span class="hljs-string">construct</span> <span class="hljs-string">instance</span> <span class="hljs-string">of</span> <span class="hljs-string">`com.logicbig.example.Shape`</span> <span class="hljs-string">(no</span> <span class="hljs-string">Creators,</span> <span class="hljs-string">like</span> <span class="hljs-string">default</span> <span class="hljs-string">construct,</span> <span class="hljs-string">exist):</span> <span class="hljs-string">abstract</span> <span class="hljs-string">types</span> <span class="hljs-string">either</span> <span class="hljs-string">need</span> <span class="hljs-string">to</span> <span class="hljs-string">be</span> <span class="hljs-string">mapped</span> <span class="hljs-string">to</span> <span class="hljs-string">concrete</span> <span class="hljs-string">types,</span> <span class="hljs-string">have</span> <span class="hljs-string">custom</span> <span class="hljs-string">deserializer,</span> <span class="hljs-string">or</span> <span class="hljs-string">contain</span> <span class="hljs-string">additional</span> <span class="hljs-string">type</span> <span class="hljs-string">information</span><br> <span class="hljs-string">at</span> [<span class="hljs-attr">Source:</span> <span class="hljs-string">(String)&quot;</span>&#123;<span class="hljs-string">&quot;shapes&quot;</span><span class="hljs-string">:</span>[&#123;<span class="hljs-string">&quot;w&quot;</span><span class="hljs-string">:3</span>,<span class="hljs-string">&quot;h&quot;</span><span class="hljs-string">:6</span>&#125;,&#123;<span class="hljs-string">&quot;radius&quot;</span><span class="hljs-string">:5</span>&#125;]&#125;<span class="hljs-string">&quot;; line: 1, column: 12] (through reference chain: com.logicbig.example.View[&quot;</span><span class="hljs-string">shapes&quot;</span>]<span class="hljs-string">-&gt;java.util.ArrayList[0])</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.DeserializationContext.reportBadDefinition(DeserializationContext.java:1451)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.DeserializationContext.handleMissingInstantiator(DeserializationContext.java:1027)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.AbstractDeserializer.deserialize(AbstractDeserializer.java:265)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:286)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:245)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:27)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:127)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:288)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:151)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4013)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3004)</span><br>	<span class="hljs-string">at</span> <span class="hljs-string">com.logicbig.example.ExampleMain.main(ExampleMain.java:18)</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Using-JsonTypeInfo"><a href="#Using-JsonTypeInfo" class="headerlink" title="Using @JsonTypeInfo"></a>Using @JsonTypeInfo</h2><p>This annotation is used to serialize information about actual class of polymorphic instances, so that Jackson can know what subtype is to be deserialized. Let’s fix about exception by using this annotation:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-meta">@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = &quot;className&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Shape</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Above configuration specifies that the qualified class name should be used (use = JsonTypeInfo.Id.CLASS) and persist that as JSON property (include = JsonTypeInfo.As.PROPERTY). The property name should be ‘className’.<br>Let’s run our main method again:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">--</span> <span class="hljs-string">serializing</span> <span class="hljs-string">--</span><br>&#123;<span class="hljs-string">&quot;shapes&quot;</span><span class="hljs-string">:</span>[&#123;<span class="hljs-string">&quot;className&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Rectangle&quot;</span>,<span class="hljs-string">&quot;w&quot;</span><span class="hljs-string">:3</span>,<span class="hljs-string">&quot;h&quot;</span><span class="hljs-string">:6</span>&#125;,&#123;<span class="hljs-string">&quot;className&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Circle&quot;</span>,<span class="hljs-string">&quot;radius&quot;</span><span class="hljs-string">:5</span>&#125;]&#125;<br><span class="hljs-string">--</span> <span class="hljs-string">deserializing</span> <span class="hljs-string">--</span><br><span class="hljs-string">View&#123;shapes=[Rectangle&#123;w=3,</span> <span class="hljs-string">h=6&#125;,</span> <span class="hljs-string">Circle&#123;radius=5&#125;]&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>In above configuration if we skip optional elements, ‘include’ and ‘property’, then defaults will be used. The default ‘include’ is also JsonTypeInfo.As.PROPERTY and default ‘property’ is @class. So our example will be:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Shape</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>which will be serialized as:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yml">&#123;<span class="hljs-string">&quot;shapes&quot;</span><span class="hljs-string">:</span>[&#123;<span class="hljs-string">&quot;@class&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Rectangle&quot;</span>,<span class="hljs-string">&quot;w&quot;</span><span class="hljs-string">:3</span>,<span class="hljs-string">&quot;h&quot;</span><span class="hljs-string">:6</span>&#125;,&#123;<span class="hljs-string">&quot;@class&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Circle&quot;</span>,<span class="hljs-string">&quot;radius&quot;</span><span class="hljs-string">:5</span>&#125;]&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="Using-JsonTypeInfo-on-properties"><a href="#Using-JsonTypeInfo-on-properties" class="headerlink" title="Using @JsonTypeInfo on properties"></a>Using @JsonTypeInfo on properties</h2><p>@JsonTypeInfo annotation can be used both on classes (above example) and properties. In our example using the annotation on ‘shapes’ property:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">View</span> &#123;<br>    <span class="hljs-meta">@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = &quot;className&quot;)</span><br>    <span class="hljs-keyword">private</span> List&lt;Shape&gt; shapes;<br>    <br>&#125; <br></code></pre></td></tr></table></figure>
+<p>If this annotation exists on both class and property, then the one on property has precedence, as it is considered more specific.</p>
+<p>When used on properties (fields, methods), this annotation applies to values. That means when used on collection types (Collection, Map, arrays) it will apply to the elements, not the collection itself. For non-collection types there is no difference. In above snippet when we used it on ‘shapes’ list, it is applied on each element (Shape) of the List rather than List type itself.</p>
+<h2 id="Using-JsonTypeInfo-Id-MINIMAL-CLASS"><a href="#Using-JsonTypeInfo-Id-MINIMAL-CLASS" class="headerlink" title="Using JsonTypeInfo.Id.MINIMAL_CLASS"></a>Using JsonTypeInfo.Id.MINIMAL_CLASS</h2><p>use = JsonTypeInfo.Id.MINIMAL_CLASS option will serialize minimal relative package path. Check out complete example <a target="_blank" rel="noopener" href="https://www.logicbig.com/examples/jackson/jackson-json-type-info-annotation-with-minimal-class.html">here</a>.</p>
+<h2 id="Using-ObjectMapper-enableDefaultTyping"><a href="#Using-ObjectMapper-enableDefaultTyping" class="headerlink" title="Using ObjectMapper.enableDefaultTyping()"></a>Using ObjectMapper.enableDefaultTyping()</h2><p>This method can be used to enable global automatic inclusion of type information in cases where polymorphic types are used.</p>
+<p>Let’s use this method in our example:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExampleMain2</span> &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>      <span class="hljs-type">View</span> <span class="hljs-variable">v</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>();<br>      v.setShapes(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(List.of(Rectangle.of(<span class="hljs-number">3</span>, <span class="hljs-number">6</span>), Circle.of(<span class="hljs-number">5</span>))));<br><br>      System.out.println(<span class="hljs-string">&quot;-- serializing --&quot;</span>);<br>      <span class="hljs-type">ObjectMapper</span> <span class="hljs-variable">om</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectMapper</span>();<br>      om.enableDefaultTyping(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY);<br><br>      <span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> om.writeValueAsString(v);<br>      System.out.println(s);<br><br>      System.out.println(<span class="hljs-string">&quot;-- deserializing --&quot;</span>);<br>      <span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> om.readValue(s, View.class);<br>      System.out.println(view);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">--</span> <span class="hljs-string">serializing</span> <span class="hljs-string">--</span><br>&#123;<span class="hljs-string">&quot;shapes&quot;</span><span class="hljs-string">:</span>[<span class="hljs-string">&quot;java.util.ArrayList&quot;</span>,[&#123;<span class="hljs-string">&quot;@class&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Rectangle&quot;</span>,<span class="hljs-string">&quot;w&quot;</span><span class="hljs-string">:3</span>,<span class="hljs-string">&quot;h&quot;</span><span class="hljs-string">:6</span>&#125;,&#123;<span class="hljs-string">&quot;@class&quot;</span><span class="hljs-string">:&quot;com.logicbig.example.Circle&quot;</span>,<span class="hljs-string">&quot;radius&quot;</span><span class="hljs-string">:5</span>&#125;]]&#125;<br><span class="hljs-string">--</span> <span class="hljs-string">deserializing</span> <span class="hljs-string">--</span><br><span class="hljs-string">View&#123;shapes=[Rectangle&#123;w=3,</span> <span class="hljs-string">h=6&#125;,</span> <span class="hljs-string">Circle&#123;radius=5&#125;]&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>In above example DefaultTyping.OBJECT_AND_NON_CONCRETE specifies that default typing will be used for properties with declared type of java.lang.Object or an abstract type (abstract class or interface, Shape in our example).</p>
+<p>Note that in above output the actual type of List<Shape> is also persisted as ArrayList. That’s because List is also a non-concrete type.</p>
+<h2 id="Example-Project"><a href="#Example-Project" class="headerlink" title="Example Project"></a>Example Project</h2><p>Dependencies and Technologies Used:</p>
+<ul>
+<li>ackson-databind 2.9.6: General data-binding functionality for Jackson: works on core streaming API.</li>
+<li>JDK 10 </li>
+<li>Maven 3.3.9</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.logicbig.com/tutorials/misc/jackson/jackson-json-type-info-annotation.html">Jackson JSON - Using @JsonTypeInfo annotation to handle polymorphic types</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/Jackson/">#Jackson</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JsonTypeInfo annotation usage</div>
+      <div>https://baymax55.github.io/2022/07/21/java/Using @JsonTypeInfo annotation to handle polymorphic types/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月21日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/21/k8s/Kubernetes%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="Kubernetes网络模型的基础知识">
+                        <span class="hidden-mobile">Kubernetes网络模型的基础知识</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
