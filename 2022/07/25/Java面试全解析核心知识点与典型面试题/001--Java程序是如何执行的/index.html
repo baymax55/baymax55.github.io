@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/interview.png">
 <meta property="article:published_time" content="2022-07-25T07:09:57.585Z">
-<meta property="article:modified_time" content="2022-07-25T09:35:07.791Z">
+<meta property="article:modified_time" content="2022-07-26T09:28:05.565Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary_large_image">
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.3k 字
+          5k 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          45 分钟
+          42 分钟
         
       </span>
     
@@ -282,7 +282,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月25日 下午
+                    本文最后更新于：2022年7月26日 下午
                   
                 
               </p>
@@ -372,51 +372,20 @@
 </ul>
 <p>总体来说，JDK 提供了一整套的 Java 运行和开发环境，通常使用对象为 Java 的开发者，当然 JDK 也包含了 JRE；而 JRE 为 Java<br>运行的最小运行单元，一般安装在 Java 服务器上，所以 JDK 和 JRE 可以从用途上进行理解和区分。JVM 不同于 JDK 和 JRE，JVM 是<br>Java 程序运行的载体，Java 程序只有通过 JVM 才能正常的运行。</p>
 <h4 id="4-Java-中如何获取明天此刻的时间？"><a href="#4-Java-中如何获取明天此刻的时间？" class="headerlink" title="4. Java 中如何获取明天此刻的时间？"></a>4. Java 中如何获取明天此刻的时间？</h4><p>答：JDK 8 之前使用 <code>Calendar.add()</code> 方法获取，代码如下：</p>
-<pre><code class="hljs">Calendar calendar = Calendar.getInstance();
-calendar.add(Calendar.DATE, 1);
-System.out.println(calendar.getTime());
-</code></pre>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">Calendar</span> <span class="hljs-string">calendar</span> <span class="hljs-string">=</span> <span class="hljs-string">Calendar.getInstance();</span><br><span class="hljs-string">calendar.add(Calendar.DATE,</span> <span class="hljs-number">1</span><span class="hljs-string">);</span><br><span class="hljs-string">System.out.println(calendar.getTime());</span><br></code></pre></td></tr></table></figure>
+
 <p>JDK 8 有两种获取明天时间的方法。</p>
 <p>方法一，使用 <code>LocalDateTime.plusDays()</code> 方法获取，代码如下：</p>
-<pre><code class="hljs">LocalDateTime today = LocalDateTime.now();
-LocalDateTime tomorrow = today.plusDays(1);
-System.out.println(tomorrow);
-</code></pre>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">LocalDateTime</span> <span class="hljs-string">today</span> <span class="hljs-string">=</span> <span class="hljs-string">LocalDateTime.now();</span><br><span class="hljs-string">LocalDateTime</span> <span class="hljs-string">tomorrow</span> <span class="hljs-string">=</span> <span class="hljs-string">today.plusDays(1);</span><br><span class="hljs-string">System.out.println(tomorrow);</span><br></code></pre></td></tr></table></figure>
+
 <p>方法二，使用 <code>LocalDateTime.minusDays()</code> 方法获取，代码如下：</p>
-<pre><code class="hljs">LocalDateTime today = LocalDateTime.now();
-LocalDateTime tomorrow = today.minusDays(-1);
-System.out.println(tomorrow);
-</code></pre>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">LocalDateTime</span> <span class="hljs-string">today</span> <span class="hljs-string">=</span> <span class="hljs-string">LocalDateTime.now();</span><br><span class="hljs-string">LocalDateTime</span> <span class="hljs-string">tomorrow</span> <span class="hljs-string">=</span> <span class="hljs-string">today.minusDays(-1);</span><br><span class="hljs-string">System.out.println(tomorrow);</span><br></code></pre></td></tr></table></figure>
 <p><code>minusDays()</code> 方法为当前时间减去 n 天，传负值就相当于当前时间加 n 天。</p>
 <h4 id="5-Java-中如何跳出多重嵌套循环？"><a href="#5-Java-中如何跳出多重嵌套循环？" class="headerlink" title="5. Java 中如何跳出多重嵌套循环？"></a>5. Java 中如何跳出多重嵌套循环？</h4><p>答：Java 中跳出多重嵌套循环的两种方式。</p>
 <ul>
 <li>方法一：定义一个标号，使用 break 加标号的方式</li>
 <li>方法二：使用全局变量终止循环</li>
 </ul>
-<p>方法一，示例代码：</p>
-<pre><code class="hljs">myfor:for (int i = 0; i &lt; 100; i++) &#123;
-    for (int j = 0; j &lt; 100; j++) &#123;
-        System.out.println(&quot;J:&quot; + j);
-        if (j == 10) &#123;
-            // 跳出多重循环
-            break myfor;
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<p>方法二，示例代码：</p>
-<pre><code class="hljs">boolean flag = true;
-for (int i = 0; i &lt; 100 &amp;&amp; flag; i++) &#123;
-    for (int j = 0; j &lt; 100; j++) &#123;
-        System.out.println(&quot;J:&quot; + j);
-        if (j == 10) &#123;
-            // 跳出多重循环
-            flag = false;
-            break;
-        &#125;
-    &#125;
-&#125;
-</code></pre>
 <h4 id="6-char-变量能不能存贮一个中文汉字？为什么？"><a href="#6-char-变量能不能存贮一个中文汉字？为什么？" class="headerlink" title="6. char 变量能不能存贮一个中文汉字？为什么？"></a>6. char 变量能不能存贮一个中文汉字？为什么？</h4><p>英文字母和中文汉字在不同字符集编码下的字节数</p>
 <p>英文字母：</p>
 <p>字节数 : 1;编码：GB2312</p>
@@ -530,6 +499,12 @@ for (int i = 0; i &lt; 100 &amp;&amp; flag; i++) &#123;
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/07/26/Java%E9%9D%A2%E8%AF%95%E5%85%A8%E8%A7%A3%E6%9E%90%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%85%B8%E5%9E%8B%E9%9D%A2%E8%AF%95%E9%A2%98/025--Spring%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA+%E9%9D%A2%E8%AF%95%E9%A2%98/" title="025--Spring核心功能演示+面试题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">025--Spring核心功能演示+面试题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
