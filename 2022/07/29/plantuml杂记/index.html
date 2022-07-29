@@ -16,25 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="LockSupport 使用">
+    <meta name="description" content="plantuml杂记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发编程之LockSupport">
-<meta property="og:url" content="https://baymax55.github.io/2022/07/29/java/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BLockSupport/index.html">
+<meta property="og:title" content="plantuml杂记">
+<meta property="og:url" content="https://baymax55.github.io/2022/07/29/plantuml%E6%9D%82%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="LockSupport 使用">
+<meta property="og:description" content="plantuml杂记">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
-<meta property="article:published_time" content="2022-07-29T01:23:30.436Z">
-<meta property="article:modified_time" content="2022-07-29T01:48:48.001Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/mockito.png">
+<meta property="article:published_time" content="2022-07-29T03:12:38.607Z">
+<meta property="article:modified_time" content="2022-07-29T09:01:41.164Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="java">
-<meta property="article:tag" content="juc">
+<meta property="article:tag" content="plantuml">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/mockito.png">
   
   
   
-  <title>Java并发编程之LockSupport - Baymax55&#39;s Blog</title>
+  <title>plantuml杂记 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Java并发编程之LockSupport"></span>
+            <span id="subtitle" data-typed-text="plantuml杂记"></span>
           
         </div>
 
@@ -209,7 +208,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-07-29 09:23" pubdate>
+        <time datetime="2022-07-29 11:12" pubdate>
           2022年7月29日 上午
         </time>
       </span>
@@ -221,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          175 字
         
       </span>
     
@@ -232,7 +231,7 @@
         
         
         
-          26 分钟
+          2 分钟
         
       </span>
     
@@ -278,60 +277,23 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Java并发编程之LockSupport</h1>
+            <h1 style="display: none">plantuml杂记</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月29日 上午
+                    本文最后更新于：2022年7月29日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>LockSupport是一个工具类，提供了基本的线程阻塞和唤醒功能</strong>，它是创建锁和其他同步组件的基础工具，内部是使用sun.misc.Unsafe类实现的。</p>
-<p>LockSupport和使用它的线程都会关联一个许可，park方法表示消耗一个许可，调用park方法时，如果许可可用则park方法返回，如果没有许可则一直阻塞直到许可可用。unpark方法表示增加一个许可，多次调用并不会积累许可，因为许可数最大值为1。</p>
-<h2 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h2><p><strong>park()：</strong> 阻塞当前线程，直到unpark方法被调用或当前线程被中断，park方法才会返回。</p>
-<p><strong>park(Object blocker)：</strong> 同park()方法，多了一个阻塞对象blocker参数。</p>
-<p><strong>parkNanos(long nanos)：</strong> 同park方法，nanos表示最长阻塞超时时间，超时后park方法将自动返回。</p>
-<p><strong>parkNanos(Object blocker, long nanos)：</strong> 同parkNanos(long nanos)方法，多了一个阻塞对象blocker参数。</p>
-<p><strong>parkUntil(long deadline)：</strong> 同park()方法，deadline参数表示最长阻塞到某一个时间点，当到达这个时间点，park方法将自动返回。（该时间为从1970年到现在某一个时间点的毫秒数）</p>
-<p><strong>parkUntil(Object blocker, long deadline)：</strong> 同parkUntil(long deadline)方法，多了一个阻塞对象blocker参数。</p>
-<p><strong>unpark(Thread thread)：</strong> 唤醒处于阻塞状态的线程thread。</p>
-<h2 id="阻塞和唤醒实例"><a href="#阻塞和唤醒实例" class="headerlink" title="阻塞和唤醒实例"></a>阻塞和唤醒实例</h2><p>子线程执行LockSupport.park()，由于没有许可，进入阻塞状态。主线程3秒后调用unpark方法给子线程增加了一个许可，park方法返回，子线程被唤醒继续执行。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;do something start&quot;</span>);<br>            LockSupport.park();<br>            System.out.println(<span class="hljs-string">&quot;do something end&quot;</span>);<br>        &#125;);<br><br>        thread.start();<br>        Thread.sleep(<span class="hljs-number">3000</span>);<br><br>        System.out.println(<span class="hljs-string">&quot;给子线程thread增加一个许可&quot;</span>);<br>        LockSupport.unpark(thread);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 输出结果：</span><br><span class="hljs-comment"> * do something start</span><br><span class="hljs-comment"> * 给子线程thread增加一个许可</span><br><span class="hljs-comment"> * do something end</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>
-
-<p>先unpark增加许可，后park消费许可也是可以的。unpark会给thread增加一个许可，此时调用park方法，由于许可是可用的，所以park方法直接返回了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;do something start&quot;</span>);<br>            System.out.println(<span class="hljs-string">&quot;子线程thread给自己增加一个许可&quot;</span>);<br>            LockSupport.unpark(Thread.currentThread());<br>            LockSupport.park();<br>            System.out.println(<span class="hljs-string">&quot;do something end&quot;</span>);<br>        &#125;);<br><br>        thread.start();<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 输出结果：</span><br><span class="hljs-comment"> * do something start</span><br><span class="hljs-comment"> * 子线程thread给自己增加一个许可</span><br><span class="hljs-comment"> * do something end</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>
-
-
-<p>连续调用unpark不会累计许可，许可最大值为1，第一次park就已经消耗了许可，所以第二次park一直阻塞。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;do something start&quot;</span>);<br><br>            LockSupport.unpark(Thread.currentThread());<br>            System.out.println(<span class="hljs-string">&quot;unpark 1&quot;</span>);<br>            LockSupport.unpark(Thread.currentThread());<br>            System.out.println(<span class="hljs-string">&quot;unpark 2&quot;</span>);<br><br>            LockSupport.park();<br>            System.out.println(<span class="hljs-string">&quot;park 1&quot;</span>);<br>            LockSupport.park();<br>            System.out.println(<span class="hljs-string">&quot;park 2&quot;</span>);<br><br>            System.out.println(<span class="hljs-string">&quot;do something end&quot;</span>);<br>        &#125;);<br><br>        thread.start();<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 输出结果：</span><br><span class="hljs-comment"> * do something start</span><br><span class="hljs-comment"> * unpark 1</span><br><span class="hljs-comment"> * unpark 2</span><br><span class="hljs-comment"> * park 1</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>
-
-
-<h2 id="阻塞对象blocker的作用"><a href="#阻塞对象blocker的作用" class="headerlink" title="阻塞对象blocker的作用"></a>阻塞对象blocker的作用</h2><p>通过前面方法介绍可以看到，park、parkNanos、parkUntil方法都有对应的带阻塞对象blocker参数的重载方法。Thread类有一个变量为parkBlocker，对应的就是LockSupport的park等方法设置进去的阻塞对象。</p>
-<p><strong>该参数主要用于问题排查和系统监控，在线程dump中会显示该参数的信息，有利于问题定位。</strong></p>
-<p>分别调用park()和park(Object blocker)，然后使用jstack查看线程堆栈信息，对比发现后者会多输出一条阻塞对象的信息：</p>
-<p>park():</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        LockSupport.park();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<p><img src="1.png" srcset="/img/loading.gif" lazyload></p>
-<p>park(Object blocker):</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        LockSupport.park(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Demo</span>());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-<p><img src="2.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="和显式锁、隐式锁等待唤醒的区别"><a href="#和显式锁、隐式锁等待唤醒的区别" class="headerlink" title="和显式锁、隐式锁等待唤醒的区别"></a>和显式锁、隐式锁等待唤醒的区别</h2><ol>
-<li> park和unpark方法的调用不需要获取锁。</li>
-<li> 先调用unpark方法后调用park方法依然可以唤醒。</li>
-<li> park方法响应中断，线程被中断后park方法直接返回，但是不会InterruptedException异常。</li>
-<li> unpark方法是直接唤醒指定的线程。</li>
-</ol>
+              <h2 id="活动图"><a href="#活动图" class="headerlink" title="活动图"></a>活动图</h2><p>活动图(activity diagram)是工作流的图形化表示。活动图主要由活动和动作构成，也可以支持分支选择、迭代、并行。在 UML 中，活动图主要用于为计算性和组织性过程(即工作流)建模，相关活动之间的数据流也在其覆盖范围之内。活动图主要是用来说明控制流，不过也可以显示数据在各数据存储之间的流动。</p>
+<h3 id="示例图"><a href="#示例图" class="headerlink" title="示例图"></a>示例图</h3><p><img src="http://www.plantuml.com/plantuml/svg/PL5BRi8m4Dtx5BCa6mwGB8g4rAex12Umd1UmC7Ow7XTn-yOsZb1PPJBlepVFkoYQ9TsSAeFgzywQwmdywo3RY_QZmn4_2L4stQ1wZplD-en1sOasXsNQ1d-2IMpbiR_0N3kI2pnjX1CwHTG_IT_U5WkYhBJnC_1Ty_ZH-3vaTkPpC8YHJF32mSKigQAyiJw1vagn_lmc9ueIvZB2ZtPIgzh6GuYo2Xw8JT4YPhn698ABQAwld2-ibEh_2XwN5RZY5Qqsaru-dQghqjmOY35QXdbBr3UWdJaKbmLv2gVQtFib_RDJulfYW_f_HryJbYSamMrsMh2cRG5BWxlb9ztS7m00" srcset="/img/loading.gif" lazyload></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/seve/p/14555740.html">Java并发编程之LockSupport</a></li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%B4%BB%E5%8A%A8%E5%9B%BE">活动图</a></li>
+<li><a target="_blank" rel="noopener" href="https://plantuml.com/">plantuml</a></li>
 </ul>
 
               
@@ -365,9 +327,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/java/">#java</a>
-      
-        <a href="/tags/juc/">#juc</a>
+        <a href="/tags/plantuml/">#plantuml</a>
       
     </div>
   
@@ -379,8 +339,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Java并发编程之LockSupport</div>
-      <div>https://baymax55.github.io/2022/07/29/java/Java并发编程之LockSupport/</div>
+      <div>plantuml杂记</div>
+      <div>https://baymax55.github.io/2022/07/29/plantuml杂记/</div>
     </div>
     <div class="license-meta">
       
@@ -417,29 +377,6 @@
 
 
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2022/07/29/java/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCondition/" title="Java并发编程之Condition">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java并发编程之Condition</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2022/07/28/Java%E9%9D%A2%E8%AF%95%E5%85%A8%E8%A7%A3%E6%9E%90%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%85%B8%E5%9E%8B%E9%9D%A2%E8%AF%95%E9%A2%98/033--Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" title="033--Redis面试题汇总">
-                        <span class="hidden-mobile">033--Redis面试题汇总</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
