@@ -4,6 +4,58 @@
   
   
   <entry>
+    <title>以windows服务的方式运行FRP</title>
+    <link href="/2022/08/08/network/%E4%BB%A5windows%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8CFRP/"/>
+    <url>/2022/08/08/network/%E4%BB%A5windows%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8CFRP/</url>
+    
+    <content type="html"><![CDATA[<p>前几天看见有人在frp提<a href="https://github.com/fatedier/frp/issues/1901">工单</a>问是否可以支持windows服务,正好有解决类似问题的经验，于是给作者提了一个PR，不过作者表示：</p><ol><li> 类似脚本打算放到专门的仓库中维护</li><li> 那个专门仓库目前无人维护</li></ol><p>那就是没法了，只能记在自己的小本子上了。</p><p>效果演示</p><p><img src="1.png"></p><h2 id="Run-frp-as-Windows-service"><a href="#Run-frp-as-Windows-service" class="headerlink" title="Run frp as Windows service"></a><a href="#Run-frp-as-Windows-service" title="Run frp as Windows service"></a>Run <code>frp</code> as Windows service</h2><ol><li> Download <a href="https://github.com/winsw/winsw/releases">winsw</a>(<code>WinSW.NET2.exe</code> means need <code>.NET 2.0</code> runtime,and so on),Rename it to <code>frpc-service.exe</code> and <code>frps-service.exe</code> .</li><li> Put <code>frpc-service.xml</code> and <code>frpc-service.xml</code> to same directory as <code>frp*-service.exe</code> .</li><li> Default location of frp is <code>C:\frp</code>, you can edit the xml config file.</li></ol><p>install service</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp client</span>  <br>frpc-service.exe install   <br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp server</span>  <br>frps-service.exe install <br></code></pre></td></tr></table></figure><blockquote><p>You will see frp service in windows service manager</p></blockquote><p>uninstall service</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp client</span>  <br>frpc-service.exe uninstall   <br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp server</span>  <br>frps-service.exe uninstall  <br></code></pre></td></tr></table></figure><h2 id="以Windows服务的方式运行frp"><a href="#以Windows服务的方式运行frp" class="headerlink" title="以Windows服务的方式运行frp"></a><a href="#%E4%BB%A5Windows%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8Cfrp" title="以Windows服务的方式运行frp"></a>以Windows服务的方式运行<code>frp</code></h2><ol><li> 下载<a href="https://github.com/winsw/winsw/releases">winsw</a>(它有多个运行时版本,<code>WinSW.NET2.exe</code> 的意思是需要安装 <code>.NET 2.0</code> ),然后将其分别重命名为两个文件: <code>frpc-service.exe</code> 和<code>frps-service.exe</code> .</li><li> 将<code>frpc-service.xml</code> 和 <code>frpc-service.xml</code> 放到 <code>frp*-service.exe</code> 相同的目录下.</li><li> 默认的frp安装目录是 <code>C:\frp</code>, 你可以在xml配置文件中修改。</li></ol><p>创建服务</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp client</span>  <br>frpc-service.exe install   <br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp server</span>  <br>frps-service.exe install  <br></code></pre></td></tr></table></figure><blockquote><p>服务创建后你在Windows的服务管理器里面就能看见frp服务了</p></blockquote><p>服务卸载</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp client</span>  <br>frpc-service.exe uninstall   <br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">for</span> frp server</span>  <br>frps-service.exe uninstall  <br></code></pre></td></tr></table></figure><h2 id="脚本-scripts"><a href="#脚本-scripts" class="headerlink" title="脚本(scripts)"></a><a href="#%E8%84%9A%E6%9C%AC-scripts" title="脚本(scripts)"></a>脚本(scripts)</h2><h3 id="frps-service-xml"><a href="#frps-service-xml" class="headerlink" title="frps-service.xml"></a><a href="#frps-service-xml" title="frps-service.xml"></a>frps-service.xml</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml">&lt;service\&gt;  <br>  <span class="hljs-comment">&lt;!-- ID of the service. It should be unique across the Windows system--&gt;</span>  <br>  &lt;id\&gt;frps&lt;/id\&gt;  <br>  <span class="hljs-comment">&lt;!-- Display name of the service --&gt;</span>  <br>  &lt;name\&gt;frp server&lt;/name\&gt;  <br>  <span class="hljs-comment">&lt;!-- Service description --&gt;</span>  <br>  &lt;description\&gt;Service for frp server&lt;/description\&gt;  <br>  <span class="hljs-comment">&lt;!-- frp install dir --&gt;</span>  <br>  &lt;workingdirectory\&gt;C:\\frp&lt;/workingdirectory\&gt;  <br>  <span class="hljs-comment">&lt;!-- frps.exe --&gt;</span>  <br>  &lt;executable\&gt;C:\\frp\\frps.exe&lt;/executable\&gt;  <br>  <span class="hljs-comment">&lt;!-- args --&gt;</span>  <br>  &lt;startarguments\&gt;\-c frps.ini&lt;/startarguments\&gt;  <br>&lt;/service\&gt;  <br></code></pre></td></tr></table></figure><h3 id="frps-service-xml-1"><a href="#frps-service-xml-1" class="headerlink" title="frps-service.xml"></a><a href="#frps-service-xml-1" title="frps-service.xml"></a>frps-service.xml</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml">&lt;service\&gt;  <br>  <span class="hljs-comment">&lt;!-- ID of the service. It should be unique across the Windows system--&gt;</span>  <br>  &lt;id\&gt;frpc&lt;/id\&gt;  <br>  <span class="hljs-comment">&lt;!-- Display name of the service --&gt;</span>  <br>  &lt;name\&gt;frp client&lt;/name\&gt;  <br>  <span class="hljs-comment">&lt;!-- Service description --&gt;</span>  <br>  &lt;description\&gt;Service for frp client&lt;/description\&gt;  <br>  <span class="hljs-comment">&lt;!-- frp install dir --&gt;</span>  <br>  &lt;workingdirectory\&gt;C:\\frp&lt;/workingdirectory\&gt;  <br>  <span class="hljs-comment">&lt;!-- frpc.exe --&gt;</span>  <br>  &lt;executable\&gt;C:\\frp\\frpc.exe&lt;/executable\&gt;  <br>  <span class="hljs-comment">&lt;!-- args --&gt;</span>  <br>  &lt;startarguments\&gt;\-c frpc.ini&lt;/startarguments\&gt;  <br>&lt;/service\&gt;  <br></code></pre></td></tr></table></figure><h2 id="screenshot"><a href="#screenshot" class="headerlink" title="screenshot"></a><a href="#screenshot" title="screenshot"></a>screenshot</h2><p>frp install dir</p><p><img src="2.png"></p><p>service wrapper dir</p><p><img src="3.png"></p><p>install service</p><p><img src="4.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="http://note.eta.pub/2020/07/21/frp-windows-service/">以windows服务的方式运行FRP</a></li><li><a href="https://github.com/winsw/winsw/releases">winsw</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>frp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>丑陋的中国人</title>
+    <link href="/2022/08/08/book/%E4%B8%91%E9%99%8B%E7%9A%84%E4%B8%AD%E5%9B%BD%E4%BA%BA/"/>
+    <url>/2022/08/08/book/%E4%B8%91%E9%99%8B%E7%9A%84%E4%B8%AD%E5%9B%BD%E4%BA%BA/</url>
+    
+    <content type="html"><![CDATA[<p><img src="%E4%B8%91%E9%99%8B%E7%9A%84%E4%B8%AD%E5%9B%BD%E4%BA%BA.png"></p><h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p>柏杨</p><h2 id="原文摘录"><a href="#原文摘录" class="headerlink" title="原文摘录"></a>原文摘录</h2><ul><li><p><strong>没有包容性的性格，如此这般狭窄的心胸，造成中国人两个极端，不够平衡。一方面是绝对的自卑，一方面是绝对的自傲。 自卑的时候，成了奴才；自傲的时候，成了主人！独独的，没有自尊。自卑的时候觉得自己是团狗屎，和权势走得越近，脸上的笑容越多。 自傲的时候觉得其他人都是狗屎，不屑一顾；变成了一种人格分裂的奇异动物。</strong></p></li><li><p><strong>”算了算了”四个字，不知害死了多少中国人，使我们民族的元气，受到挫伤。这种神经质的恐惧，是培养暴君、暴官最好的温床，所以中国的暴君、暴官，永远不会绝迹。 中国传统文化里———各位在《资治通鉴》中可以看到———一再强调明哲保身，暴君暴官最喜欢、最欣赏的就是人民明哲保身，所以中国人就越来越堕落萎缩</strong>。</p></li><li><p><strong>一个人生活在世上，就好像水泥搅拌器里的石子一样，运转起来之后，身不由主。使我们感到，不是某一个人的问题，而是社会问题，而是文化问题。 耶稣临死的时候说：＂宽容他们！他们做的他们不知道。</strong></p></li></ul><h2 id="短评"><a href="#短评" class="headerlink" title="短评"></a>短评</h2><ul><li><strong>这本书创作于十年文革结束，中国从动乱中开始觉醒的这个特殊时间，创作背景很特殊，但其中有些观点评论依旧适用于今日的中国。 有人说作者有些偏激，但有些观点确实就是这个社会的现状。这本书毁誉参半，我认为应该用历史观，辩证地看待它，还是有不小意义的。</strong></li></ul><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://book.douban.com/subject/1027247/">豆瓣读书</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>book</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>文学</tag>
+      
+      <tag>柏杨</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java ThreadLocal</title>
     <link href="/2022/08/08/java/threadlocal/"/>
     <url>/2022/08/08/java/threadlocal/</url>
