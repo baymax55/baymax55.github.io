@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java ThreadLocal">
+<meta property="og:url" content="https://baymax55.github.io/2022/08/08/java/threadlocal/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta property="article:published_time" content="2022-08-08T03:09:46.267Z">
+<meta property="article:modified_time" content="2022-08-08T03:27:11.744Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="ThreadLocal">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+  
+  
+  
+  <title>Java ThreadLocal - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java ThreadLocal"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-08 11:09" pubdate>
+          2022年8月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java ThreadLocal</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年8月8日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>The <em>Java</em> <em>ThreadLocal</em> class enables you to create variables that can only be read and written by the same thread. Thus, even if two threads are executing the same code, and the code has a reference to the same <code>ThreadLocal</code> variable, the two threads cannot see each other’s <code>ThreadLocal</code> variables. Thus, the Java ThreadLocal class provides a simple way to make code <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-concurrency/thread-safety.html">thread safe</a> that would not otherwise be so.</p>
+<h2 id="Java-ThreadLocal-Tutorial-Video"><a href="#Java-ThreadLocal-Tutorial-Video" class="headerlink" title="Java ThreadLocal Tutorial Video"></a>Java ThreadLocal Tutorial Video</h2><p>If you prefer video, I have a video version of this Java ThreadLocal tutorial here:<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=a_BoqsnVR2U&list=PLL8woMHwr36EDxjUoCzboZjedsnhLP1j4&index=9" title="Java ThreadLocal Tutorial Video">Java ThreadLocal Tutorial</a></p>
+<h2 id="Creating-a-ThreadLocal"><a href="#Creating-a-ThreadLocal" class="headerlink" title="Creating a ThreadLocal"></a>Creating a ThreadLocal</h2><p>You create a <code>ThreadLocal</code> instance just like you create any other Java object - via the <code>new</code> operator. Here is an example that shows how to create a <code>ThreadLocal</code> variable:</p>
+<p>private ThreadLocal threadLocal = new ThreadLocal();</p>
+<p>This only needs to be done once per thread. Multiple threads can now get and set values inside this <code>ThreadLocal</code>, and each thread will only see the value it set itself.</p>
+<h2 id="Set-ThreadLocal-Value"><a href="#Set-ThreadLocal-Value" class="headerlink" title="Set ThreadLocal Value"></a>Set ThreadLocal Value</h2><p>Once a <code>ThreadLocal</code> has been created you can set the value to be stored in it using its <code>set()</code> method.</p>
+<p>threadLocal.set(“A thread local value”);</p>
+<h2 id="Get-ThreadLocal-Value"><a href="#Get-ThreadLocal-Value" class="headerlink" title="Get ThreadLocal Value"></a>Get ThreadLocal Value</h2><p>You read the value stored in a <code>ThreadLocal</code> using its <code>get()</code> method. Here is an example obtaining the value stored inside a Java <code>ThreadLocal</code>:</p>
+<p>String threadLocalValue = (String) threadLocal.get();</p>
+<h2 id="Remove-ThreadLocal-Value"><a href="#Remove-ThreadLocal-Value" class="headerlink" title="Remove ThreadLocal Value"></a>Remove ThreadLocal Value</h2><p>It is possible to remove a value set in a ThreadLocal variable. You remove a value by calling the <code>ThreadLocal</code> <code>remove()</code> method. Here is an example of removing the value set on a Java <code>ThreadLocal</code>:</p>
+<p>threadLocal.remove();</p>
+<h2 id="Generic-ThreadLocal"><a href="#Generic-ThreadLocal" class="headerlink" title="Generic ThreadLocal"></a>Generic ThreadLocal</h2><p>You can create a <code>ThreadLocal</code> with a generic type. Using a generic type only objects of the generic type can be set as value on the <code>ThreadLocal</code>. Additionally, you do not have to typecast the value returned by <code>get()</code>. Here is a generic <code>ThreadLocal</code> example:</p>
+<p>private ThreadLocal<String> myThreadLocal = new ThreadLocal<String>();</p>
+<p>Now you can only store strings in the <code>ThreadLocal</code> instance. Additionally, you do not need to typecast the value obtained from the <code>ThreadLocal</code>:</p>
+<p>myThreadLocal.set(“Hello ThreadLocal”);</p>
+<p>String threadLocalValue = myThreadLocal.get();</p>
+<h2 id="Initial-ThreadLocal-Value"><a href="#Initial-ThreadLocal-Value" class="headerlink" title="Initial ThreadLocal Value"></a>Initial ThreadLocal Value</h2><p>It is possible to set an initial value for a Java <code>ThreadLocal</code> which will get used the first time <code>get()</code> is called - before <code>set()</code> has been called with a new value. You have two options for specifying an initial value for a ThreadLocal:</p>
+<ul>
+<li>  Create a ThreadLocal subclass that overrides the <code>initialValue()</code> method.</li>
+<li>  Create a ThreadLocal with a <code>Supplier</code> interface implementation.</li>
+</ul>
+<p>I will show you both options in the following sections.</p>
+<h3 id="Override-initialValue"><a href="#Override-initialValue" class="headerlink" title="Override initialValue()"></a>Override initialValue()</h3><p>The first way to specify an initial value for a Java <code>ThreadLocal</code> variable is to create a subclass of <code>ThreadLocal</code> which overrides its <code>initialValue()</code> method. The easiest way to create a subclass of <code>ThreadLocal</code> is to simply create an anonymous subclass, right where you create the <code>ThreadLocal</code> variable. Here is an example of creating an anonymous subclass of <code>ThreadLocal</code> which overrides the <code>initialValue()</code> method:</p>
+<p>private ThreadLocal myThreadLocal = new ThreadLocal<String>() {<br>    @Override protected String initialValue() {<br>        return String.valueOf(System.currentTimeMillis());<br>    }<br>};    </p>
+<p>Note, that different threads will still see different initial values. Each thread will create its own initial value. Only if you return the exact same object from the <code>initialValue()</code> method, will all threads see the same object. However, the whole point of using a <code>ThreadLocal</code> in the first place is to avoid the different threads seeing the same instance.</p>
+<h3 id="Provide-a-Supplier-Implementation"><a href="#Provide-a-Supplier-Implementation" class="headerlink" title="Provide a Supplier Implementation"></a>Provide a Supplier Implementation</h3><p>The second method for specifying an initial value for a Java <code>ThreadLocal</code> variable is to use its static factory method <code>withInitial(Supplier)</code> passing a <code>Supplier</code> interface implementation as parameter. This <code>Supplier</code> implementation supplies the initial value for the <code>ThreadLocal</code>. Here is an example of creating a <code>ThreadLocal</code> using its <code>withInitial()</code> static factory method, passing a simple <code>Supplier</code> implementation as parameter:</p>
+<p>ThreadLocal<String> threadLocal = ThreadLocal.withInitial(new Supplier<String>() {<br>    @Override<br>    public String get() {<br>        return String.valueOf(System.currentTimeMillis());<br>    }<br>});</p>
+<p>Since <code>Supplier</code> is a <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-functional-programming/functional-interfaces.html">functional interface</a>, it an be implemented using a <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java/lambda-expressions.html">Java Lambda Expression</a>. Here is how providing a <code>Supplier</code> implementation as a lambda expression to <code>withInitial()</code> looks:</p>
+<p>ThreadLocal threadLocal = ThreadLocal.withInitial(<br>        () -&gt; { return String.valueOf(System.currentTimeMillis()); } );</p>
+<p>As you can see, this is somewhat shorter than the previous example. But it can be made even a bit shorter yet, using the most dense syntax of lambda expressions:</p>
+<p>ThreadLocal threadLocal3 = ThreadLocal.withInitial(<br>        () -&gt; String.valueOf(System.currentTimeMillis()) );</p>
+<h2 id="Lazy-Setting-of-ThreadLocal-Value"><a href="#Lazy-Setting-of-ThreadLocal-Value" class="headerlink" title="Lazy Setting of ThreadLocal Value"></a>Lazy Setting of ThreadLocal Value</h2><p>In some situations you cannot use the standard ways of setting an initial value. For instance, perhaps you need some configuration information which is not available at the time you create the ThreadLocal variable. In that case you can set the initial value lazily. Here is an example of how setting an initial value lazily on a Java ThreadLocal:</p>
+<p>public class MyDateFormatter {</p>
+<pre><code class="hljs">private ThreadLocal&lt;SimpleDateFormat&gt; simpleDateFormatThreadLocal = new ThreadLocal&lt;&gt;();
+
+public String format(Date date) &#123;
+    SimpleDateFormat simpleDateFormat = getThreadLocalSimpleDateFormat();
+    return simpleDateFormat.format(date);
+&#125;
+</code></pre>
+<p>​<br>​    private SimpleDateFormat getThreadLocalSimpleDateFormat() {<br>​        SimpleDateFormat simpleDateFormat = simpleDateFormatThreadLocal.get();<br>​        if(simpleDateFormat == null) {<br>​            simpleDateFormat = new SimpleDateFormat(“yyyy-MM-dd HH:mm:ss”);<br>​            simpleDateFormatThreadLocal.set(simpleDateFormat);<br>​        }<br>​        return simpleDateFormat;<br>​    }<br>}</p>
+<p>Notice how the <code>format()</code> method calls the <code>getThreadLocalSimpleDateFormat()</code> method to obtain a <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-internationalization/simpledateformat.html">Java SimpleDatFormat</a> instance. If a <code>SimpleDateFormat</code> instance has not been set in the <code>ThreadLocal</code>, a new <code>SimpleDateFormat</code> is created and set in the <code>ThreadLocal</code> variable. Once a thread has set its own <code>SimpleDateFormat</code> in the <code>ThreadLocal</code> variable, the same <code>SimpleDateFormat</code> object is used for that thread going forward. But only for that thread. Each thread creates its own <code>SimpleDateFormat</code> instance, as they cannot see each others instances set on the <code>ThreadLocal</code> variable.</p>
+<p>The <code>SimpleDateFormat</code> class is not thread safe, so multiple threads cannot use it at the same time. To solve this problem, the <code>MyDateFormatter</code> class above creates a <code>SimpleDateFormat</code> per thread, so each thread calling the <code>format()</code> method will use its own <code>SimpleDateFormat</code> instance.</p>
+<h2 id="Using-a-ThreadLocal-with-a-Thread-Pool-or-ExecutorService"><a href="#Using-a-ThreadLocal-with-a-Thread-Pool-or-ExecutorService" class="headerlink" title="Using a ThreadLocal with a Thread Pool or ExecutorService"></a>Using a ThreadLocal with a Thread Pool or ExecutorService</h2><p>If you plan to use a Java <code>ThreadLocal</code> from inside a task passed to a <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-concurrency/thread-pools.html">Java Thread Pool</a> or a <a target="_blank" rel="noopener" href="http://tutorials.jenkov.com/java-util-concurrent/executorservice.html">Java ExecutorService</a>, keep in mind that you do not have any guarantees which thread will execute your task. However, if all you need is to make sure that each thread uses its own instance of some object, this is not a problem. Then you can use a Java ThreadLocal with a thread pool or <code>ExecutorService</code> just fine.</p>
+<h2 id="Full-ThreadLocal-Example"><a href="#Full-ThreadLocal-Example" class="headerlink" title="Full ThreadLocal Example"></a>Full ThreadLocal Example</h2><p>Here is a fully runnable Java <code>ThreadLocal</code> example:</p>
+<p>public class ThreadLocalExample {</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String\[\] args)</span> &#123;<br>    <span class="hljs-type">MyRunnable</span> <span class="hljs-variable">sharedRunnableInstance</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyRunnable</span>();<br><br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">thread1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(sharedRunnableInstance);<br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">thread2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(sharedRunnableInstance);<br><br>    thread1.start();<br>    thread2.start();<br><br>    thread1.join(); <span class="hljs-comment">//wait for thread 1 to terminate</span><br>    thread2.join(); <span class="hljs-comment">//wait for thread 2 to terminate</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>}</p>
+<p>public class MyRunnable implements Runnable {</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> ThreadLocal&lt;Integer&gt; threadLocal = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>&lt;Integer&gt;();<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>    threadLocal.set( (<span class="hljs-type">int</span>) (Math.random() \* <span class="hljs-number">100D</span>) );<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        Thread.sleep(<span class="hljs-number">2000</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>    &#125;<br><br>    System.out.println(threadLocal.get());<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>}</p>
+<p>This example creates a single <code>MyRunnable</code> instance which is passed to two different threads. Both threads execute the <code>run()</code> method, and thus sets different values on the <code>ThreadLocal</code> instance. If the access to the <code>set()</code> call had been synchronized, and it had <em>not</em> been a <code>ThreadLocal</code> object, the second thread would have overridden the value set by the first thread.</p>
+<p>However, since it <em>is</em> a <code>ThreadLocal</code> object then the two threads cannot see each other’s values. Thus, they set and get different values.</p>
+<h2 id="InheritableThreadLocal"><a href="#InheritableThreadLocal" class="headerlink" title="InheritableThreadLocal"></a>InheritableThreadLocal</h2><p>The <code>InheritableThreadLocal</code> class is a subclass of <code>ThreadLocal</code>. Instead of each thread having its own value inside a <code>ThreadLocal</code>, the <code>InheritableThreadLocal</code> grants access to values to a thread and all child threads created by that thread. Here is a full Java <code>InheritableThreadLocal</code> example:</p>
+<p>public class InheritableThreadLocalBasicExample {</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String\[\] args)</span> &#123;<br><br>    ThreadLocal&lt;String&gt; threadLocal = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>&lt;&gt;();<br>    InheritableThreadLocal&lt;String&gt; inheritableThreadLocal =<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">InheritableThreadLocal</span>&lt;&gt;();<br><br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">thread1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>        System.out.println(<span class="hljs-string">&quot;===== Thread 1 =====&quot;</span>);<br>        threadLocal.set(<span class="hljs-string">&quot;Thread 1 - ThreadLocal&quot;</span>);<br>        inheritableThreadLocal.set(<span class="hljs-string">&quot;Thread 1 - InheritableThreadLocal&quot;</span>);<br><br>        System.out.println(threadLocal.get());<br>        System.out.println(inheritableThreadLocal.get());<br><br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">childThread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>( () -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;===== ChildThread =====&quot;</span>);<br>            System.out.println(threadLocal.get());<br>            System.out.println(inheritableThreadLocal.get());<br>        &#125;);<br>        childThread.start();<br>    &#125;);<br><br>    thread1.start();<br><br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">thread2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            Thread.sleep(<span class="hljs-number">3000</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>        System.out.println(<span class="hljs-string">&quot;===== Thread2 =====&quot;</span>);<br>        System.out.println(threadLocal.get());<br>        System.out.println(inheritableThreadLocal.get());<br>    &#125;);<br>    thread2.start();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>}</p>
+<p>This example creates a normal Java ThreadLocal and a Java InheritableThreadLocal. Then the example creates one thread which sets the value of the ThreadLocal and InheritableThreadLocal - and then creates a child thread which accesses the values of the ThreadLocal and InheritableThreadLocal. Only the value of the InheritableThreadLocal is visible to the child thread.</p>
+<p>Finally the example creates a third thread which also tries to access both the ThreadLocal and InheritableThreadLocal - but which does not see any of the values stored by the first thread.</p>
+<p>The output printed from running this example would look like this:</p>
+<p>===== Thread 1 =====<br>Thread 1 - ThreadLocal<br>Thread 1 - InheritableThreadLocal<br>===== ChildThread =====<br>null<br>Thread 1 - InheritableThreadLocal<br>===== Thread2 =====<br>null<br>null</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://jenkov.com/tutorials/java-concurrency/threadlocal.html">Java ThreadLocal</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/ThreadLocal/">#ThreadLocal</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java ThreadLocal</div>
+      <div>https://baymax55.github.io/2022/08/08/java/threadlocal/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月8日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/08/nas/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85OpenWrt%E8%BD%AF%E8%B7%AF%E7%94%B1/" title="虚拟机安装OpenWrt软路由">
+                        <span class="hidden-mobile">虚拟机安装OpenWrt软路由</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

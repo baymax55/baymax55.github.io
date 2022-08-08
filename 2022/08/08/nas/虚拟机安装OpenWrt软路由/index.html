@@ -16,25 +16,25 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="DDD分层架构、洋葱架构、六边形架构">
+    <meta name="description" content="虚拟机安装OpenWrt软路由,并实现局域网内所以设备自动科学上网,广告过滤等">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DDD分层架构、洋葱架构、六边形架构">
-<meta property="og:url" content="https://baymax55.github.io/2022/08/04/java/DDD%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%E3%80%81%E6%B4%8B%E8%91%B1%E6%9E%B6%E6%9E%84%E3%80%81%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:title" content="虚拟机安装OpenWrt软路由">
+<meta property="og:url" content="https://baymax55.github.io/2022/08/08/nas/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85OpenWrt%E8%BD%AF%E8%B7%AF%E7%94%B1/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="DDD分层架构、洋葱架构、六边形架构">
+<meta property="og:description" content="虚拟机安装OpenWrt软路由,并实现局域网内所以设备自动科学上网,广告过滤等">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/software_architecture.png">
-<meta property="article:published_time" content="2022-08-04T07:05:52.847Z">
-<meta property="article:modified_time" content="2022-08-04T07:56:11.924Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/openwrt.png">
+<meta property="article:published_time" content="2022-08-08T02:28:18.989Z">
+<meta property="article:modified_time" content="2022-08-08T03:28:08.688Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="java">
-<meta property="article:tag" content="architecture">
+<meta property="article:tag" content="OpenWrt">
+<meta property="article:tag" content="设置旁路由">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/software_architecture.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/openwrt.png">
   
   
   
-  <title>DDD分层架构、洋葱架构、六边形架构 - Baymax55&#39;s Blog</title>
+  <title>虚拟机安装OpenWrt软路由 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="DDD分层架构、洋葱架构、六边形架构"></span>
+            <span id="subtitle" data-typed-text="虚拟机安装OpenWrt软路由"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-04 15:05" pubdate>
-          2022年8月4日 下午
+        <time datetime="2022-08-08 10:28" pubdate>
+          2022年8月8日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          432 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          14 分钟
+          4 分钟
         
       </span>
     
@@ -278,65 +278,31 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">DDD分层架构、洋葱架构、六边形架构</h1>
+            <h1 style="display: none">虚拟机安装OpenWrt软路由</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月4日 下午
+                    本文最后更新于：2022年8月8日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h2 id="一、DDD分层架构"><a href="#一、DDD分层架构" class="headerlink" title="一、DDD分层架构"></a>一、DDD分层架构</h2><p>DDD分层架构中有很重要的依赖原则：每层只能与位于下方的层发生耦合，类似于网络的7层或TCP/IP的4层模型架构，每一层各司其职，并且只关心向下一层的实现，而不会出现各层耦合。</p>
-<p>DDD分层架构中包含四层：从上到下分别是用户接口层，应用层，领域层和基础层。</p>
-<p><img src="DDD%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="二、洋葱架构"><a href="#二、洋葱架构" class="headerlink" title="二、洋葱架构"></a>二、洋葱架构</h2><p>2008年Jeffrey Palermo已经提出了具有分层思想的洋葱架构，如下图，同心圆代表软件的不同部分，从里向外依次是领域模型，领域服务，应用服务和外层的基础设施和用户终端。</p>
-<p>洋葱架构根据依赖原则，定义了各层的依赖关系，越往里依赖程度越低，代码级别越高，越是核心能力。外圆代码依赖只能指向内圆，内圆不需要知道外圆的情况，这种架构也是典型的分层架构，和DDD分层架构一样，都体现了高内聚，低耦合的设计特性。洋葱架构也常作为指导微服务设计的重要架构之一。</p>
-<p><img src="%E6%B4%8B%E8%91%B1%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="三、六边形架构"><a href="#三、六边形架构" class="headerlink" title="三、六边形架构"></a>三、六边形架构</h2><p>2005年Alistair Cockburn提出了六边形架构，在这个架构中，将应用分为内六边形和外六边形两层，内六边形实现应用的核心业务逻辑。外六边形完成外部应用，基础资源等的交互和访问，对于与不同的外部系统交互，由外六边形的适配器负责协议转换，保证内六边形业务逻辑的干净。</p>
-<p>这种架构也是典型的分层架构，和DDD分层架构一样，都体现了高内聚，低耦合的设计特性。六边形也常作为指导微服务设计的重要架构之一。</p>
-<p><img src="%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="四、DDD分层协作"><a href="#四、DDD分层协作" class="headerlink" title="四、DDD分层协作"></a>四、DDD分层协作</h2><p>DDD各层的主要职责和怎么分工协作如下图：</p>
-<p><img src="DDD%E5%88%86%E5%B1%82%E5%8D%8F%E4%BD%9C.png" srcset="/img/loading.gif" lazyload></p>
-<p>PO（数据持久化对象）：与数据库字段映射的数据载体</p>
-<p>DO（领域对象）：领域模型核心业务对象的载体，包括实体和值对象</p>
-<p>DTO（数据传输对象）：用于前端和微服务交互的数据传输载体</p>
-<p><strong>用户接口层：主要有facade接口，Assembler转换器</strong></p>
-<ul>
-<li>微服务面向不同前端时，需要展示的数据可能不同，此时由于需要保持领域核心业务逻辑的稳定，不可能去定制开发各种领域服务和应用服务编排。因此，为避免暴露服务端业务逻辑，防止非必需的字段数据外泄<br>，同时保证领域逻辑的干净，用户接口层的facade接口和Assembler转换器就发挥作用了。</li>
-<li>facade接口用于封装应用服务，适配不同前端需要的字段，提供不同要求的服务接口适配。Assembler根据不同前端的数据请求，完成DTO和领域DO对象的组装，转换，完成数据适配。</li>
+              <p>虚拟机安装OpenWrt软路由,并实现局域网内所以设备自动科学上网,广告过滤等</p>
+<h2 id="安装注意点"><a href="#安装注意点" class="headerlink" title="安装注意点"></a>安装注意点</h2><ul>
+<li>安装后的OpenWrt需要手动设置ip地址</li>
 </ul>
-<p><strong>应用层：</strong></p>
-<ul>
-<li><p>应用层连接用户接口层和领域层，主要协调领域层，面向用例和业务流程，协调多个聚合完成服务的组合和编排，在这一层不实现任何业务逻辑，只是很薄的一层</p>
-</li>
-<li><p>如何判定一个东西是否属于业务逻辑？</p>
-<p>很简单，只需设想你和产品聊这个事情时，需不需要把这部分信息输入给它？比如接口调用的处理，数据的转换，是否加了缓存等等都不属于产品关心的东西，所以不算是业务逻辑</p>
-</li>
-<li><p>应用层编排成应用服务后，被接口层facade封装，完成接口和数据适配后，以粗粒度向API网关发布服务</p>
-</li>
-<li><p>应用层还负责事件的订阅和发布，以及与其他外部服务的交互，事件的具体实现则在领域层</p>
-</li>
-</ul>
-<p><strong>领域层：</strong></p>
-<ul>
-<li>领域层位于应用层之下，是领域模型的核心，主要实现领域模型的核心业务逻辑，体现领域模型的业务能力</li>
-<li>领域层关注实现领域对象的充血模型和聚合本身的原子业务逻辑，至于用户操作和业务流程，则交给应用层去编排。这样设计可以保证领域模型不容易受外部需求变化的影响，保证领域模型的稳定</li>
-<li>跨多个聚合的领域逻辑在领域层实现，由领域服务组织和协调多聚合的多实体，实现原子业务逻辑</li>
-</ul>
-<p><strong>基础层：</strong></p>
-<ul>
-<li>基础层贯穿了DDD所有层，包括第三方工具，API网关，消息中间件，分布式事务，消息最终一致性能力，数据库，缓存能能力的提供。</li>
-<li>基础层有仓储模式的代码逻辑，通过仓储接口和仓储实现，解耦领域层和基础层，保证领域核心业务逻辑的干净，降低DB资源变化给领域层带来的影响，这部分内容，请见下回分解。</li>
-</ul>
+<h2 id="使局域网设备自动科学上网方式"><a href="#使局域网设备自动科学上网方式" class="headerlink" title="使局域网设备自动科学上网方式"></a>使局域网设备自动科学上网方式</h2><p>设置网口网关地址和dns为软路由ip<br><img src="1.png" srcset="/img/loading.gif" lazyload></p>
+<p>忽略该接口,并保存并应用<br><img src="2.png" srcset="/img/loading.gif" lazyload></p>
+<p>情况说明:我有俩个路由器,一级路由器负责拨号，二级路由器挂在一级路由器下面设置为固定ip范围获取,主要工作路由为二级路由</p>
+<p>由于软路由处于在一级路由下，二级路由和软路由位于同一层，因此我设置二级路由的WAN口连接类型为固定ip获取,并将网关和dns设置为软路由IP.自此,我直接连上二级路由实现自动科学上网<br><img src="3.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="OpenWrt-开启openClash-服务后，WireGuard无法接收流量问题"><a href="#OpenWrt-开启openClash-服务后，WireGuard无法接收流量问题" class="headerlink" title="OpenWrt 开启openClash 服务后，WireGuard无法接收流量问题"></a>OpenWrt 开启openClash 服务后，WireGuard无法接收流量问题</h2><p>openClash-&gt; 全局设置-&gt; 模式设置 -&gt; 实验性：绕过中国大陆IP 功能 启用<br><strong>我的WireGuard server ip 为国内</strong>,可能被代理了<br><img src="4.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li>《基于DDD和微服务的中台架构与实现》欧创新、邓頔</li>
-<li>《领域驱动设计》Eric Evans</li>
-<li>《架构真经》Martin L. Abbott</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiyukai/p/14830869.html">DDD—分层架构、洋葱架构、六边形架构</a></li>
+<li><a target="_blank" rel="noopener" href="https://post.smzdm.com/p/a5dn78pl/">群晖虚拟机安装 Openwrt 做旁路由的设置教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://openwrt.club/dl">OpenWrt固件下载</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=OCF8KgoctfU">OpenWrt设置旁路由</a></li>
 </ul>
 
               
@@ -355,7 +321,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  <a href="/categories/%E6%8A%98%E8%85%BE/" class="category-chain-item">折腾</a>
   
   
 
@@ -370,9 +336,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/java/">#java</a>
+        <a href="/tags/OpenWrt/">#OpenWrt</a>
       
-        <a href="/tags/architecture/">#architecture</a>
+        <a href="/tags/%E8%AE%BE%E7%BD%AE%E6%97%81%E8%B7%AF%E7%94%B1/">#设置旁路由</a>
       
     </div>
   
@@ -384,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>DDD分层架构、洋葱架构、六边形架构</div>
-      <div>https://baymax55.github.io/2022/08/04/java/DDD分层架构、洋葱架构、六边形架构/</div>
+      <div>虚拟机安装OpenWrt软路由</div>
+      <div>https://baymax55.github.io/2022/08/08/nas/虚拟机安装OpenWrt软路由/</div>
     </div>
     <div class="license-meta">
       
@@ -397,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月4日</div>
+          <div>2022年8月8日</div>
         </div>
       
       
@@ -427,9 +393,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/08/04/java/COLA%204.0%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="COLA 4.0:应用架构的最佳实践">
+                      <a href="/2022/08/08/java/threadlocal/" title="Java ThreadLocal">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">COLA 4.0:应用架构的最佳实践</span>
+                        <span class="hidden-mobile">Java ThreadLocal</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -437,8 +403,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/08/04/java/GenericConstructors/" title="Generic Constructors">
-                        <span class="hidden-mobile">Generic Constructors</span>
+                      <a href="/2022/08/08/k8s/how-to-fix-OOMKilled-kubernetes-error/" title="How to fix OOMKilled Kubernetes error">
+                        <span class="hidden-mobile">How to fix OOMKilled Kubernetes error</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
