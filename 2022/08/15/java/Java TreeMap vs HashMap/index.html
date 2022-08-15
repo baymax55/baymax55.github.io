@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
 <meta property="article:published_time" content="2022-08-15T00:38:03.582Z">
-<meta property="article:modified_time" content="2022-08-15T00:38:03.582Z">
+<meta property="article:modified_time" content="2022-08-15T01:55:26.700Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary_large_image">
@@ -282,7 +282,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月15日 早上
+                    本文最后更新于：2022年8月15日 上午
                   
                 
               </p>
@@ -293,26 +293,27 @@
 <p><em>TreeMap</em> and <em>HashMap</em> are quite similar, both are collections that implement the <em>Map</em> interface. But they also have some differences that make one better than the other in some situations. Let’s look at those differences.</p>
 <p>Table Of Contents</p>
 <ol>
-<li><a href="#1-differences-between-hashmap-and-treemap">1. Differences between HashMap and TreeMap</a><ul>
-<li>  <a href="#11-class-hierarchy">1.1. Class Hierarchy</a></li>
-<li>  <a href="#12-internal-implementations">1.2. Internal Implementations</a></li>
-<li>  <a href="#13-null-keys-and-values">1.3. Null Keys and Values</a></li>
-<li>  <a href="#14-functionality">1.4. Functionality</a></li>
-<li>  <a href="#15-element-ordering">1.5. Element Ordering</a></li>
-<li>  <a href="#16-performance-comparison">1.6. Performance Comparison</a></li>
-<li>  <a href="#17-memory-usage">1.7. Memory Usage</a></li>
-<li>  <a href="#18-key-searches">1.8. Key Searches</a></li>
+<li><a href="#1-Differences-between-HashMap-and-TreeMap">1. Differences between HashMap and TreeMap</a><ul>
+<li>  <a href="#1-1-Class-Hierarchy">1.1. Class Hierarchy</a></li>
+<li>  <a href="#1-2-Internal-Implementations">1.2. Internal Implementations</a></li>
+<li>  <a href="#1-3-Null-Keys-and-Values">1.3. Null Keys and Values</a></li>
+<li>  <a href="#1-4-Functionality">1.4. Functionality</a></li>
+<li>  <a href="#1-5-Element-Ordering">1.5. Element Ordering</a></li>
+<li>  <a href="#1-6-Performance-Comparison">1.6. Performance Comparison</a></li>
+<li>  <a href="#1-7-Memory-Usage">1.7. Memory Usage</a></li>
+<li>  <a href="#1-8-Key-Searches">1.8. Key Searches</a></li>
 </ul>
 </li>
-<li> <a href="#2-when-to-use-hashmap-and-treemap">2. When to use HashMap and TreeMap</a></li>
-<li> <a href="#3-conclusion">3. Conclusion</a></li>
+<li> <a href="#2-When-to-use-HashMap-and-TreeMap">2. When to use HashMap and TreeMap</a></li>
+<li> <a href="#3-Conclusion">3. Conclusion</a></li>
+<li> <a href="#4-References">4. References</a></li>
 </ol>
-<h2 id="1-Differences-between-HashMap-and-TreeMap"><a href="#1-Differences-between-HashMap-and-TreeMap" class="headerlink" title="1. Differences between HashMap and TreeMap"></a>1. Differences between <em>HashMap</em> and <em>TreeMap</em></h2><p>Let’s discuss some of the main differences between the two maps.</p>
+<h2 id="1-Differences-between-HashMap-and-TreeMap"><a href="#1-Differences-between-HashMap-and-TreeMap" class="headerlink" title="1.Differences between HashMap and TreeMap"></a>1.Differences between HashMap and TreeMap</h2><p>Let’s discuss some of the main differences between the two maps.</p>
 <h3 id="1-1-Class-Hierarchy"><a href="#1-1-Class-Hierarchy" class="headerlink" title="1.1. Class Hierarchy"></a>1.1. Class Hierarchy</h3><p><em><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java-hashmap/">HashMap</a></em> class extends <em>AbstractMap</em> class and <strong>implements <em>Map</em> interface</strong> whereas <em><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java/collections/treemap-class/">TreeMap</a></em> class extends <em>AbstractMap</em> class and <strong>implements</strong> _<strong>NavigableMap</strong>_ <strong>interface</strong>.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// HashMap class declaration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HashMap</span>&lt;K, V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMap</span>&lt;K, V&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Map</span>&lt;K, V&gt;, Cloneable, Serializable<br><br><span class="hljs-comment">// TreeMap class declaration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeMap</span>&lt;K, V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractMap</span>&lt;K, V&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NavigableMap</span>&lt;K, V&gt;, Cloneable, Serializable<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://howtodoinjava.com/wp-content/uploads/2022/08/image-19.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://howtodoinjava.com/wp-content/uploads/2022/08/image-20.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="img.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="img_1.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="1-2-Internal-Implementations"><a href="#1-2-Internal-Implementations" class="headerlink" title="1.2. Internal Implementations"></a>1.2. Internal Implementations</h3><ul>
 <li>  <em>HashMap</em> internally uses <em><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java/collections/hashtable-class/">HashTable</a></em> and works on the principle of <strong>Hashing</strong>. It contains the buckets in the form of a <em><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java/collections/java-linkedlist-class/">LinkedList</a>,</em> and when there are more than 8 entries in the bucket, then the <em>LinkedList</em> transforms into a <em>Balanced Tree</em> (TreeNodes).</li>
 <li>  <em>TreeMap</em> internally uses <strong><em>Red-Black Tree</em>,</strong> a self-balancing <em>Binary Search Tree.</em></li>
@@ -354,7 +355,7 @@
 <p><em><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html">HashMap</a></em> is more of a general purpose map implementation and can be used where we don’t want any kind of sorting for our data, and the entries can be maintained in any order or sequence. In high-performance applications, we can prefer using <em>HashMap</em> over <em>TreeMap</em> as it performs better as compared to <em><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html">TreeMap</a></em>.</p>
 <h2 id="3-Conclusion"><a href="#3-Conclusion" class="headerlink" title="3. Conclusion"></a>3. Conclusion</h2><p>In this post, we have seen some of the key differences between <em>HashMap</em> and <em>TreeMap</em> and on which factors we can decide between the two while using them in our code.</p>
 <p>Happy Learning !!</p>
-<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<h2 id="4-References"><a href="#4-References" class="headerlink" title="4.References"></a>4.References</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://howtodoinjava.com/java/collections/java-treemap-vs-hashmap/">Java TreeMap vs HashMap</a></li>
 </ul>
 
