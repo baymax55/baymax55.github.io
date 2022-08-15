@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-08-15T00:58:25.919Z</updated>
+  <updated>2022-08-15T09:44:36.796Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Bean与Component同时作用同一个类</title>
+    <link href="https://baymax55.github.io/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/"/>
+    <id>https://baymax55.github.io/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/</id>
+    <published>2022-08-15T09:38:44.334Z</published>
+    <updated>2022-08-15T09:44:36.796Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.cnblogs.com/youzhibing/p/15354706.html">关于 Spring Boot 中创建对象的疑虑 → @Bean 与 @Component 同时作用同一个类，会怎么样？ </a></li></ul>]]></content>
+    
+    
+    <summary type="html">　关于allowBeanDefinitionOverriding</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="spring" scheme="https://baymax55.github.io/tags/spring/"/>
+    
+  </entry>
   
   <entry>
     <title>Java中field和property的区别</title>

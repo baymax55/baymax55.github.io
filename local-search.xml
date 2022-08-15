@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Bean与Component同时作用同一个类</title>
+    <link href="/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/"/>
+    <url>/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/</url>
+    
+    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.cnblogs.com/youzhibing/p/15354706.html">关于 Spring Boot 中创建对象的疑虑 → @Bean 与 @Component 同时作用同一个类，会怎么样？ </a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>spring</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java中field和property的区别</title>
     <link href="/2022/08/15/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
     <url>/2022/08/15/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/</url>

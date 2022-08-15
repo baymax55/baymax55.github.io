@@ -16,24 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Java中field和property的区别">
+    <meta name="description" content="关于allowBeanDefinitionOverriding">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中field和property的区别">
-<meta property="og:url" content="https://baymax55.github.io/2022/08/15/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:title" content="Bean与Component同时作用同一个类">
+<meta property="og:url" content="https://baymax55.github.io/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="Java中field和property的区别">
+<meta property="og:description" content="关于allowBeanDefinitionOverriding">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
-<meta property="article:published_time" content="2022-08-15T00:43:33.832Z">
-<meta property="article:modified_time" content="2022-08-15T00:58:25.919Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/spring.png">
+<meta property="article:published_time" content="2022-08-15T09:38:44.334Z">
+<meta property="article:modified_time" content="2022-08-15T09:44:36.796Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/spring.png">
   
   
   
-  <title>Java中field和property的区别 - Baymax55&#39;s Blog</title>
+  <title>Bean与Component同时作用同一个类 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Java中field和property的区别"></span>
+            <span id="subtitle" data-typed-text="Bean与Component同时作用同一个类"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-15 08:43" pubdate>
-          2022年8月15日 早上
+        <time datetime="2022-08-15 17:38" pubdate>
+          2022年8月15日 下午
         </time>
       </span>
     
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          476 字
+          61 字
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          4 分钟
+          1 分钟
         
       </span>
     
@@ -277,29 +277,20 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Java中field和property的区别</h1>
+            <h1 style="display: none">Bean与Component同时作用同一个类</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月15日 早上
+                    本文最后更新于：2022年8月15日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <p>field和property中文的翻译差不多，实际上是两个不同的概念。</p>
-<blockquote>
-<p>field: A data member of a class. Unless specified otherwise, a field is not static.</p>
-<p>property: Characteristics of an object that users can set, such as the color of a window.</p>
-<p>摘自：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/information/glossary.html#P">Glossary of Terms</a></p>
-</blockquote>
-<p>我的理解是，field指那些在类的内部，未通过getter/setter访问的成员变量。而property指的是通过getter/setter访问的成员变量</p>
-<p><img src="img.png" srcset="/img/loading.gif" lazyload></p>
-<p>如上图所示我们新建一个Demo类，在没有设置getter/setter方法时，filed1,filed2,filed3,filed4都是field，然后我给property1和property2添加getter/setter方法后，getProperty1(), setProperty1()和property1就变成了一个property。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://xinxingastro.github.io/2018/07/21/Java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/">Java中field和property的区别</a></li>
+              <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/youzhibing/p/15354706.html">关于 Spring Boot 中创建对象的疑虑 → @Bean 与 @Component 同时作用同一个类，会怎么样？ </a></li>
 </ul>
 
               
@@ -333,7 +324,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/java/">#java</a>
+        <a href="/tags/spring/">#spring</a>
       
     </div>
   
@@ -345,8 +336,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Java中field和property的区别</div>
-      <div>https://baymax55.github.io/2022/08/15/java/Java中field和property的区别/</div>
+      <div>Bean与Component同时作用同一个类</div>
+      <div>https://baymax55.github.io/2022/08/15/spring/注解Bean与注解Component同时作用同一个类,会怎么样/</div>
     </div>
     <div class="license-meta">
       
@@ -388,18 +379,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/08/15/spring/%E6%B3%A8%E8%A7%A3Bean%E4%B8%8E%E6%B3%A8%E8%A7%A3Component%E5%90%8C%E6%97%B6%E4%BD%9C%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%B1%BB,%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7/" title="Bean与Component同时作用同一个类">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Bean与Component同时作用同一个类</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/08/15/java/Java%20TreeMap%20vs%20HashMap/" title="Java TreeMap vs HashMap">
-                        <span class="hidden-mobile">Java TreeMap vs HashMap</span>
+                      <a href="/2022/08/15/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/" title="Java中field和property的区别">
+                        <span class="hidden-mobile">Java中field和property的区别</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
