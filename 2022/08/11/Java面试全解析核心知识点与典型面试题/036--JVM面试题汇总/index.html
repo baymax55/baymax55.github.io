@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/jvm.png">
 <meta property="article:published_time" content="2022-08-11T09:33:16.333Z">
-<meta property="article:modified_time" content="2022-08-11T09:36:49.359Z">
+<meta property="article:modified_time" content="2022-08-12T01:29:07.515Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="jvm">
@@ -283,7 +283,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月11日 下午
+                    本文最后更新于：2022年8月12日 上午
                   
                 
               </p>
@@ -305,11 +305,11 @@
 <li>Java 虚拟机栈（Java Virtual Machine Stacks）</li>
 <li>本地方法栈（Native Method Stack）</li>
 <li>Java 堆（Java Heap）</li>
-<li>方法区（Methed Area）</li>
+<li>方法区（Method Area）</li>
 </ul>
 <p><strong>① 程序计数器</strong></p>
 <p>程序计数器（Program Counter Register）是一块较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解析器的工作是通过改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
-<p>由于 JVM的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，也就是任何时刻，一个处理器（或者说一个内核）都只会执行一条线程中的指令。因此为了线程切换后能恢复到正确的执行位置，每个线程都有独立的程序计数器。</p>
+<p>由于 JVM的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，也就是任何时刻，一个处理器（或者说一个内核）都只会执行一条线程中的指令。因此为了线程切换后能恢复到正确地执行位置，每个线程都有独立的程序计数器。</p>
 <p>如果线程正在执行 Java 中的方法，程序计数器记录的就是正在执行虚拟机字节码指令的地址，如果是 Native方法，这个计数器就为空（undefined），因此该内存区域是唯一一个在 Java 虚拟机规范中没有规定 OutOfMemoryError 的区域。</p>
 <p><strong>② Java 虚拟机栈</strong></p>
 <p>Java 虚拟机栈（Java Virtual Machine Stacks）描述的是 Java方法执行的内存模型，每个方法在执行的同时都会创建一个栈帧（Stack<br>Frame）用于存储局部变量表、操作数栈、动态链接、方法出口等信息，每个方法从调用直至执行完成的过程，都对应着一个线帧在虚拟机栈中入栈到出栈的过程。</p>
@@ -319,12 +319,12 @@
 </ul>
 <p><strong>③ 本地方法栈</strong></p>
 <p>本地方法栈（Native Method Stack）与虚拟机栈的作用是一样的，只不过虚拟机栈是服务 Java 方法的，而本地方法栈是为虚拟机调用<br>Native 方法服务的。</p>
-<p>在 Java 虚拟机规范中对于本地方法栈没有特殊的要求，虚拟机可以自由的实现它，因此在 Sun HotSpot 虚拟机直接把本地方法栈和虚拟机栈合二为一了。</p>
+<p>在 Java 虚拟机规范中对于本地方法栈没有特殊的要求，虚拟机可以自由地实现它，因此在 Sun HotSpot 虚拟机直接把本地方法栈和虚拟机栈合二为一了。</p>
 <p><strong>④ Java 堆</strong></p>
 <p>Java 堆（Java Heap）是 JVM 中内存最大的一块，是被所有线程共享的，在虚拟机启动时候创建，Java堆唯一的目的就是存放对象实例，几乎所有的对象实例都在这里分配内存，随着JIT编译器的发展和逃逸分析技术的逐渐成熟，栈上分配、标量替换优化的技术将会导致一些微妙的变化，所有的对象都分配在堆上渐渐变得不那么绝对了。</p>
 <p>如果在堆中没有内存完成实例分配，并且堆不可以再扩展时，将会抛出 OutOfMemoryError。 Java 虚拟机规范规定，Java堆可以处在物理上不连续的内存空间中，只要逻辑上连续即可，就像我们的磁盘空间一样。在实现上也可以是固定大小的，也可以是可扩展的，不过当前主流的虚拟机都是可扩展的，通过-Xmx 和 -Xms 控制。</p>
 <p><strong>⑤ 方法区</strong></p>
-<p>方法区（Methed Area）用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译后的代码等数据。</p>
+<p>方法区（Method Area）用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译后的代码等数据。</p>
 <p>很多人把方法区称作“永久代”（Permanent Generation），本质上两者并不等价，只是 HotSpot 虚拟机垃圾回收器团队把 GC分代收集扩展到了方法区，或者说是用来永久代来实现方法区而已，这样能省去专门为方法区编写内存管理的代码，但是在 JDK 8 也移除了“永久代”，使用Native Memory 来实现方法区。</p>
 <p>当方法无法满足内存分配需求时会抛出 OutOfMemoryError 异常。</p>
 <h4 id="5-在-Java-中负责字节码解释执行的是？"><a href="#5-在-Java-中负责字节码解释执行的是？" class="headerlink" title="5.在 Java 中负责字节码解释执行的是？"></a>5.在 Java 中负责字节码解释执行的是？</h4><p>A：应用服务器<br>B：垃圾回收器<br>C：虚拟机<br>D：编译器</p>
@@ -351,7 +351,7 @@
 <ul>
 <li>强引用：在代码中普遍存在的，类似 <code>Object obj = new Object()</code> 这类引用，只要强引用还在，垃圾收集器永远不会回收掉被引用的对象。</li>
 <li>软引用：是一种相对强引用弱化一些的引用，可以让对象豁免一些垃圾收集，只有当JVM 认为内存不足时，才会去试图回收软引用指向的对象，JVM 会确保在抛出 OutOfMemoryError 之前，清理软引用指向的对象。</li>
-<li>弱引用：非必需对象，但它的强度比软引用更弱，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。</li>
+<li>弱引用：非必需对象，但它的强度比软引用更弱，弱引用关联的对象只能生存到下一次垃圾收集发生之前。</li>
 <li>虚引用：也称为幽灵引用或幻影引用，是最弱的一种引用关系，无法通过虚引用来获取一个对象实例，为对象设置虚引用的目的只有一个，就是当着个对象被收集器回收时收到一条系统通知。</li>
 </ul>
 <h4 id="10-内存溢出和内存泄漏的区别是什么？"><a href="#10-内存溢出和内存泄漏的区别是什么？" class="headerlink" title="10.内存溢出和内存泄漏的区别是什么？"></a>10.内存溢出和内存泄漏的区别是什么？</h4><p>答：内存溢出和内存泄漏的区别如下：</p>
@@ -483,6 +483,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/08/12/Java%E9%9D%A2%E8%AF%95%E5%85%A8%E8%A7%A3%E6%9E%90%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E5%85%B8%E5%9E%8B%E9%9D%A2%E8%AF%95%E9%A2%98/034--%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" title="034--设计模式常见面试题汇总">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">034--设计模式常见面试题汇总</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
