@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-08-15T09:44:36.796Z</updated>
+  <updated>2022-08-16T08:07:12.929Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql分库分表方案</title>
+    <link href="https://baymax55.github.io/2022/08/16/mysql/mysql%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E6%96%B9%E6%A1%88/"/>
+    <id>https://baymax55.github.io/2022/08/16/mysql/mysql%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E6%96%B9%E6%A1%88/</id>
+    <published>2022-08-16T07:44:43.936Z</published>
+    <updated>2022-08-16T08:07:12.929Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://shardingsphere.apache.org/">ShardingSphere</a></li><li><a href="https://github.com/baymax55/sharding-jdbc-example">sharding-jdbc-example</a></li><li><a href="https://bbs.huaweicloud.com/blogs/323521">ShardingSphere(1)—主从篇</a></li></ul>]]></content>
+    
+    
+    <summary type="html">ShardingSphere example</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="mysql" scheme="https://baymax55.github.io/tags/mysql/"/>
+    
+    <category term="ShardingSphere" scheme="https://baymax55.github.io/tags/ShardingSphere/"/>
+    
+  </entry>
   
   <entry>
     <title>Bean与Component同时作用同一个类</title>
