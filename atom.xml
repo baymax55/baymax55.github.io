@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-08-16T08:07:12.929Z</updated>
+  <updated>2022-08-16T09:55:06.011Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java新特性教程</title>
+    <link href="https://baymax55.github.io/2022/08/16/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/"/>
+    <id>https://baymax55.github.io/2022/08/16/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/</id>
+    <published>2022-08-16T09:50:15.577Z</published>
+    <updated>2022-08-16T09:55:06.011Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul><li><a href="https://www.wdbyte.com/java-feature/">Java 新特性教程</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Java新特性教程</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="java" scheme="https://baymax55.github.io/tags/java/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql分库分表方案</title>
