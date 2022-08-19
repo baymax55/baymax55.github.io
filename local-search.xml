@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Java Enum</title>
+    <link href="/2022/08/19/java/Java%20Enum/"/>
+    <url>/2022/08/19/java/Java%20Enum/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><ul><li><a href="https://github.com/dromara/hutool/issues/2075">序列化JSON时, 当字段类型为枚举且枚举类存在静态方法时, 反序列化结果与预期不符.</a></li></ul><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.baeldung.com/java-enum-values">Attaching Values to Java Enum</a></li><li><a href="https://www.baeldung.com/a-guide-to-java-enums">A Guide to Java Enums</a></li><li><a href="https://www.baeldung.com/java-enum-iteration">Iterating over Enum Values in Java</a></li><li><a href="https://www.runoob.com/java/java-enum.html">Java 枚举(enum)</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Strategy</title>
     <link href="/2022/08/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/"/>
     <url>/2022/08/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/</url>

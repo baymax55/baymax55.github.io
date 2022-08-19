@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-08-18T03:07:41.459Z</updated>
+  <updated>2022-08-19T10:10:04.845Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java Enum</title>
+    <link href="https://baymax55.github.io/2022/08/19/java/Java%20Enum/"/>
+    <id>https://baymax55.github.io/2022/08/19/java/Java%20Enum/</id>
+    <published>2022-08-19T09:59:47.339Z</published>
+    <updated>2022-08-19T10:10:04.845Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><ul><li><a href="https://github.com/dromara/hutool/issues/2075">序列化JSON时, 当字段类型为枚举且枚举类存在静态方法时, 反序列化结果与预期不符.</a></li></ul><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.baeldung.com/java-enum-values">Attaching Values to Java Enum</a></li><li><a href="https://www.baeldung.com/a-guide-to-java-enums">A Guide to Java Enums</a></li><li><a href="https://www.baeldung.com/java-enum-iteration">Iterating over Enum Values in Java</a></li><li><a href="https://www.runoob.com/java/java-enum.html">Java 枚举(enum)</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Java Enum</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="java" scheme="https://baymax55.github.io/tags/java/"/>
+    
+  </entry>
   
   <entry>
     <title>Strategy</title>
