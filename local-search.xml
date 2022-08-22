@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>k3s安装与部署</title>
+    <link href="/2022/08/22/k8s/k3s%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2/"/>
+    <url>/2022/08/22/k8s/k3s%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2/</url>
+    
+    <content type="html"><![CDATA[<p>k3s是经过CNCF认证的由Rancher公司开发维护的一个轻量级的 Kubernetes 发行版，内核机制还是和 k8s 一样，但是剔除了很多外部依赖以及 K8s 的 alpha、beta 特性，同时改变了部署方式和运行方式，目的是轻量化 K8s，简单来说，K3s 就是阉割版 K8s，消耗资源极少。它主要用于边缘计算、物联网等场景。</p><h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><h3 id="k3s安装Dashboard无法外面访问时-修改kubernetes-dashboard-svc-type-为NodePort"><a href="#k3s安装Dashboard无法外面访问时-修改kubernetes-dashboard-svc-type-为NodePort" class="headerlink" title="k3s安装Dashboard无法外面访问时,修改kubernetes-dashboard svc type 为NodePort"></a>k3s安装Dashboard无法外面访问时,修改kubernetes-dashboard svc type 为NodePort</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">creationTimestamp:</span> <span class="hljs-string">&quot;2022-08-22T03:45:00Z&quot;</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">k8s-app:</span> <span class="hljs-string">kubernetes-dashboard</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">kubernetes-dashboard</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kubernetes-dashboard</span><br>  <span class="hljs-attr">resourceVersion:</span> <span class="hljs-string">&quot;12356&quot;</span><br>  <span class="hljs-attr">uid:</span> <span class="hljs-string">2b77a6f5-97fe-4f04-beac-a4503db1b402</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">clusterIP:</span> <span class="hljs-number">10.43</span><span class="hljs-number">.217</span><span class="hljs-number">.53</span><br>  <span class="hljs-attr">clusterIPs:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-number">10.43</span><span class="hljs-number">.217</span><span class="hljs-number">.53</span><br>  <span class="hljs-attr">externalTrafficPolicy:</span> <span class="hljs-string">Cluster</span><br>  <span class="hljs-attr">internalTrafficPolicy:</span> <span class="hljs-string">Cluster</span><br>  <span class="hljs-attr">ipFamilies:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">IPv4</span><br>  <span class="hljs-attr">ipFamilyPolicy:</span> <span class="hljs-string">SingleStack</span><br>  <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">nodePort:</span> <span class="hljs-number">30619</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">443</span><br>      <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>      <span class="hljs-attr">targetPort:</span> <span class="hljs-number">8443</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">k8s-app:</span> <span class="hljs-string">kubernetes-dashboard</span><br>  <span class="hljs-attr">sessionAffinity:</span> <span class="hljs-string">None</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br><span class="hljs-attr">status:</span><br>  <span class="hljs-attr">loadBalancer:</span> &#123;&#125; <br></code></pre></td></tr></table></figure><h3 id="Kubernetes-cluster-unreachable-with-helm-3-0"><a href="#Kubernetes-cluster-unreachable-with-helm-3-0" class="headerlink" title="Kubernetes cluster unreachable with helm 3.0"></a>Kubernetes cluster unreachable with helm 3.0</h3><p>Try setting the KUBECONFIG environment variable.</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">export KUBECONFIG=/etc/rancher/k3s/k3s.yaml<br></code></pre></td></tr></table></figure><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.cnblogs.com/hujinzhong/p/15014487.html">k3s安装与部署</a></li><li><a href="https://docs.rancher.cn/docs/k3s/installation/install-options/_index#%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85%E7%9A%84%E9%80%89%E9%A1%B9">使用脚本安装的选项</a></li><li><a href="https://rancher.com/docs/k3s/latest/en/installation/kube-dashboard/">k3s install Kubernetes Dashboard</a></li><li><a href="https://opensource.com/article/20/5/helm-charts">How to make a Helm chart in 10 minutes</a></li><li><a href="https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/kubectl/README.md">ohmyzsh/plugins/kubectl/README.md</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>k8s</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java Enum</title>
     <link href="/2022/08/19/java/Java%20Enum/"/>
     <url>/2022/08/19/java/Java%20Enum/</url>
@@ -1205,9 +1230,9 @@
     
     <tags>
       
-      <tag>设计模式</tag>
-      
       <tag>代理</tag>
+      
+      <tag>设计模式</tag>
       
       <tag>proxy</tag>
       
