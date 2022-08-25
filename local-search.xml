@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>Factory Method</title>
+    <link href="/2022/08/25/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/FactoryMethod/"/>
+    <url>/2022/08/25/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/FactoryMethod/</url>
+    
+    <content type="html"><![CDATA[<p>Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.</p><p><img src="/img/design-patterns/img_3.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/factory-method/">Factory Method</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Template method</title>
+    <link href="/2022/08/24/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
+    <url>/2022/08/24/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
+    
+    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>k3s安装与部署</title>
     <link href="/2022/08/22/k8s/k3s%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2/"/>
     <url>/2022/08/22/k8s/k3s%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2/</url>
@@ -1230,9 +1280,9 @@
     
     <tags>
       
-      <tag>代理</tag>
-      
       <tag>设计模式</tag>
+      
+      <tag>代理</tag>
       
       <tag>proxy</tag>
       

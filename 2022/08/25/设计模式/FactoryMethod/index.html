@@ -16,27 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="翻译代理模式">
+    <meta name="description" content="Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="代理模式">
-<meta property="og:url" content="https://baymax55.github.io/2022/06/28/design-patterns/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="Factory Method">
+<meta property="og:url" content="https://baymax55.github.io/2022/08/25/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/FactoryMethod/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="翻译代理模式">
+<meta property="og:description" content="Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/proxy-patterns.png">
-<meta property="article:published_time" content="2022-06-28T06:37:19.560Z">
-<meta property="article:modified_time" content="2022-06-28T07:54:33.206Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/design_patterns.png">
+<meta property="article:published_time" content="2022-08-25T02:43:41.419Z">
+<meta property="article:modified_time" content="2022-08-25T03:17:04.803Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="设计模式">
-<meta property="article:tag" content="代理">
-<meta property="article:tag" content="proxy">
-<meta property="article:tag" content="译文">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/proxy-patterns.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/design_patterns.png">
   
   
   
-  <title>代理模式 - Baymax55&#39;s Blog</title>
+  <title>Factory Method - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="代理模式"></span>
+            <span id="subtitle" data-typed-text="Factory Method"></span>
           
         </div>
 
@@ -211,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-28 14:37" pubdate>
-          2022年6月28日 下午
+        <time datetime="2022-08-25 10:43" pubdate>
+          2022年8月25日 上午
         </time>
       </span>
     
@@ -223,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          160 字
         
       </span>
     
@@ -234,7 +231,7 @@
         
         
         
-          17 分钟
+          2 分钟
         
       </span>
     
@@ -280,49 +277,22 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">代理模式</h1>
+            <h1 style="display: none">Factory Method</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年6月28日 下午
+                    本文最后更新于：2022年8月25日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>提供另一个对象的代理或占位符来控制对它的访问</p>
-<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><h4 id="现实世界举例"><a href="#现实世界举例" class="headerlink" title="现实世界举例"></a>现实世界举例</h4><p>想象一下，有一座塔，当地的巫师去那里学习咒语。这个象牙塔只能通过一个代理访问，这个代理确保只有前三个巫师可以进入。这里的代理代表塔的功能并向其添加访问控制。</p>
-<h4 id="大白话"><a href="#大白话" class="headerlink" title="大白话"></a>大白话</h4><p>使用代理模式，一个类代表另一个类的功能。</p>
-<h4 id="维基百科解释"><a href="#维基百科解释" class="headerlink" title="维基百科解释"></a>维基百科解释</h4><p>代理，在其最一般的形式中，是作为其他事物的界面功能的类。代理是客户机调用的包装器或代理对象，用于在幕后访问真正的服务对象。<br>使用代理可以简单地转发到实际对象，也可以提供额外的逻辑。在代理中可以提供额外的功能，例如在对实际对象的操作是资源密集型时进行缓存，或者在调用对实际对象的操作之前检查先决条件。</p>
-<h3 id="编程示例"><a href="#编程示例" class="headerlink" title="编程示例"></a>编程示例</h3><p>以我们上面的巫师塔为例。首先，我们有WizardTower接口和IvoryTower类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">WizardTower</span> &#123;<br><br>  <span class="hljs-keyword">void</span> <span class="hljs-title function_">enter</span><span class="hljs-params">(Wizard wizard)</span>;<br>&#125;<br><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IvoryTower</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">WizardTower</span> &#123;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">enter</span><span class="hljs-params">(Wizard wizard)</span> &#123;<br>    LOGGER.info(<span class="hljs-string">&quot;&#123;&#125; enters the tower.&quot;</span>, wizard);<br>  &#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>然后是一个简单的Wizard类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Wizard</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String name;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">Wizard</span><span class="hljs-params">(String name)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = name;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> String <span class="hljs-title function_">toString</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> name;<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>然后我们有了WizardTowerProxy来为WizardTower添加访问控制。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WizardTowerProxy</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">WizardTower</span> &#123;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NUM_WIZARDS_ALLOWED</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> numWizards;<br><br>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> WizardTower tower;<br><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">WizardTowerProxy</span><span class="hljs-params">(WizardTower tower)</span> &#123;<br>    <span class="hljs-built_in">this</span>.tower = tower;<br>  &#125;<br><br>  <span class="hljs-meta">@Override</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">enter</span><span class="hljs-params">(Wizard wizard)</span> &#123;<br>    <span class="hljs-keyword">if</span> (numWizards &lt; NUM_WIZARDS_ALLOWED) &#123;<br>      tower.enter(wizard);<br>      numWizards++;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      LOGGER.info(<span class="hljs-string">&quot;&#123;&#125; is not allowed to enter!&quot;</span>, wizard);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这是塔进入的场景。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">var</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">WizardTowerProxy</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">IvoryTower</span>());<br>proxy.enter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Wizard</span>(<span class="hljs-string">&quot;Red wizard&quot;</span>));<br>proxy.enter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Wizard</span>(<span class="hljs-string">&quot;White wizard&quot;</span>));<br>proxy.enter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Wizard</span>(<span class="hljs-string">&quot;Black wizard&quot;</span>));<br>proxy.enter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Wizard</span>(<span class="hljs-string">&quot;Green wizard&quot;</span>));<br>proxy.enter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Wizard</span>(<span class="hljs-string">&quot;Brown wizard&quot;</span>));<br><br></code></pre></td></tr></table></figure>
-<p>程序输出</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><br>Red wizard enters the tower.<br>White wizard enters the tower.<br>Black wizard enters the tower.<br>Green wizard is not allowed to enter!<br>Brown wizard is not allowed to enter!<br></code></pre></td></tr></table></figure>
-<h2 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h2><p><img src="1.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="适应范围"><a href="#适应范围" class="headerlink" title="适应范围"></a>适应范围</h2><p>当需要比简单指针更通用或更复杂的对象引用时，代理是适用的。以下是代理模式适用的几种常见情况。</p>
-<ul>
-<li>远程代理为不同地址空间中的对象提供本地代表。</li>
-<li>虚拟代理按需创建昂贵的对象。</li>
-<li>保护代理控制对原始对象的访问。当对象应具有不同的访问权限时，保护代理很有用。</li>
-</ul>
-<p>通常，代理模式用于</p>
-<ul>
-<li>控制对另一个对象的访问</li>
-<li>惰性初始化</li>
-<li>实现日志记录</li>
-<li>促进网络连接</li>
-<li>计数对对象的引用</li>
-</ul>
-<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://java-design-patterns.com/patterns/proxy/">Proxy</a></li>
+              <p>Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.</p>
+<p><img src="/img/design-patterns/img_3.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://java-design-patterns.com/patterns/factory-method/">Factory Method</a></li>
 </ul>
 
               
@@ -358,12 +328,6 @@
       
         <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>
       
-        <a href="/tags/%E4%BB%A3%E7%90%86/">#代理</a>
-      
-        <a href="/tags/proxy/">#proxy</a>
-      
-        <a href="/tags/%E8%AF%91%E6%96%87/">#译文</a>
-      
     </div>
   
 </div>
@@ -374,8 +338,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>代理模式</div>
-      <div>https://baymax55.github.io/2022/06/28/design-patterns/代理模式/</div>
+      <div>Factory Method</div>
+      <div>https://baymax55.github.io/2022/08/25/设计模式/FactoryMethod/</div>
     </div>
     <div class="license-meta">
       
@@ -387,7 +351,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月28日</div>
+          <div>2022年8月25日</div>
         </div>
       
       
@@ -417,18 +381,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/06/29/java/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E6%96%B9%E5%BC%8F%E5%8F%8A%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98/" title="常用的创建对象方式及存在问题">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">常用的创建对象方式及存在问题</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/28/Raft%20%E5%8A%A8%E7%94%BB%E6%BC%94%E7%A4%BA/" title="Raft 动画演示">
-                        <span class="hidden-mobile">Raft 动画演示</span>
+                      <a href="/2022/08/24/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/" title="Template method">
+                        <span class="hidden-mobile">Template method</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

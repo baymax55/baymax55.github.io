@@ -6,7 +6,7 @@
   <link href="https://baymax55.github.io/atom.xml" rel="self"/>
   
   <link href="https://baymax55.github.io/"/>
-  <updated>2022-08-22T07:47:20.928Z</updated>
+  <updated>2022-08-25T03:17:04.803Z</updated>
   <id>https://baymax55.github.io/</id>
   
   <author>
@@ -15,6 +15,48 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Factory Method</title>
+    <link href="https://baymax55.github.io/2022/08/25/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/FactoryMethod/"/>
+    <id>https://baymax55.github.io/2022/08/25/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/FactoryMethod/</id>
+    <published>2022-08-25T02:43:41.419Z</published>
+    <updated>2022-08-25T03:17:04.803Z</updated>
+    
+    <content type="html"><![CDATA[<p>Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.</p><p><img src="/img/design-patterns/img_3.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/factory-method/">Factory Method</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses.</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="设计模式" scheme="https://baymax55.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Template method</title>
+    <link href="https://baymax55.github.io/2022/08/24/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
+    <id>https://baymax55.github.io/2022/08/24/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</id>
+    <published>2022-08-24T03:47:34.670Z</published>
+    <updated>2022-08-24T03:49:35.735Z</updated>
+    
+    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
+    
+    
+    <summary type="html">Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm&#39;s structure.</summary>
+    
+    
+    
+    <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
+    
+    
+    <category term="设计模式" scheme="https://baymax55.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>k3s安装与部署</title>
@@ -1059,9 +1101,9 @@
     <category term="IT" scheme="https://baymax55.github.io/categories/IT/"/>
     
     
-    <category term="代理" scheme="https://baymax55.github.io/tags/%E4%BB%A3%E7%90%86/"/>
-    
     <category term="设计模式" scheme="https://baymax55.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    <category term="代理" scheme="https://baymax55.github.io/tags/%E4%BB%A3%E7%90%86/"/>
     
     <category term="proxy" scheme="https://baymax55.github.io/tags/proxy/"/>
     
