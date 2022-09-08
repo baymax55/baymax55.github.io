@@ -4,6 +4,62 @@
   
   
   <entry>
+    <title>Kubernetes网络权威指南：基础、原理与实践</title>
+    <link href="/2022/09/07/book/Kubernetes%E7%BD%91%E7%BB%9C%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/"/>
+    <url>/2022/09/07/book/Kubernetes%E7%BD%91%E7%BB%9C%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/</url>
+    
+    <content type="html"><![CDATA[<p><img src="img.png"></p><h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p>杜军</p><h2 id="原文摘录"><a href="#原文摘录" class="headerlink" title="原文摘录"></a>原文摘录</h2><h2 id="短评"><a href="#短评" class="headerlink" title="短评"></a>短评</h2><ul><li><strong>1-3章还是比较基础的， 4章讲解了一些原理性的东西 总体比较全面吧，但是讲解的不是很深入，适合初学者。</strong></li></ul><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://book.douban.com/subject/34855927/">豆瓣读书</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>book</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>k8s</tag>
+      
+      <tag>network</tag>
+      
+      <tag>杜军</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>modified subpath configmap mount fails when container restarts</title>
+    <link href="/2022/09/07/k8s/modified%20subpath%20configmap%20mount%20fails%20when%20container%20restarts/"/>
+    <url>/2022/09/07/k8s/modified%20subpath%20configmap%20mount%20fails%20when%20container%20restarts/</url>
+    
+    <content type="html"><![CDATA[<p>k8s 1.20 以下版本使用subpath会出现此问题</p><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul><li><a href="https://github.com/kubernetes/kubernetes/issues/68211">modified subpath configmap mount fails when container restarts</a></li><li><a href="https://www.cnblogs.com/cmt/p/14333247.html">【故障公告】K8s CofigMap 挂载问题引发网站故障</a></li><li><a href="https://github.com/moby/moby/issues/37083">docker run –mount creates a directory owned by root if directory is removed at a wrong time</a></li><li><a href="https://github.com/kubernetes/kubernetes/issues/96240">OCI runtime create failed: container_linux.go:349: starting container process caused “process_linux.go:449</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>k8s</tag>
+      
+      <tag>configmap</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Guide to Java HashMap</title>
     <link href="/2022/08/30/java/Guide-to-Java-HashMap/"/>
     <url>/2022/08/30/java/Guide-to-Java-HashMap/</url>
