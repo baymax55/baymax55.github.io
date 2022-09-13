@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="OOM stands for “Out Of Memory”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to fix OOMKilled Kubernetes error">
+<meta property="og:url" content="https://baymax55.github.io/2022/09/13/k8s/how-to-fix-OOMKilled-kubernetes-error/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="OOM stands for “Out Of Memory”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/k8s.png">
+<meta property="article:published_time" content="2022-09-13T07:41:37.836Z">
+<meta property="article:modified_time" content="2022-08-08T02:40:59.297Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="OOMKilled">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/k8s.png">
+  
+  
+  
+  <title>How to fix OOMKilled Kubernetes error - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="How to fix OOMKilled Kubernetes error"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-13 15:41" pubdate>
+          2022年9月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">How to fix OOMKilled Kubernetes error</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年8月8日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="What-is-OOMKilled-exit-code-137"><a href="#What-is-OOMKilled-exit-code-137" class="headerlink" title="What is OOMKilled (exit code 137)"></a>What is OOMKilled (exit code 137)</h2><p>The <code>OOMKilled</code> error, also indicated by exit code 137, means that a container or pod was terminated because they used more memory than allowed. OOM stands for “Out Of Memory”.</p>
+<p>Kubernetes allows pods to limit the resources their containers are allowed to utilize on the host machine. A pod can specify a <strong>memory limit</strong> – the maximum amount of memory the container is allowed to use, and a <strong>memory request</strong> – the minimum memory the container is expected to use.</p>
+<p>If a container uses more memory than its memory limit, it is terminated with an <code>OOMKilled</code> status. Similarly, if overall memory usage on all containers, or all pods on the node, exceeds the defined limit, one or more pods may be terminated.</p>
+<p>You can identify the error by running the <code>kubectl get pods command</code>—the pod status will appear as <code>Terminating</code>.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">NAME</span>        <span class="hljs-string">READY</span>    <span class="hljs-string">STATUS</span>       <span class="hljs-string">RESTARTS</span>    <span class="hljs-string">AGE</span><br><span class="hljs-string">my-pod-1</span>    <span class="hljs-number">0</span><span class="hljs-string">/1</span>      <span class="hljs-string">OOMKilled</span>    <span class="hljs-number">0</span>           <span class="hljs-string">3m12s</span><br></code></pre></td></tr></table></figure>
+
+<p>We’ll provide a general process for identifying and resolving <code>OOMKilled</code>. More complex cases will require advanced diagnosis and troubleshooting, which is beyond the scope of this article.</p>
+<h2 id="How-Does-the-OOM-Killer-Mechanism-Work"><a href="#How-Does-the-OOM-Killer-Mechanism-Work" class="headerlink" title="How Does the OOM Killer Mechanism Work?"></a>How Does the OOM Killer Mechanism Work?</h2><p><code>OOMKilled</code> is actually not native to Kubernetes—it is a feature of the Linux Kernel, known as the <code>OOM Killer</code>, which Kubernetes uses to manage container lifecycles. The <code>OOM Killer</code> mechanism monitors node memory and selects processes that are taking up too much memory, and should be killed. It is important to realize that <code>OOM Killer</code> may kill a process even if there is free memory on the node.</p>
+<p>The Linux kernel maintains an <code>oom_score</code> for each process running on the host. The higher this score, the greater the chance that the process will be killed. Another value, called <code>oom_score_adj</code>, allows users to customize the OOM process and define when processes should be terminated.</p>
+<p>Kubernetes uses the <code>oom_score_adj</code> value when defining a Quality of Service (QoS) class for a pod. There are three QoS classes that may be assigned to a pod:</p>
+<ul>
+<li>  Guaranteed</li>
+<li>  Burstable</li>
+<li>  BestEffort</li>
+</ul>
+<p>Each QoS class has a matching value for <code>oom_score_adj</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Quality of Service</th>
+<th>oom_score_adj</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Guaranteed</td>
+<td>-997</td>
+</tr>
+<tr>
+<td>BestEffort</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>Burstable</td>
+<td>min(max(2, 1000—(1000 * memoryRequestBytes) / machineMemoryCapacityBytes), 999)</td>
+</tr>
+</tbody></table>
+<p>Because “Guaranteed” pods have a lower value, they are the last to be killed on a node that is running out of memory. “BestEffort” pods are the first to be killed.</p>
+<p>A pod that is killed due to a memory issue is not necessarily evicted from a node—if the restart policy on the node is set to “Always”, it will try to restart the pod.</p>
+<p>To see the QoS class of a pod, run the following command:</p>
+<p><code>Kubectl get pod -o jsonpath=’&#123;.status.qosClass&#125;’</code></p>
+<p>To see the <code>oom_score</code> of a pod:</p>
+<ol>
+<li> Run <code>kubectl exec -it /bin/bash</code></li>
+<li> To see the <code>oom_score</code>, run <code>cat/proc//oom_score</code></li>
+<li> To see the <code>oom_score_adj</code>, <code>run cat/proc//oom_score_adj</code></li>
+</ol>
+<p>The pod with the lowest <code>oom_score</code> is the first to be killed when the node runs out of memory.</p>
+<h2 id="OOMKilled-Common-Causes"><a href="#OOMKilled-Common-Causes" class="headerlink" title="OOMKilled: Common Causes"></a>OOMKilled: Common Causes</h2><p>The following table shows the common causes of this error and how to resolve it. However, note there are many more causes of OOMKilled errors, and many cases are difficult to diagnose and troubleshoot.</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Container memory limit was reached, and the application is experiencing higher load than normal</td>
+<td>Increase memory limit in pod specifications</td>
+</tr>
+<tr>
+<td>Container memory limit was reached, and application is experiencing a memory leak</td>
+<td>Debug the application and resolve the memory leak</td>
+</tr>
+<tr>
+<td>Node is overcommitted—this means the total memory used by pods is greater than node memory</td>
+<td>Adjust memory requests (minimal threshold) and memory limits (maximal threshold) in your containers</td>
+</tr>
+</tbody></table>
+<h2 id="OOMKilled-Diagnosis-and-Resolution"><a href="#OOMKilled-Diagnosis-and-Resolution" class="headerlink" title="OOMKilled: Diagnosis and Resolution"></a>OOMKilled: Diagnosis and Resolution</h2><h3 id="Step-1-Gather-Information"><a href="#Step-1-Gather-Information" class="headerlink" title="Step 1: Gather Information"></a>Step 1: Gather Information</h3><p>Run <code>kubectl describe pod [name]</code> and save the content to a text file for future reference:</p>
+<p><code>kubectl describe pod [name] /tmp/troubleshooting_describe_pod.txt</code></p>
+<h3 id="Step-2-Check-Pod-Events-Output-for-Exit-Code-137"><a href="#Step-2-Check-Pod-Events-Output-for-Exit-Code-137" class="headerlink" title="Step 2: Check Pod Events Output for Exit Code 137"></a>Step 2: Check Pod Events Output for Exit Code 137</h3><p>Check the Events section of the describe pod text file, and look for the following message:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">State:</span>          <span class="hljs-string">Running</span><br>       <span class="hljs-attr">Started:</span>      <span class="hljs-string">Thu,</span> <span class="hljs-number">10</span> <span class="hljs-string">Oct</span> <span class="hljs-number">2019 11:14:13</span> <span class="hljs-string">+0200</span><br>       <span class="hljs-attr">Last State:</span>   <span class="hljs-string">Terminated</span><br>       <span class="hljs-attr">Reason:</span>       <span class="hljs-string">OOMKilled</span><br>       <span class="hljs-attr">Exit Code:</span>    <span class="hljs-number">137</span><br>       <span class="hljs-string">...</span><br></code></pre></td></tr></table></figure>
+<p>Exit code 137 indicates that the container was terminated due to an out of memory issue. Now look through the events in the pod’s recent history, and try to determine what caused the <code>OOMKilled</code> error:</p>
+<ul>
+<li>  The pod was terminated because a container limit was reached.</li>
+<li>  The pod was terminated because the node was “overcommitted”—pods were scheduled to the node that, put together, request more memory than is available on the node.</li>
+</ul>
+<h3 id="Step-3-Troubleshooting"><a href="#Step-3-Troubleshooting" class="headerlink" title="Step 3: Troubleshooting"></a>Step 3: Troubleshooting</h3><p>If the pod was terminated because <strong>container limit was reached</strong>:</p>
+<ul>
+<li>  Determine if your application really needs more memory. For example, if the application is a website that is experiencing additional load, it may need more memory than originally specified. In this case, to resolve the error, increase the memory limit for the container in the pod specification.</li>
+<li>  If memory use suddenly increases, and does not seem to be related to application loads, the application may be experiencing a memory leak. Debug the application and resolve the memory leak. In this case you should not increase the memory limit, because this will cause the application to use up too many resources on the nodes.</li>
+</ul>
+<p>If the pod was terminated because of <strong>overcommit on the node</strong>:</p>
+<ul>
+<li>  Overcommit on a node can occur because pods are allowed to schedule on a node if their memory requests value—the minimal memory value—is less than the memory available on the node.</li>
+<li>  For example, Kubernetes may run 10 containers with a memory request value of 1 GB on a node with 10 GB memory. However, if these containers have a memory limit of 1.5 GB, some of the pods may use more than the minimum memory, and then the node will run out of memory and need to kill some of the pods.</li>
+<li>  You need to determine why Kubernetes decided to terminate the pod with the <code>OOMKilled</code> error, and adjust memory requests and limit values to ensure that the node is not overcommitted.</li>
+</ul>
+<p>When adjusting memory requests and limits, keep in mind that when a node is overcommitted, Kubernetes kills nodes according to the following priority order:</p>
+<ol>
+<li> Pods that do not have requests or limits</li>
+<li> Pods that have requests, but not limits</li>
+<li> Pods that are using more than their memory request value—minimal memory specified—but under their memory limit</li>
+<li> Pods that are using more than their memory limit</li>
+</ol>
+<p>To fully diagnose and resolve Kubernetes memory issues, you’ll need to monitor your environment, understand the memory behavior of pods and containers compared to the limits, and fine tune your settings. This can be a complex, unwieldy process without the right tooling.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://komodor.com/learn/how-to-fix-oomkilled-exit-code-137/">How to fix OOMKilled Kubernetes error (exit code 137)</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/k8s/">#k8s</a>
+      
+        <a href="/tags/OOMKilled/">#OOMKilled</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>How to fix OOMKilled Kubernetes error</div>
+      <div>https://baymax55.github.io/2022/09/13/k8s/how-to-fix-OOMKilled-kubernetes-error/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/13/k8s/k3s%E5%AE%89%E8%A3%85%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="k3s安装与部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">k3s安装与部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/13/k8s/Kubernetes%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="Kubernetes网络模型的基础知识">
+                        <span class="hidden-mobile">Kubernetes网络模型的基础知识</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

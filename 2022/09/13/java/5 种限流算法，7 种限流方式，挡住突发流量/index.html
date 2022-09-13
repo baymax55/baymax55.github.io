@@ -1,0 +1,940 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="介绍限流相关知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5种限流算法,7种限流方式,挡住突发流量">
+<meta property="og:url" content="https://baymax55.github.io/2022/09/13/java/5%20%E7%A7%8D%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%EF%BC%8C7%20%E7%A7%8D%E9%99%90%E6%B5%81%E6%96%B9%E5%BC%8F%EF%BC%8C%E6%8C%A1%E4%BD%8F%E7%AA%81%E5%8F%91%E6%B5%81%E9%87%8F/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="介绍限流相关知识">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta property="article:published_time" content="2022-09-13T07:41:37.806Z">
+<meta property="article:modified_time" content="2022-07-28T01:13:45.962Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="限流">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+  
+  
+  
+  <title>5种限流算法,7种限流方式,挡住突发流量 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="5种限流算法,7种限流方式,挡住突发流量"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-13 15:41" pubdate>
+          2022年9月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          126 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">5种限流算法,7种限流方式,挡住突发流量</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年7月28日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p><img src="https://img.wdbyte.com/git/2021/20220314204028.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近几年，随着微服务的流行，服务和服务之间的依赖越来越强，调用关系越来越复杂，服务和服务之间的<strong>稳定性</strong>越来越重要。在遇到突发的请求量激增，恶意的用户访问，亦或请求频率过高给下游服务带来较大压力时，我们常常需要通过缓存、限流、熔断降级、负载均衡等多种方式保证服务的稳定性。其中<strong>限流</strong>是不可或缺的一环，这篇文章介绍<strong>限流</strong>相关知识。</p>
+<h2 id="1-限流"><a href="#1-限流" class="headerlink" title="1. 限流"></a>1. 限流</h2><p><strong>限流</strong>顾名思义，就是对请求或并发数进行限制；通过对一个时间窗口内的请求量进行限制来保障系统的正常运行。如果我们的服务资源有限、处理能力有限，就需要对调用我们服务的上游请求进行限制，以防止自身服务由于资源耗尽而停止服务。</p>
+<p>在限流中有两个概念需要了解。</p>
+<ul>
+<li>  <strong>阈值</strong>：在一个单位时间内允许的请求量。如 QPS 限制为10，说明 1 秒内最多接受 10 次请求。</li>
+<li>  <strong>拒绝策略</strong>：超过阈值的请求的拒绝策略，常见的拒绝策略有直接拒绝、排队等待等。</li>
+</ul>
+<h2 id="2-固定窗口算法"><a href="#2-固定窗口算法" class="headerlink" title="2. 固定窗口算法"></a>2. 固定窗口算法</h2><p><strong>固定窗口算法</strong>又叫<strong>计数器算法</strong>，是一种<strong>简单</strong>方便的限流算法。主要通过一个支持<strong>原子操作</strong>的计数器来累计 1 秒内的请求次数，当 1 秒内计数达到限流阈值时触发拒绝策略。每过 1 秒，计数器重置为 0 开始重新计数。</p>
+<h3 id="2-1-代码实现"><a href="#2-1-代码实现" class="headerlink" title="2.1. 代码实现"></a>2.1. 代码实现</h3><p>下面是简单的代码实现，QPS 限制为 2，这里的代码做了一些<strong>优化</strong>，并没有单独开一个线程去每隔 1 秒重置计数器，而是在每次调用时进行时间间隔计算来确定是否先重置计数器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> https://www.wdbyte.com</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RateLimiterSimpleWindow</span> &#123;<br>    <span class="hljs-comment">// 阈值</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">Integer</span> <span class="hljs-variable">QPS</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-comment">// 时间窗口（毫秒）</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">long</span> <span class="hljs-variable">TIME_WINDOWS</span> <span class="hljs-operator">=</span> <span class="hljs-number">1000</span>;<br>    <span class="hljs-comment">// 计数器</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">REQ_COUNT</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>();<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">long</span> <span class="hljs-variable">START_TIME</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryAcquire</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> ((System.currentTimeMillis() - START_TIME) &gt; TIME_WINDOWS) &#123;<br>            REQ_COUNT.set(<span class="hljs-number">0</span>);<br>            START_TIME = System.currentTimeMillis();<br>        &#125;<br>        <span class="hljs-keyword">return</span> REQ_COUNT.incrementAndGet() &lt;= QPS;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            Thread.sleep(<span class="hljs-number">250</span>);<br>            <span class="hljs-type">LocalTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalTime.now();<br>            <span class="hljs-keyword">if</span> (!tryAcquire()) &#123;<br>                System.out.println(now + <span class="hljs-string">&quot; 被限流&quot;</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                System.out.println(now + <span class="hljs-string">&quot; 做点什么&quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs log">20:53:43.038922 做点什么<br>20:53:43.291435 做点什么<br>20:53:43.543087 被限流<br>20:53:43.796666 做点什么<br>20:53:44.050855 做点什么<br>20:53:44.303547 被限流<br>20:53:44.555008 被限流<br>20:53:44.809083 做点什么<br>20:53:45.063828 做点什么<br>20:53:45.314433 被限流<br></code></pre></td></tr></table></figure>
+
+
+
+<p>从输出结果中可以看到大概每秒操作 3 次，由于限制 QPS 为 2，所以平均会有一次被限流。看起来可以了，不过我们思考一下就会发现这种简单的限流方式是有问题的，虽然我们限制了 QPS 为 2，但是当遇到时间窗口的临界突变时，如 1s 中的后 500 ms 和第 2s 的前 500ms 时，虽然是加起来是 1s 时间，却可以被请求 4 次。</p>
+<p><img src="https://img.wdbyte.com/git/2021/20220223215006.png" srcset="/img/loading.gif" lazyload alt="固定窗口算法"></p>
+<p>简单修改测试代码，可以进行验证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 先休眠 400ms，可以更快的到达时间窗口。</span><br>Thread.sleep(<span class="hljs-number">400</span>);<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>    Thread.sleep(<span class="hljs-number">250</span>);<br>    <span class="hljs-keyword">if</span> (!tryAcquire()) &#123;<br>        System.out.println(<span class="hljs-string">&quot;被限流&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;做点什么&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>得到输出中可以看到连续 4 次请求，间隔 250 ms 没有却被限制。：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">20:51:17.395087 做点什么<br>20:51:17.653114 做点什么<br>20:51:17.903543 做点什么<br>20:51:18.154104 被限流<br>20:51:18.405497 做点什么<br>20:51:18.655885 做点什么<br>20:51:18.906177 做点什么<br>20:51:19.158113 被限流<br>20:51:19.410512 做点什么<br>20:51:19.661629 做点什么<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-滑动窗口算法"><a href="#3-滑动窗口算法" class="headerlink" title="3. 滑动窗口算法"></a>3. 滑动窗口算法</h2><p>我们已经知道固定窗口算法的实现方式以及它所存在的问题，而滑动窗口算法是对固定窗口算法的改进。既然固定窗口算法在遇到时间窗口的临界突变时会有问题，那么我们在遇到下一个时间窗口前也调整时间窗口不就可以了吗？</p>
+<p>下面是滑动窗口的示意图。</p>
+<p><img src="https://img.wdbyte.com/git/2021/20220223215316.png" srcset="/img/loading.gif" lazyload alt="滑动窗口算法"></p>
+<p>上图的示例中，每 500ms 滑动一次窗口，可以发现窗口滑动的间隔越短，时间窗口的临界突变问题发生的概率也就越小，不过只要有时间窗口的存在，还是有可能发生<strong>时间窗口的临界突变问题</strong>。</p>
+<h3 id="3-1-代码实现"><a href="#3-1-代码实现" class="headerlink" title="3.1. 代码实现"></a>3.1. 代码实现</h3><p>下面是基于以上滑动窗口思路实现的简单的滑动窗口限流工具类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wdbyte.rate.limiter;<br><br><span class="hljs-keyword">import</span> java.time.LocalTime;<br><span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicInteger;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 滑动窗口限流工具类</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> https://www.wdbyte.com</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RateLimiterSlidingWindow</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 阈值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">qps</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 时间窗口总大小（毫秒）</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">long</span> <span class="hljs-variable">windowSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">1000</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 多少个子窗口</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">Integer</span> <span class="hljs-variable">windowCount</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 窗口列表</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> WindowInfo[] windowArray = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WindowInfo</span>[windowCount];<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">RateLimiterSlidingWindow</span><span class="hljs-params">(<span class="hljs-type">int</span> qps)</span> &#123;<br>        <span class="hljs-built_in">this</span>.qps = qps;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">currentTimeMillis</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; windowArray.length; i++) &#123;<br>            windowArray[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WindowInfo</span>(currentTimeMillis, <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>(<span class="hljs-number">0</span>));<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 1. 计算当前时间窗口</span><br><span class="hljs-comment">     * 2. 更新当前窗口计数 &amp; 重置过期窗口计数</span><br><span class="hljs-comment">     * 3. 当前 QPS 是否超过限制</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryAcquire</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">currentTimeMillis</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-comment">// 1. 计算当前时间窗口</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">currentIndex</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>)(currentTimeMillis % windowSize / (windowSize / windowCount));<br>        <span class="hljs-comment">// 2.  更新当前窗口计数 &amp; 重置过期窗口计数</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">sum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; windowArray.length; i++) &#123;<br>            <span class="hljs-type">WindowInfo</span> <span class="hljs-variable">windowInfo</span> <span class="hljs-operator">=</span> windowArray[i];<br>            <span class="hljs-keyword">if</span> ((currentTimeMillis - windowInfo.getTime()) &gt; windowSize) &#123;<br>                windowInfo.getNumber().set(<span class="hljs-number">0</span>);<br>                windowInfo.setTime(currentTimeMillis);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (currentIndex == i &amp;&amp; windowInfo.getNumber().get() &lt; qps) &#123;<br>                windowInfo.getNumber().incrementAndGet();<br>            &#125;<br>            sum = sum + windowInfo.getNumber().get();<br>        &#125;<br>        <span class="hljs-comment">// 3. 当前 QPS 是否超过限制</span><br>        <span class="hljs-keyword">return</span> sum &lt;= qps;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WindowInfo</span> &#123;<br>        <span class="hljs-comment">// 窗口开始时间</span><br>        <span class="hljs-keyword">private</span> Long time;<br>        <span class="hljs-comment">// 计数器</span><br>        <span class="hljs-keyword">private</span> AtomicInteger number;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">WindowInfo</span><span class="hljs-params">(<span class="hljs-type">long</span> time, AtomicInteger number)</span> &#123;<br>            <span class="hljs-built_in">this</span>.time = time;<br>            <span class="hljs-built_in">this</span>.number = number;<br>        &#125;<br>        <span class="hljs-comment">// get...set...</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>77</p>
+<p>下面是测试用例，设置 QPS 为 2,测试次数 20 次，每次间隔 300 毫秒，预计成功次数在 12 次左右。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">qps</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>, count = <span class="hljs-number">20</span>, sleep = <span class="hljs-number">300</span>, success = count * sleep / <span class="hljs-number">1000</span> * qps;<br>    System.out.println(String.format(<span class="hljs-string">&quot;当前QPS限制为:%d,当前测试次数:%d,间隔:%dms,预计成功次数:%d&quot;</span>, qps, count, sleep, success));<br>    success = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">RateLimiterSlidingWindow</span> <span class="hljs-variable">myRateLimiter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RateLimiterSlidingWindow</span>(qps);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; count; i++) &#123;<br>        Thread.sleep(sleep);<br>        <span class="hljs-keyword">if</span> (myRateLimiter.tryAcquire()) &#123;<br>            success++;<br>            <span class="hljs-keyword">if</span> (success % qps == <span class="hljs-number">0</span>) &#123;<br>                System.out.println(LocalTime.now() + <span class="hljs-string">&quot;: success, &quot;</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                System.out.print(LocalTime.now() + <span class="hljs-string">&quot;: success, &quot;</span>);<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            System.out.println(LocalTime.now() + <span class="hljs-string">&quot;: fail&quot;</span>);<br>        &#125;<br>    &#125;<br>    System.out.println();<br>    System.out.println(<span class="hljs-string">&quot;实际测试成功次数:&quot;</span> + success);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>下面是测试的结果。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs text">当前QPS限制为:2,当前测试次数:20,间隔:300ms,预计成功次数:12<br>16:04:27.077782: success, 16:04:27.380715: success, <br>16:04:27.684244: fail<br>16:04:27.989579: success, 16:04:28.293347: success, <br>16:04:28.597658: fail<br>16:04:28.901688: fail<br>16:04:29.205262: success, 16:04:29.507117: success, <br>16:04:29.812188: fail<br>16:04:30.115316: fail<br>16:04:30.420596: success, 16:04:30.725897: success, <br>16:04:31.028599: fail<br>16:04:31.331047: fail<br>16:04:31.634127: success, 16:04:31.939411: success, <br>16:04:32.242380: fail<br>16:04:32.547626: fail<br>16:04:32.847965: success, <br>实际测试成功次数:11<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-滑动日志算法"><a href="#4-滑动日志算法" class="headerlink" title="4. 滑动日志算法"></a>4. 滑动日志算法</h2><p>滑动日志算法是实现限流的另一种方法，这种方法比较简单。基本逻辑就是记录下所有的请求时间点，新请求到来时先判断最近指定时间范围内的请求数量是否超过指定阈值，由此来确定是否达到限流，这种方式没有了时间窗口突变的问题，限流比较准确，但是因为要记录下每次请求的时间点，所以<strong>占用的内存较多</strong>。</p>
+<h3 id="4-1-代码实现"><a href="#4-1-代码实现" class="headerlink" title="4.1. 代码实现"></a>4.1. 代码实现</h3><p>下面是简单实现的 一个滑动日志算法，因为滑动日志要每次请求单独存储一条记录，可能占用内存过多。所以下面这个实现其实不算严谨的滑动日志，更像一个把 1 秒时间切分成 1000 个时间窗口的滑动窗口算法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.wdbyte.rate.limiter;<br><br><span class="hljs-keyword">import</span> java.time.LocalTime;<br><span class="hljs-keyword">import</span> java.util.HashSet;<br><span class="hljs-keyword">import</span> java.util.Set;<br><span class="hljs-keyword">import</span> java.util.TreeMap;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 滑动日志方式限流</span><br><span class="hljs-comment"> * 设置 QPS 为 2.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> https://www.wdbyte.com</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RateLimiterSildingLog</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 阈值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">Integer</span> <span class="hljs-variable">qps</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 记录请求的时间戳,和数量</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> TreeMap&lt;Long, Long&gt; treeMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TreeMap</span>&lt;&gt;();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 清理请求记录间隔, 60 秒</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">long</span> <span class="hljs-variable">claerTime</span> <span class="hljs-operator">=</span> <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">RateLimiterSildingLog</span><span class="hljs-params">(Integer qps)</span> &#123;<br>        <span class="hljs-built_in">this</span>.qps = qps;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">tryAcquire</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-comment">// 清理过期的数据老数据，最长 60 秒清理一次</span><br>        <span class="hljs-keyword">if</span> (!treeMap.isEmpty() &amp;&amp; (treeMap.firstKey() - now) &gt; claerTime) &#123;<br>            Set&lt;Long&gt; keySet = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;(treeMap.subMap(<span class="hljs-number">0L</span>, now - <span class="hljs-number">1000</span>).keySet());<br>            <span class="hljs-keyword">for</span> (Long key : keySet) &#123;<br>                treeMap.remove(key);<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 计算当前请求次数</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">sum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (Long value : treeMap.subMap(now - <span class="hljs-number">1000</span>, now).values()) &#123;<br>            sum += value;<br>        &#125;<br>        <span class="hljs-comment">// 超过QPS限制，直接返回 false</span><br>        <span class="hljs-keyword">if</span> (sum + <span class="hljs-number">1</span> &gt; qps) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-comment">// 记录本次请求</span><br>        <span class="hljs-keyword">if</span> (treeMap.containsKey(now)) &#123;<br>            treeMap.compute(now, (k, v) -&gt; v + <span class="hljs-number">1</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            treeMap.put(now, <span class="hljs-number">1L</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> sum &lt;= qps;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>        <span class="hljs-type">RateLimiterSildingLog</span> <span class="hljs-variable">rateLimiterSildingLog</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RateLimiterSildingLog</span>(<span class="hljs-number">3</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            Thread.sleep(<span class="hljs-number">250</span>);<br>            <span class="hljs-type">LocalTime</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> LocalTime.now();<br>            <span class="hljs-keyword">if</span> (rateLimiterSildingLog.tryAcquire()) &#123;<br>                System.out.println(now + <span class="hljs-string">&quot; 做点什么&quot;</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                System.out.println(now + <span class="hljs-string">&quot; 被限流&quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>代码中把阈值 QPS 设定为 3，运行可以得到如下日志：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">20:51:17.395087 做点什么<br>20:51:17.653114 做点什么<br>20:51:17.903543 做点什么<br>20:51:18.154104 被限流<br>20:51:18.405497 做点什么<br>20:51:18.655885 做点什么<br>20:51:18.906177 做点什么<br>20:51:19.158113 被限流<br>20:51:19.410512 做点什么<br>20:51:19.661629 做点什么<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="5-漏桶算法"><a href="#5-漏桶算法" class="headerlink" title="5. 漏桶算法"></a>5. 漏桶算法</h2><p>漏桶算法中的漏桶是一个形象的比喻，这里可以用生产者消费者模式进行说明，请求是一个生产者，每一个请求都如一滴水，请求到来后放到一个队列（漏桶）中，而桶底有一个孔，不断的漏出水滴，就如消费者不断的在消费队列中的内容，消费的速率（漏出的速度）等于限流阈值。即假如 QPS 为 2，则每 <code>1s / 2= 500ms</code> 消费一次。漏桶的桶有大小，就如队列的容量，当请求堆积超过指定容量时，会触发拒绝策略。</p>
+<p>下面是漏桶算法的示意图。</p>
+<p><img src="https://img.wdbyte.com/git/2021/20220225161827.png" srcset="/img/loading.gif" lazyload alt="漏桶算法"></p>
+<p>由介绍可以知道，漏桶模式中的消费处理总是能以恒定的速度进行，可以很好的<strong>保护自身系统</strong>不被突如其来的流量冲垮；但是这也是漏桶模式的缺点，假设 QPS 为 2，同时 2 个请求进来，2 个请求并不能同时进行处理响应，因为每 <code>1s / 2= 500ms</code> 只能处理一个请求。</p>
+<h2 id="6-令牌桶算法"><a href="#6-令牌桶算法" class="headerlink" title="6. 令牌桶算法"></a>6. 令牌桶算法</h2><p>令牌桶算法同样是实现限流是一种常见的思路，最为常用的 Google 的 Java 开发工具包 Guava 中的限流工具类 RateLimiter 就是令牌桶的一个实现。令牌桶的实现思路类似于生产者和消费之间的关系。</p>
+<p>系统服务作为生产者，按照指定频率向桶（容器）中添加令牌，如 QPS 为 2，每 500ms 向桶中添加一个令牌，如果桶中令牌数量达到阈值，则不再添加。</p>
+<p>请求执行作为消费者，每个请求都需要去桶中拿取一个令牌，取到令牌则继续执行；如果桶中无令牌可取，就触发拒绝策略，可以是超时等待，也可以是直接拒绝本次请求，由此达到限流目的。</p>
+<p>下面是令牌桶限流算法示意图。</p>
+<p><img src="https://img.wdbyte.com/git/2021/20220225160801.png" srcset="/img/loading.gif" lazyload alt="令牌桶算法"></p>
+<p>思考令牌桶的实现可以以下特点。</p>
+<ol>
+<li> 1s / 阈值（QPS） = 令牌添加时间间隔。</li>
+<li> 桶的容量等于限流的阈值，令牌数量达到阈值时，不再添加。</li>
+<li> 可以适应流量突发，N 个请求到来只需要从桶中获取 N 个令牌就可以继续处理。</li>
+<li> 有启动过程，令牌桶启动时桶中无令牌，然后按照令牌添加时间间隔添加令牌，若启动时就有阈值数量的请求过来，会因为桶中没有足够的令牌而触发拒绝策略，不过如 RateLimiter 限流工具已经优化了这类问题。</li>
+</ol>
+<h3 id="6-1-代码实现"><a href="#6-1-代码实现" class="headerlink" title="6.1. 代码实现"></a>6.1. 代码实现</h3><p>Google 的 Java 开发工具包 Guava 中的限流工具类 RateLimiter 就是令牌桶的一个实现，日常开发中我们也不会手动实现了，这里直接使用 RateLimiter 进行测试。</p>
+<p>引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span><br>  	<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.guava<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>guava<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>  	<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>31.0.1-jre<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>RateLimiter 限流体验：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// qps 2</span><br><span class="hljs-type">RateLimiter</span> <span class="hljs-variable">rateLimiter</span> <span class="hljs-operator">=</span> RateLimiter.create(<span class="hljs-number">2</span>);<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">time</span> <span class="hljs-operator">=</span> LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);<br>    System.out.println(time + <span class="hljs-string">&quot;:&quot;</span> + rateLimiter.tryAcquire());<br>    Thread.sleep(<span class="hljs-number">250</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>代码中限制 QPS 为 2，也就是每隔 500ms 生成一个令牌，但是程序每隔 250ms 获取一次令牌，所以两次获取中只有一次会成功。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">17:19:06.797557:true<br>17:19:07.061419:false<br>17:19:07.316283:true<br>17:19:07.566746:false<br>17:19:07.817035:true<br>17:19:08.072483:false<br>17:19:08.326347:true<br>17:19:08.577661:false<br>17:19:08.830252:true<br>17:19:09.085327:false<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-2-思考"><a href="#6-2-思考" class="headerlink" title="6.2. 思考"></a>6.2. 思考</h3><p>虽然演示了 Google Guava 工具包中的 RateLimiter 的实现，但是我们需要思考一个问题，就是令牌的添加方式，如果按照指定间隔添加令牌，那么需要开一个线程去定时添加，如果有很多个接口很多个 RateLimiter 实例，<strong>线程数会随之增加</strong>，这显然不是一个好的办法。显然 Google 也考虑到了这个问题，在 RateLimiter 中，是<strong>在每次令牌获取时才进行计算令牌是否足够的</strong>。它通过存储的下一个令牌生成的时间，和当前获取令牌的时间差，再结合阈值，去计算令牌是否足够，同时再记录下一个令牌的生成时间以便下一次调用。</p>
+<p>下面是 Guava 中 RateLimiter 类的子类 SmoothRateLimiter 的 <code>resync()</code> 方法的代码分析，可以看到其中的令牌计算逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">resync</span><span class="hljs-params">(<span class="hljs-type">long</span> nowMicros)</span> &#123; <span class="hljs-comment">// 当前微秒时间</span><br>    <span class="hljs-comment">// 当前时间是否大于下一个令牌生成时间</span><br>    <span class="hljs-keyword">if</span> (nowMicros &gt; <span class="hljs-built_in">this</span>.nextFreeTicketMicros) &#123; <br>      	<span class="hljs-comment">// 可生成的令牌数 newPermits = （当前时间 - 下一个令牌生成时间）/ 令牌生成时间间隔。</span><br>      	<span class="hljs-comment">// 如果 QPS 为2，这里的 coolDownIntervalMicros 就是 500000.0 微秒(500ms)</span><br>        <span class="hljs-type">double</span> <span class="hljs-variable">newPermits</span> <span class="hljs-operator">=</span> (<span class="hljs-type">double</span>)(nowMicros - <span class="hljs-built_in">this</span>.nextFreeTicketMicros) / <span class="hljs-built_in">this</span>.coolDownIntervalMicros();<br>				<span class="hljs-comment">// 更新令牌库存 storedPermits。</span><br>      	<span class="hljs-built_in">this</span>.storedPermits = Math.min(<span class="hljs-built_in">this</span>.maxPermits, <span class="hljs-built_in">this</span>.storedPermits + newPermits);<br>				<span class="hljs-comment">// 更新下一个令牌生成时间 nextFreeTicketMicros</span><br>      	<span class="hljs-built_in">this</span>.nextFreeTicketMicros = nowMicros;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-Redis-分布式限流"><a href="#7-Redis-分布式限流" class="headerlink" title="7. Redis 分布式限流"></a>7. Redis 分布式限流</h2><p>Redis 是一个开源的内存数据库，可以用来作为数据库、缓存、消息中间件等。Redis 是单线程的，又在内存中操作，所以速度极快，得益于 Redis 的各种特性，所以使用 Redis 实现一个限流工具是十分方便的。</p>
+<p>下面的演示都基于Spring Boot 项目，并需要以下依赖。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;dependency&gt;<br>    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>配置 Redis 信息。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">database:</span> <span class="hljs-number">0</span><br>    <span class="hljs-attr">password:</span> <br>    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">host:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>    <span class="hljs-attr">lettuce:</span><br>      <span class="hljs-attr">shutdown-timeout:</span> <span class="hljs-string">100ms</span><br>      <span class="hljs-attr">pool:</span><br>        <span class="hljs-attr">min-idle:</span> <span class="hljs-number">5</span><br>        <span class="hljs-attr">max-idle:</span> <span class="hljs-number">10</span><br>        <span class="hljs-attr">max-active:</span> <span class="hljs-number">8</span><br>        <span class="hljs-attr">max-wait:</span> <span class="hljs-string">1ms</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-1-固定窗口限流"><a href="#7-1-固定窗口限流" class="headerlink" title="7.1. 固定窗口限流"></a>7.1. 固定窗口限流</h3><p>Redis 中的固定窗口限流是使用 <code>incr</code> 命令实现的，<code>incr</code> 命令通常用来自增计数；如果我们使用时间戳信息作为 key，自然就可以统计每秒的请求量了，以此达到限流目的。</p>
+<p>这里有两点要注意。</p>
+<ol>
+<li> 对于不存在的 key，第一次新增时，value 始终为 1。</li>
+<li> INCR 和 EXPIRE 命令操作应该在一个<strong>原子操作</strong>中提交，以保证每个 key 都正确设置了过期时间，不然会有 key 值无法自动删除而导致的内存溢出。</li>
+</ol>
+<p>由于 Redis 中实现事务的复杂性，所以这里直接只用 <code>lua</code> 脚本来实现原子操作。下面是 <code>lua</code> 脚本内容。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> count = redis.call(<span class="hljs-string">&quot;incr&quot;</span>,KEYS[<span class="hljs-number">1</span>])<br><span class="hljs-keyword">if</span> count == <span class="hljs-number">1</span> <span class="hljs-keyword">then</span><br>  redis.call(<span class="hljs-string">&#x27;expire&#x27;</span>,KEYS[<span class="hljs-number">1</span>],ARGV[<span class="hljs-number">2</span>])<br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">if</span> count &gt; <span class="hljs-built_in">tonumber</span>(ARGV[<span class="hljs-number">1</span>]) <span class="hljs-keyword">then</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>下面是使用 Spring Boot 中 <code>RedisTemplate</code> 来实现的 <code>lua</code> 脚本调用测试代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> https://www.wdbyte.com</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisLuaLimiterByIncr</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">KEY_PREFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;limiter_&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">QPS</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;4&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">EXPIRE_TIME</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;1&quot;</span>;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> StringRedisTemplate stringRedisTemplate;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">redisLuaLimiterTests</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException, IOException &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">15</span>; i++) &#123;<br>            Thread.sleep(<span class="hljs-number">200</span>);<br>            System.out.println(LocalTime.now() + <span class="hljs-string">&quot; &quot;</span> + acquire(<span class="hljs-string">&quot;user1&quot;</span>));<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 计数器限流</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> key</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">acquire</span><span class="hljs-params">(String key)</span> &#123;<br>        <span class="hljs-comment">// 当前秒数作为 key</span><br>        key = KEY_PREFIX + key + System.currentTimeMillis() / <span class="hljs-number">1000</span>;<br>        DefaultRedisScript&lt;Long&gt; redisScript = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultRedisScript</span>&lt;&gt;();<br>        redisScript.setResultType(Long.class);<br>        <span class="hljs-comment">//lua文件存放在resources目录下</span><br>        redisScript.setScriptSource(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ResourceScriptSource</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;limiter.lua&quot;</span>)));<br>        <span class="hljs-keyword">return</span> stringRedisTemplate.execute(redisScript, Arrays.asList(key), QPS, EXPIRE_TIME) == <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>代码中虽然限制了 QPS 为 4，但是因为这种限流实现是把毫秒时间戳作为 key 的，所以会有临界窗口突变的问题，下面是运行结果，可以看到因为时间窗口的变化，导致了 QPS 超过了限制值 4。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">17:38:23.122044 true<br>17:38:23.695124 true<br>17:38:23.903220 true<br><span class="hljs-meta prompt_"># </span><span class="language-bash">此处有时间窗口变化，所以下面继续 <span class="hljs-literal">true</span></span><br>17:38:24.106206 true<br>17:38:24.313458 true<br>17:38:24.519431 true<br>17:38:24.724446 true<br>17:38:24.932387 false<br>17:38:25.137912 true<br>17:38:25.355595 true<br>17:38:25.558219 true<br>17:38:25.765801 true<br>17:38:25.969426 false<br>17:38:26.176220 true<br>17:38:26.381918 true<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-3-滑动窗口限流"><a href="#7-3-滑动窗口限流" class="headerlink" title="7.3. 滑动窗口限流"></a>7.3. 滑动窗口限流</h3><p>通过对上面的基于 <code>incr</code> 命令实现的 Redis 限流方式的测试，我们已经发现了固定窗口限流所带来的问题，在这篇文章的第三部分已经介绍了滑动窗口限流的优势，它可以大幅度降低因为窗口临界突变带来的问题，那么如何使用 Redis 来实现滑动窗口限流呢？</p>
+<p>这里主要使用 <code>ZSET</code> 有序集合来实现滑动窗口限流，<code>ZSET</code> 集合有下面几个特点：</p>
+<ol>
+<li> ZSET 集合中的 key 值可以自动排序。</li>
+<li> ZSET 集合中的 value 不能有重复值。</li>
+<li> ZSET 集合可以方便的使用 ZCARD 命令获取元素个数。</li>
+<li> ZSET 集合可以方便的使用 ZREMRANGEBYLEX 命令移除指定范围的 key 值。</li>
+</ol>
+<p>基于上面的四点特性，可以编写出基于 <code>ZSET</code> 的滑动窗口限流 <code>lua</code> 脚本。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">--KEYS[1]: 限流 key</span><br><span class="hljs-comment">--ARGV[1]: 时间戳 - 时间窗口</span><br><span class="hljs-comment">--ARGV[2]: 当前时间戳（作为score）</span><br><span class="hljs-comment">--ARGV[3]: 阈值</span><br><span class="hljs-comment">--ARGV[4]: score 对应的唯一value</span><br><span class="hljs-comment">-- 1. 移除时间窗口之前的数据</span><br>redis.call(<span class="hljs-string">&#x27;zremrangeByScore&#x27;</span>, KEYS[<span class="hljs-number">1</span>], <span class="hljs-number">0</span>, ARGV[<span class="hljs-number">1</span>])<br><span class="hljs-comment">-- 2. 统计当前元素数量</span><br><span class="hljs-keyword">local</span> res = redis.call(<span class="hljs-string">&#x27;zcard&#x27;</span>, KEYS[<span class="hljs-number">1</span>])<br><span class="hljs-comment">-- 3. 是否超过阈值</span><br><span class="hljs-keyword">if</span> (res == <span class="hljs-literal">nil</span>) <span class="hljs-keyword">or</span> (res &lt; <span class="hljs-built_in">tonumber</span>(ARGV[<span class="hljs-number">3</span>])) <span class="hljs-keyword">then</span><br>    redis.call(<span class="hljs-string">&#x27;zadd&#x27;</span>, KEYS[<span class="hljs-number">1</span>], ARGV[<span class="hljs-number">2</span>], ARGV[<span class="hljs-number">4</span>])<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br><span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>下面是使用 Spring Boot 中 <code>RedisTemplate</code> 来实现的 <code>lua</code> 脚本调用测试代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisLuaLimiterByZset</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> <span class="hljs-variable">KEY_PREFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;limiter_&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">String</span> <span class="hljs-variable">QPS</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;4&quot;</span>;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> StringRedisTemplate stringRedisTemplate;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">redisLuaLimiterTests</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException, IOException &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">15</span>; i++) &#123;<br>            Thread.sleep(<span class="hljs-number">200</span>);<br>            System.out.println(LocalTime.now() + <span class="hljs-string">&quot; &quot;</span> + acquire(<span class="hljs-string">&quot;user1&quot;</span>));<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 计数器限流</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> key</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">acquire</span><span class="hljs-params">(String key)</span> &#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">now</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        key = KEY_PREFIX + key;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">oldest</span> <span class="hljs-operator">=</span> String.valueOf(now - <span class="hljs-number">1_000</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">score</span> <span class="hljs-operator">=</span> String.valueOf(now);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">scoreValue</span> <span class="hljs-operator">=</span> score;<br>        DefaultRedisScript&lt;Long&gt; redisScript = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultRedisScript</span>&lt;&gt;();<br>        redisScript.setResultType(Long.class);<br>        <span class="hljs-comment">//lua文件存放在resources目录下</span><br>        redisScript.setScriptSource(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ResourceScriptSource</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;limiter2.lua&quot;</span>)));<br>        <span class="hljs-keyword">return</span> stringRedisTemplate.execute(redisScript, Arrays.asList(key), oldest, score, QPS, scoreValue) == <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>代码中限制 QPS 为 4，运行结果信息与之一致。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">17:36:37.150370 true<br>17:36:37.716341 true<br>17:36:37.922577 true<br>17:36:38.127497 true<br>17:36:38.335879 true<br>17:36:38.539225 false<br>17:36:38.745903 true<br>17:36:38.952491 true<br>17:36:39.159497 true<br>17:36:39.365239 true<br>17:36:39.570572 false<br>17:36:39.776635 true<br>17:36:39.982022 true<br>17:36:40.185614 true<br>17:36:40.389469 true<br></code></pre></td></tr></table></figure>
+
+
+
+<p>这里介绍了 Redis 实现限流的两种方式，当然使用 Redis 也可以实现漏桶和令牌桶两种限流算法，这里就不做演示了，感兴趣的可以自己研究下。</p>
+<h2 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h2><p>这篇文章介绍实现限流的几种方式，主要是<strong>窗口算法和桶算法</strong>，两者各有优势。</p>
+<ul>
+<li>  窗口算法实现简单，逻辑清晰，可以很直观的得到当前的 QPS 情况，但是会有时间窗口的临界突变问题，而且不像桶一样有队列可以缓冲。</li>
+<li>桶算法虽然稍微复杂，不好统计 QPS 情况，但是桶算法也有优势所在。<ul>
+<li>  漏桶模式消费速率恒定，可以很好的<strong>保护自身系统</strong>，可以对流量进行整形，但是面对突发流量不能快速响应。</li>
+<li>  令牌桶模式可以面对突发流量，但是启动时会有缓慢加速的过程，不过常见的开源工具中已经对此优化。</li>
+</ul>
+</li>
+</ul>
+<p><strong>单机限流与分布式限流</strong></p>
+<p>上面演示的基于代码形式的窗口算法和桶算法限流都适用于单机限流，如果需要分布式限流可以结合注册中心、负载均衡计算每个服务的限流阈值，但这样会降低一定精度，如果对精度要求不是太高，可以使用。</p>
+<p>而 Redis 的限流，由于 Redis 的单机性，本身就可以用于分布式限流。使用 Redis 可以实现各种可以用于限流算法，如果觉得麻烦也可以使用开源工具如 redisson，已经封装了基于 Redis 的限流。</p>
+<p><strong>其他限流工具</strong></p>
+<p>文中已经提到了 <code>Guava</code> 的限流工具包，不过它毕竟是单机的，开源社区中也有很多分布式限流工具，如阿里开源的 Sentinel 就是不错的工具，Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<p>一如既往，文章中的代码存放在：<a target="_blank" rel="noopener" href="https://github.com/niumoo/JavaNotes/tree/master/core-java-rate-limiter">github.com/niumoo/JavaNotes</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.wdbyte.com/java/rate-limiter.html">5 种限流算法，7 种限流方式，挡住突发流量</a></li>
+<li><a target="_blank" rel="noopener" href="https://redis.io/commands/incr">Redis INCR</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rate_limiting">Rate Limiting Wikipedia</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lenve/p/10965667.html">SpringBoot Redis</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/%E9%99%90%E6%B5%81/">#限流</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>5种限流算法,7种限流方式,挡住突发流量</div>
+      <div>https://baymax55.github.io/2022/09/13/java/5 种限流算法，7 种限流方式，挡住突发流量/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/13/hello-world/" title="Hello World">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/13/go/Structs/" title="Structs">
+                        <span class="hidden-mobile">Structs</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
