@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xxl-Job调度器原理解析">
+<meta property="og:url" content="https://baymax55.github.io/2022/09/19/java/Xxl-Job%E8%B0%83%E5%BA%A6%E5%99%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/xxl-job.png">
+<meta property="article:published_time" content="2022-09-19T00:59:05.498Z">
+<meta property="article:modified_time" content="2022-09-19T00:59:05.499Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="xxl-job">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/xxl-job.png">
+  
+  
+  
+  <title>Xxl-Job调度器原理解析 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Xxl-Job调度器原理解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-19 08:59" pubdate>
+          2022年9月19日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          18k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          154 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Xxl-Job调度器原理解析</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年9月19日 早上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <blockquote>
+<p>项目解析源码地址：<a target="_blank" rel="noopener" href="https://gitee.com/lidishan/xxl-job-code-analysis">xxl-job</a><br>xxl-job版本：2.3.0<br>Xxl-Job分为执行器、调度器。而我们平时的客户端就属于一个执行器，执行器启动的时候会自动注册到调度器上，然后调度器进行远程调度。</p>
+</blockquote>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/da76545841614878a200966fda993018~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h2 id="调度器初始化过程步骤如下"><a href="#调度器初始化过程步骤如下" class="headerlink" title="调度器初始化过程步骤如下"></a>调度器初始化过程步骤如下</h2><blockquote>
+<p>1 国际化相关  </p>
+<blockquote>
+<p>配置参数： xxl.job.i18n=zh_CN, 这里设置为中文简体  </p>
+</blockquote>
+<p>2 初始化快线程fastTriggerPool、慢线程池slowTriggerPool  </p>
+<blockquote>
+<p>配置参数：xxl.job.triggerpool.fast.max=200, 这里设置为fastTriggerPool的最大线程数=200, 不能小于200<br>xxl.job.triggerpool.slow.max=100, 这里设置为slowTriggerPool的最大线程数=100, 不能小于100  </p>
+</blockquote>
+<p>3 启动注册监听线程  </p>
+<blockquote>
+<p>3.1 初始化registryOrRemoveThreadPool线程池：用于注册或者移除的线程池，客户端调用api/registry或api/registryRemove接口时，会用这个线程池进行注册或注销<br>3.2 启动监听注册的线程registryMonitorThread：清除心跳超过90s的注册信息，并且刷新分组注册信息  </p>
+</blockquote>
+<p>4 启动失败任务监听线程(重试、告警)  </p>
+<blockquote>
+<p>配置参数：spring.mail.from=<a href="https://link.juejin.cn/?target=mailto:xxx@qq.com" title="mailto:xxx@qq.com">[email protected]</a>, 告警邮箱  </p>
+</blockquote>
+<p>5 启动监控线程  </p>
+<blockquote>
+<p>5.1 初始化callbackThreadPool线程池：用于callback回调的线程池，客户端调用api/callback接口时会使用这个线程池<br>5.2 启动监控线monitorThread：调度记录停留在 “运行中” 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败  </p>
+</blockquote>
+<p>6 启动日志统计和清除线程logrThread  </p>
+<blockquote>
+<p>-- 日志记录刷新，刷新最近三天的日志Report（即统计每天的失败、成功、运行次数等）<br>-- 每天清除一次失效过期的日志数据<br>配置参数：xxl.job.logretentiondays=30, 清除xxl-job数据库日志的过期时间, 小于7天则不清除  </p>
+</blockquote>
+<p>7 启动任务调度（**很重要！！**主要靠这两个线程进行塞数据到时间轮，然后时间轮取数调度任务）  </p>
+<blockquote>
+<p>7.1 scheduleThread线程-取待执行任务数据入时间轮（塞数据）<br>-- 第一步：用select for update 数据库作为分布式锁加锁，避免多个xxl-job admin调度器节点同时执行<br>-- 第二步：预读数据，从数据库中读取当前截止到五秒后内会执行的job信息，并且读取分页大小为preReadCount=6000条数据<br>-— preReadCount = (XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax()) * 20;<br>-- 第三步：将当前时间与下次调度时间对比，有如下三种情况<br>**** 当前时间 大于 （任务的下一次触发时间 + PRE_READ_MS（5s））：可能是查询太久了，然后下面的代码刷新了任务下次执行时间，导致超过五秒，所以就需要特殊处理<br>-——- 1、匹配过期失效的策略：DO_NOTHING=过期啥也不干，废弃；FIRE_ONCE_NOW=过期立即触发一次<br>-——- 2、刷新上一次触发 和 下一次待触发时间<br>**** 当前时间 大于 任务的下一次触发时间 并且是没有过期的：<br>-——- 1、直接触发任务执行器<br>-——- 2、刷新上一次触发 和 下一次待触发时间<br>-——- 3、如果下一次触发在五秒内，直接放进时间轮里面待调度<br>-————— 1、求当前任务下一次触发时间所处一分钟的第N秒<br>-————— 2、将当前任务ID和ringSecond放进时间轮里面<br>-————— 3、刷新上一次触发 和 下一次待触发时间<br>**** 当前时间 小于 下一次触发时间：<br>-——- 1、求当前任务下一次触发时间所处一分钟的第N秒<br>-——- 2、将当前任务ID和ringSecond放进时间轮里面<br>-——- 3、刷新上一次触发 和 下一次待触发时间<br>-- 第四步：更新数据库执行器信息，如trigger_last_time、trigger_next_time  </p>
+<p>-- 第五步：提交数据库事务，释放数据库select for update排它锁  </p>
+<p>7.2 ringThread线程-根据时间轮执行job任务 （取数据执行）<br>首先时间轮数据格式为：Map&lt;Integer, List&gt; ringData = new ConcurrentHashMap&lt;&gt;()<br>-- 第一步：获取当前所处的一分钟第几秒，然后for两次，第二次是为了重跑前面一个刻度没有被执行的的job list，避免前面的刻度遗漏了<br>-- 第二步：执行触发器<br>-- 第三步：清除当前刻度列表的数据<br>**** 执行的过程中还会选择对应的策略，如下：<br>-——- 阻塞策略：串行、废弃后面、覆盖前面<br>-——- 路由策略：取第一个、取最后一个、最小分发、一致性hash、快速失败、LFU最不常用、LRU最近最少使用、随机、轮询</p>
+</blockquote>
+</blockquote>
+<h2 id="初始化的入口代码为-XxlJobAdminConfig如下"><a href="#初始化的入口代码为-XxlJobAdminConfig如下" class="headerlink" title="初始化的入口代码为 XxlJobAdminConfig如下"></a>初始化的入口代码为 XxlJobAdminConfig如下</h2><pre><code class="hljs">@Component
+public class XxlJobAdminConfig implements InitializingBean, DisposableBean &#123;
+    private static XxlJobAdminConfig adminConfig = null;
+    public static XxlJobAdminConfig getAdminConfig() &#123;
+        return adminConfig;
+    &#125;
+    // ---------------------- XxlJobScheduler ----------------------
+    private XxlJobScheduler xxlJobScheduler;
+    @Override
+    public void afterPropertiesSet() throws Exception &#123;// 生命周期中的属性注入来对xxlJobScheduler初始化
+        adminConfig = this;
+        // 初始化xxl-job定时任务
+        xxlJobScheduler = new XxlJobScheduler();
+        xxlJobScheduler.init();
+    &#125;
+    @Override
+    public void destroy() throws Exception &#123; // 生命周期中的销毁来对xxlJobScheduler销毁
+        xxlJobScheduler.destroy();
+    &#125;
+    ..............省略..............
+&#125;
+     
+</code></pre>
+<blockquote>
+<p>xxlJobScheduler.init()进行初始化会执行如下过程：</p>
+</blockquote>
+<pre><code class="hljs">public class XxlJobScheduler &#123;
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobScheduler.class);
+    public void init() throws Exception &#123;
+        // 1 国际化相关 init i18n
+        initI18n();
+        // 2 初始化快线程池fastTriggerPool、慢线程池slowTriggerPool admin trigger pool start
+        JobTriggerPoolHelper.toStart();
+        // 3 启动注册监听线程 admin registry monitor run
+        JobRegistryHelper.getInstance().start();
+        // 4 启动失败任务监听线程(重试、告警) admin fail-monitor run
+        JobFailMonitorHelper.getInstance().start();
+        // 5 启动监控线程（调度记录停留在 &quot;运行中&quot; 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败）admin lose-monitor run ( depend on JobTriggerPoolHelper )
+        JobCompleteHelper.getInstance().start();
+        // 6 启动日志统计和清除线程（日志记录刷新，刷新最近三天的日志Report（即统计每天的失败、成功、运行次数等）；每天清除一次失效过期的日志数据）admin log report start
+        JobLogReportHelper.getInstance().start();
+        // 7 启动任务调度(scheduleThread-取待执行任务数据入时间轮；ringThread-根据时间轮执行job任务) start-schedule ( depend on JobTriggerPoolHelper )
+        JobScheduleHelper.getInstance().start();
+        logger.info(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; init xxl-job admin success.&quot;);
+    &#125;
+    ................省略........................
+&#125;
+     
+</code></pre>
+<hr>
+<h2 id="上面初始化的7个步骤拆分如下"><a href="#上面初始化的7个步骤拆分如下" class="headerlink" title="上面初始化的7个步骤拆分如下"></a>上面初始化的7个步骤拆分如下</h2><h3 id="1-国际化相关"><a href="#1-国际化相关" class="headerlink" title="1 国际化相关"></a>1 国际化相关</h3><pre><code class="hljs">private void initI18n()&#123;// 根据环境设置title为中文、英文等
+    for (ExecutorBlockStrategyEnum item:ExecutorBlockStrategyEnum.values()) &#123;
+        item.setTitle(I18nUtil.getString(&quot;jobconf_block_&quot;.concat(item.name())));
+    &#125;
+&#125;
+     
+</code></pre>
+<h3 id="2-初始化快线程fastTriggerPool、慢线程池slowTriggerPool"><a href="#2-初始化快线程fastTriggerPool、慢线程池slowTriggerPool" class="headerlink" title="2 初始化快线程fastTriggerPool、慢线程池slowTriggerPool"></a>2 初始化快线程fastTriggerPool、慢线程池slowTriggerPool</h3><blockquote>
+<p>这个步骤初始化了两个线程池fastTriggerPool和slowTriggerPool<br>在触发调度的时候会有一个选择快慢线程池的过程，如果job在一分钟内超过超过10次，就用slowTriggerPool来处理，如下：</p>
+</blockquote>
+<pre><code class="hljs">ThreadPoolExecutor triggerPool_ = fastTriggerPool;
+AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
+if (jobTimeoutCount!=null &amp;&amp; jobTimeoutCount.get() &gt; 10) &#123; // job在一分钟内超过超过10次，就用slowTriggerPool来处理 job-timeout 10 times in 1 min
+    triggerPool_ = slowTriggerPool;
+&#125;
+triggerPool_.execute(new Runnable() &#123;.........省略............&#125;
+     
+</code></pre>
+<h3 id="3-启动注册监听线程"><a href="#3-启动注册监听线程" class="headerlink" title="3 启动注册监听线程"></a>3 启动注册监听线程</h3><blockquote>
+<p>3.1 初始化registryOrRemoveThreadPool线程池：用于注册或者移除的线程池，客户端调用api/registry或api/registryRemove接口时，会用这个线程池进行注册或注销<br>3.2 启动监听注册的线程registryMonitorThread：清除心跳超过90s的注册信息，并且刷新分组注册信息</p>
+</blockquote>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">start</span>(<span class="hljs-params"></span>)&#123;<br>   <span class="hljs-comment">// 用于注册或者移除的线程池，客户端调用api/registry或api/registryRemove接口时，会用这个线程池进行注册或注销    for registry or remove</span><br>   registryOrRemoveThreadPool = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadPoolExecutor</span>(<br>         <span class="hljs-number">2</span>,<br>         <span class="hljs-number">10</span>,<br>         30L,<br>         <span class="hljs-title class_">TimeUnit</span>.<span class="hljs-property">SECONDS</span>,<br>         <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedBlockingQueue</span>&lt;<span class="hljs-title class_">Runnable</span>&gt;(<span class="hljs-number">2000</span>),<br>         <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadFactory</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-title class_">Thread</span> <span class="hljs-title function_">newThread</span>(<span class="hljs-params">Runnable r</span>) &#123;<br>               <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(r, <span class="hljs-string">&quot;xxl-job, admin JobRegistryMonitorHelper-registryOrRemoveThreadPool-&quot;</span> + r.<span class="hljs-title function_">hashCode</span>());<br>            &#125;<br>         &#125;,<br>         <span class="hljs-keyword">new</span> <span class="hljs-title class_">RejectedExecutionHandler</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">rejectedExecution</span>(<span class="hljs-params">Runnable r, ThreadPoolExecutor executor</span>) &#123;<br>               r.<span class="hljs-title function_">run</span>();<br>               logger.<span class="hljs-title function_">warn</span>(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, registry or remove too fast, match threadpool rejected handler(run now).&quot;</span>);<br>            &#125;<br>         &#125;);<br><br>   <span class="hljs-comment">// 启动监听注册的线程      for monitor</span><br>   registryMonitorThread = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>      <span class="hljs-meta">@Override</span><br>      <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">run</span>(<span class="hljs-params"></span>) &#123;<br>         <span class="hljs-keyword">while</span> (!toStop) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>               <span class="hljs-comment">// 获取自动注册的执行器组（执行器地址类型：0=自动注册、1=手动录入） auto registry group</span><br>               <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">XxlJobGroup</span>&gt; groupList = <span class="hljs-title class_">XxlJobAdminConfig</span>.<span class="hljs-title function_">getAdminConfig</span>().<span class="hljs-title function_">getXxlJobGroupDao</span>().<span class="hljs-title function_">findByAddressType</span>(<span class="hljs-number">0</span>);<br>               <span class="hljs-keyword">if</span> (groupList!=<span class="hljs-literal">null</span> &amp;&amp; !groupList.<span class="hljs-title function_">isEmpty</span>()) &#123;<span class="hljs-comment">// group组集合不为空</span><br>                  <span class="hljs-comment">// 移除死掉的调用地址（心跳时间超过90秒，就当线程挂掉了。默认是30s做一次心跳）          remove dead address (admin/executor)</span><br>                  <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">Integer</span>&gt; ids = <span class="hljs-title class_">XxlJobAdminConfig</span>.<span class="hljs-title function_">getAdminConfig</span>().<span class="hljs-title function_">getXxlJobRegistryDao</span>().<span class="hljs-title function_">findDead</span>(<span class="hljs-title class_">RegistryConfig</span>.<span class="hljs-property">DEAD_TIMEOUT</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>                  <span class="hljs-keyword">if</span> (ids!=<span class="hljs-literal">null</span> &amp;&amp; ids.<span class="hljs-title function_">size</span>()&gt;<span class="hljs-number">0</span>) &#123;<span class="hljs-comment">// 移除挂掉的注册地址信息</span><br>                     <span class="hljs-title class_">XxlJobAdminConfig</span>.<span class="hljs-title function_">getAdminConfig</span>().<span class="hljs-title function_">getXxlJobRegistryDao</span>().<span class="hljs-title function_">removeDead</span>(ids);<br>                  &#125;<br>   <br>                  <span class="hljs-comment">// fresh online address (admin/executor)</span><br>                  <span class="hljs-title class_">HashMap</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">String</span>&gt;&gt; appAddressMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">String</span>&gt;&gt;();<br>                  <span class="hljs-comment">// 找出所有正常没死掉的注册地址</span><br>                  <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">XxlJobRegistry</span>&gt; list = <span class="hljs-title class_">XxlJobAdminConfig</span>.<span class="hljs-title function_">getAdminConfig</span>().<span class="hljs-title function_">getXxlJobRegistryDao</span>().<span class="hljs-title function_">findAll</span>(<span class="hljs-title class_">RegistryConfig</span>.<span class="hljs-property">DEAD_TIMEOUT</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>                  <span class="hljs-keyword">if</span> (list != <span class="hljs-literal">null</span>) &#123;<br>                     <span class="hljs-keyword">for</span> (<span class="hljs-title class_">XxlJobRegistry</span> <span class="hljs-attr">item</span>: list) &#123;<br>                        <span class="hljs-comment">// 确保是 EXECUTOR 执行器类型</span><br>                        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">RegistryConfig</span>.<span class="hljs-property">RegistType</span>.<span class="hljs-property">EXECUTOR</span>.<span class="hljs-title function_">name</span>().<span class="hljs-title function_">equals</span>(item.<span class="hljs-title function_">getRegistryGroup</span>())) &#123;<br>                           <span class="hljs-title class_">String</span> appname = item.<span class="hljs-title function_">getRegistryKey</span>();<br>                           <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">String</span>&gt; registryList = appAddressMap.<span class="hljs-title function_">get</span>(appname);<br>                           <span class="hljs-keyword">if</span> (registryList == <span class="hljs-literal">null</span>) &#123;<br>                              registryList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;<span class="hljs-title class_">String</span>&gt;();<br>                           &#125;<br><br><br>     <br>                           <span class="hljs-keyword">if</span> (!registryList.<span class="hljs-title function_">contains</span>(item.<span class="hljs-title function_">getRegistryValue</span>())) &#123;<br>                              registryList.<span class="hljs-title function_">add</span>(item.<span class="hljs-title function_">getRegistryValue</span>());<br>                           &#125;<br>                           appAddressMap.<span class="hljs-title function_">put</span>(appname, registryList);<br>                        &#125;<br>                     &#125;<br>                  &#125;<br><br><br>     <br>                  <span class="hljs-comment">// 刷新分组注册地址信息  fresh group address</span><br>                  <span class="hljs-keyword">for</span> (<span class="hljs-title class_">XxlJobGroup</span> <span class="hljs-attr">group</span>: groupList) &#123;<br>                     <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">String</span>&gt; registryList = appAddressMap.<span class="hljs-title function_">get</span>(group.<span class="hljs-title function_">getAppname</span>());<br>                     <span class="hljs-title class_">String</span> addressListStr = <span class="hljs-literal">null</span>;<br>                     <span class="hljs-keyword">if</span> (registryList!=<span class="hljs-literal">null</span> &amp;&amp; !registryList.<span class="hljs-title function_">isEmpty</span>()) &#123;<br>                        <span class="hljs-title class_">Collections</span>.<span class="hljs-title function_">sort</span>(registryList);<br>                        <span class="hljs-title class_">StringBuilder</span> addressListSB = <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br>                        <span class="hljs-keyword">for</span> (<span class="hljs-title class_">String</span> <span class="hljs-attr">item</span>:registryList) &#123;<br>                           addressListSB.<span class="hljs-title function_">append</span>(item).<span class="hljs-title function_">append</span>(<span class="hljs-string">&quot;,&quot;</span>);<br>                        &#125;<br>                        addressListStr = addressListSB.<span class="hljs-title function_">toString</span>();<br>                        addressListStr = addressListStr.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, addressListStr.<span class="hljs-title function_">length</span>()-<span class="hljs-number">1</span>);<br>                     &#125;<br>                     group.<span class="hljs-title function_">setAddressList</span>(addressListStr);<br>                     group.<span class="hljs-title function_">setUpdateTime</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br><br><br><br>                     <span class="hljs-title class_">XxlJobAdminConfig</span>.<span class="hljs-title function_">getAdminConfig</span>().<span class="hljs-title function_">getXxlJobGroupDao</span>().<span class="hljs-title function_">update</span>(group);<br>                  &#125;<br>               &#125;<br>            &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Exception</span> e) &#123;<br>               <span class="hljs-keyword">if</span> (!toStop) &#123;<br>                  logger.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, job registry monitor thread error:&#123;&#125;&quot;</span>, e);<br>               &#125;<br>            &#125;<br>            <span class="hljs-keyword">try</span> &#123;<br>               <span class="hljs-title class_">TimeUnit</span>.<span class="hljs-property">SECONDS</span>.<span class="hljs-title function_">sleep</span>(<span class="hljs-title class_">RegistryConfig</span>.<span class="hljs-property">BEAT_TIMEOUT</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">InterruptedException</span> e) &#123;<br>               <span class="hljs-keyword">if</span> (!toStop) &#123;<br>                  logger.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, job registry monitor thread error:&#123;&#125;&quot;</span>, e);<br>               &#125;<br>            &#125;<br>         &#125;<br>         logger.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, job registry monitor thread stop&quot;</span>);<br>      &#125;     <br>   &#125;);<br>   registryMonitorThread.<span class="hljs-title function_">setDaemon</span>(<span class="hljs-literal">true</span>);<br>   registryMonitorThread.<span class="hljs-title function_">setName</span>(<span class="hljs-string">&quot;xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread&quot;</span>);<br>   registryMonitorThread.<span class="hljs-title function_">start</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-启动失败任务监听线程-重试、告警"><a href="#4-启动失败任务监听线程-重试、告警" class="headerlink" title="4 启动失败任务监听线程(重试、告警)"></a>4 启动失败任务监听线程(重试、告警)</h3><blockquote>
+<p>这部分逻辑比较简单，就是重试 + 告警，核心代码如下</p>
+</blockquote>
+<pre><code class="hljs">// 获取执行失败的job信息
+List&lt;Long&gt; failLogIds = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findFailJobLogIds(1000);
+if (failLogIds!=null &amp;&amp; !failLogIds.isEmpty()) &#123;
+   for (long failLogId: failLogIds) &#123;
+      // lock log
+      int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
+      if (lockRet &lt; 1) &#123;
+         continue;
+      &#125;
+      XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(failLogId);
+      XxlJobInfo info = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(log.getJobId());
+
+      // 1、失败塞回重试       fail retry monitor
+      if (log.getExecutorFailRetryCount() &gt; 0) &#123;
+         JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), log.getExecutorParam(), null);
+         String retryMsg = &quot;&lt;span style=\&quot;color:#F39C12;\&quot; &gt; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&quot;+ I18nUtil.getString(&quot;jobconf_trigger_type_retry&quot;) +&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; &lt;/span&gt;&quot;;
+         log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
+         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(log);
+      &#125;
+
+      // 2、进行失败告警       fail alarm monitor
+      int newAlarmStatus = 0;       // 告警状态：0-默认、-1=锁定状态、1-无需告警、2-告警成功、3-告警失败
+      if (info!=null &amp;&amp; info.getAlarmEmail()!=null &amp;&amp; info.getAlarmEmail().trim().length()&gt;0) &#123;
+         boolean alarmResult = XxlJobAdminConfig.getAdminConfig().getJobAlarmer().alarm(info, log);
+         newAlarmStatus = alarmResult?2:3;
+      &#125; else &#123;
+         newAlarmStatus = 1;
+      &#125;
+      XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, -1, newAlarmStatus);
+   &#125;
+&#125;
+     
+</code></pre>
+<h3 id="5-启动监控线程"><a href="#5-启动监控线程" class="headerlink" title="5 启动监控线程"></a>5 启动监控线程</h3><blockquote>
+<p>5.1 初始化callbackThreadPool线程池：用于callback回调的线程池，客户端调用api/callback接口时会使用这个线程池<br>5.2 启动监控线monitorThread：调度记录停留在 “运行中” 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败</p>
+</blockquote>
+<h3 id="6-启动日志统计和清除线程logrThread"><a href="#6-启动日志统计和清除线程logrThread" class="headerlink" title="6 启动日志统计和清除线程logrThread"></a>6 启动日志统计和清除线程logrThread</h3><blockquote>
+<p>-- 日志记录刷新，刷新最近三天的日志Report（即统计每天的失败、成功、运行次数等）<br>-- 每天清除一次失效过期的日志数据<br>配置参数：xxl.job.logretentiondays=30, 清除xxl-job数据库日志的过期时间, 小于7天则不清除</p>
+</blockquote>
+<h3 id="7-启动任务调度（重点！！）"><a href="#7-启动任务调度（重点！！）" class="headerlink" title="7 启动任务调度（重点！！）"></a>7 启动任务调度（<strong>重点！！</strong>）</h3><blockquote>
+<p>7.1 scheduleThread线程-取待执行任务数据入时间轮（塞数据）<br>-- 第一步：用select for update 数据库作为分布式锁加锁，避免多个xxl-job admin调度器节点同时执行<br>-- 第二步：预读数据，从数据库中读取当前截止到五秒后内会执行的job信息，并且读取分页大小为preReadCount=6000条数据<br>-— preReadCount = (XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax() + XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax()) * 20;<br>-- 第三步：将当前时间与下次调度时间对比，有如下三种情况<br>**** 当前时间 大于 （任务的下一次触发时间 + PRE_READ_MS（5s））：可能是查询太久了，然后下面的代码刷新了任务下次执行时间，导致超过五秒，所以就需要特殊处理<br>-——- 1、匹配过期失效的策略：DO_NOTHING=过期啥也不干，废弃；FIRE_ONCE_NOW=过期立即触发一次<br>-——- 2、刷新上一次触发 和 下一次待触发时间<br>**** 当前时间 大于 任务的下一次触发时间 并且是没有过期的：<br>-——- 1、直接触发任务执行器<br>-——- 2、刷新上一次触发 和 下一次待触发时间<br>-——- 3、如果下一次触发在五秒内，直接放进时间轮里面待调度<br>-————— 1、求当前任务下一次触发时间所处一分钟的第N秒<br>-————— 2、将当前任务ID和ringSecond放进时间轮里面<br>-————— 3、刷新上一次触发 和 下一次待触发时间<br>**** 当前时间 小于 下一次触发时间：<br>-——- 1、求当前任务下一次触发时间所处一分钟的第N秒<br>-——- 2、将当前任务ID和ringSecond放进时间轮里面<br>-——- 3、刷新上一次触发 和 下一次待触发时间<br>-- 第四步：更新数据库执行器信息，如trigger_last_time、trigger_next_time  </p>
+<p>-- 第五步：提交数据库事务，释放数据库select for update排它锁  </p>
+<p>7.2 ringThread线程-根据时间轮执行job任务 （取数据执行）<br>首先时间轮数据格式为：Map&lt;Integer, List&gt; ringData = new ConcurrentHashMap&lt;&gt;()<br>-- 第一步：获取当前所处的一分钟第几秒，然后for两次，第二次是为了重跑前面一个刻度没有被执行的的job list，避免前面的刻度遗漏了<br>-- 第二步：执行触发器<br>-- 第三步：清除当前刻度列表的数据<br>**** 执行的过程中还会选择对应的策略，如下：<br>-——- 阻塞策略：串行、废弃后面、覆盖前面<br>-——- 路由策略：取第一个、取最后一个、最小分发、一致性hash、快速失败、LFU最不常用、LRU最近最少使用、随机、轮询</p>
+</blockquote>
+<ul>
+<li>  启动两个线程解析的核心源码如下：<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void start<span class="hljs-literal">()</span>&#123;<br><br>    <span class="hljs-comment">// 启动调度线程，这些线程是用来取数据的 schedule thread</span><br>    scheduleThread = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Thread(<span class="hljs-params">new</span> Runnable()</span> &#123;<br>    @Override<br>    public void run<span class="hljs-literal">()</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<span class="hljs-comment">// 不知道为啥要休眠 4-5秒 时间，然后再启动</span><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TimeUnit</span>.</span><span class="hljs-module"><span class="hljs-identifier">MILLISECONDS</span>.</span></span>sleep(<span class="hljs-number">5000</span> - <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>%<span class="hljs-number">1000</span> );<br>    &#125; catch (InterruptedException e) &#123;<br>        <span class="hljs-keyword">if</span> (!scheduleThreadToStop) &#123;<br>            logger.error(e.get<span class="hljs-constructor">Message()</span>, e);<br>        &#125;<br>    &#125;<br>    logger.info(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; init xxl-job admin scheduler success.&quot;</span>);<br>    <br>    <span class="hljs-comment">// 这里是预读数量 pre-read count: treadpool-size * trigger-qps (each trigger cost 50ms, qps = 1000/50 = 20)</span><br>    <span class="hljs-built_in">int</span> preReadCount = (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobAdminConfig</span>.</span></span>get<span class="hljs-constructor">AdminConfig()</span>.get<span class="hljs-constructor">TriggerPoolFastMax()</span> + <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobAdminConfig</span>.</span></span>get<span class="hljs-constructor">AdminConfig()</span>.get<span class="hljs-constructor">TriggerPoolSlowMax()</span>)<span class="hljs-operator"> * </span><span class="hljs-number">20</span>;<br>    <br>    <span class="hljs-keyword">while</span> (!scheduleThreadToStop) &#123;<br>    <span class="hljs-comment">// 扫描任务 Scan Job</span><br>    long start = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>;<br>    Connection conn = null;<br>    Boolean connAutoCommit = null;<br>    PreparedStatement preparedStatement = null<br>    boolean preReadSuc = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        conn = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobAdminConfig</span>.</span></span>get<span class="hljs-constructor">AdminConfig()</span>.get<span class="hljs-constructor">DataSource()</span>.get<span class="hljs-constructor">Connection()</span>;<br>        connAutoCommit = conn.get<span class="hljs-constructor">AutoCommit()</span>;<br>        conn.set<span class="hljs-constructor">AutoCommit(<span class="hljs-params">false</span>)</span>;<br>        <span class="hljs-comment">// 采用select for update，是排它锁。说白了xxl-job用一张数据库表来当分布式锁了，确保多个xxl-job admin节点下，依旧只能同时执行一个调度线程任务</span><br>        preparedStatement = conn.prepare<span class="hljs-constructor">Statement( <span class="hljs-string">&quot;select * from xxl_job_lock where lock_name = &#x27;schedule_lock&#x27; for update&quot;</span> )</span>;<br>        preparedStatement.execute<span class="hljs-literal">()</span>;<br>    <br>        <span class="hljs-comment">// tx start</span><br>    <br>        <span class="hljs-comment">// 1、预读数据 pre read</span><br>        long nowTime = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>;<br>        <span class="hljs-comment">// -- 从数据库中读取截止到五秒后未执行的job，并且读取preReadCount=6000条</span><br>        List&lt;XxlJobInfo&gt; scheduleList = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobAdminConfig</span>.</span></span>get<span class="hljs-constructor">AdminConfig()</span>.get<span class="hljs-constructor">XxlJobInfoDao()</span>.schedule<span class="hljs-constructor">JobQuery(<span class="hljs-params">nowTime</span> + PRE_READ_MS, <span class="hljs-params">preReadCount</span>)</span>;<br>        <span class="hljs-keyword">if</span> (scheduleList!=null<span class="hljs-operator"> &amp;&amp; </span>scheduleList.size<span class="hljs-literal">()</span>&gt;<span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-comment">// 2、push压进 时间轮 push time-ring</span><br>            <span class="hljs-keyword">for</span> (XxlJobInfo jobInfo: scheduleList) &#123;<br>    <br>                <span class="hljs-comment">// time-ring jump</span><br>                <span class="hljs-keyword">if</span> (nowTime &gt; jobInfo.get<span class="hljs-constructor">TriggerNextTime()</span> + PRE_READ_MS) &#123;<br>                    <span class="hljs-comment">// 当前时间 大于 （任务的下一次触发时间 + PRE_READ_MS（5s））,可能是查询太久了，然后下面的代码刷新了任务下次执行时间，导致超过五秒，所以就需要特殊处理</span><br>                    <span class="hljs-comment">// 2.1、trigger-expire &gt; 5s：pass &amp;&amp; make next-trigger-time</span><br>                    logger.warn(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, schedule misfire, jobId = &quot;</span> + jobInfo.get<span class="hljs-constructor">Id()</span>);<br>                    <span class="hljs-comment">// 1、匹配过期失效的策略：DO_NOTHING=过期啥也不干，废弃；FIRE_ONCE_NOW=过期立即触发一次 misfire match</span><br>                    MisfireStrategyEnum misfireStrategyEnum = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MisfireStrategyEnum</span>.</span></span><span class="hljs-keyword">match</span>(jobInfo.get<span class="hljs-constructor">MisfireStrategy()</span>, MisfireStrategyEnum.DO_NOTHING);<br>                    <span class="hljs-keyword">if</span> (MisfireStrategyEnum.FIRE_ONCE_NOW<span class="hljs-operator"> == </span>misfireStrategyEnum) &#123;<br>                        <span class="hljs-comment">// FIRE_ONCE_NOW 》 trigger</span><br>                        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">JobTriggerPoolHelper</span>.</span></span>trigger(jobInfo.get<span class="hljs-constructor">Id()</span>, TriggerTypeEnum.MISFIRE, -<span class="hljs-number">1</span>, null, null, null);<br>                        logger.debug(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, schedule push trigger : jobId = &quot;</span> + jobInfo.get<span class="hljs-constructor">Id()</span> );<br>                    &#125;<br>                    <span class="hljs-comment">// 2、刷新上一次触发 和 下一次待触发时间 fresh next</span><br>                    refresh<span class="hljs-constructor">NextValidTime(<span class="hljs-params">jobInfo</span>, <span class="hljs-params">new</span> Date()</span>);<br>                &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nowTime &gt; jobInfo.get<span class="hljs-constructor">TriggerNextTime()</span>) &#123;<br>                    <span class="hljs-comment">// 当前时间 大于 任务的下一次触发时间 并且是没有过期的</span><br>                    <span class="hljs-comment">// 2.2、trigger-expire &lt; 5s：direct-trigger &amp;&amp; make next-trigger-time</span><br>                    <span class="hljs-comment">// 1、直接触发任务执行器 trigger</span><br>                    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">JobTriggerPoolHelper</span>.</span></span>trigger(jobInfo.get<span class="hljs-constructor">Id()</span>, TriggerTypeEnum.CRON, -<span class="hljs-number">1</span>, null, null, null);<br>                    logger.debug(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, schedule push trigger : jobId = &quot;</span> + jobInfo.get<span class="hljs-constructor">Id()</span> );<br>                    <span class="hljs-comment">// 2、刷新上一次触发 和 下一次待触发时间 fresh next</span><br>                    refresh<span class="hljs-constructor">NextValidTime(<span class="hljs-params">jobInfo</span>, <span class="hljs-params">new</span> Date()</span>);<br>    <br>                    <span class="hljs-comment">// 如果下一次触发在五秒内，直接放进时间轮里面待调度 next-trigger-time in 5s, pre-read again</span><br>                    <span class="hljs-keyword">if</span> (jobInfo.get<span class="hljs-constructor">TriggerStatus()</span>==<span class="hljs-number">1</span><span class="hljs-operator"> &amp;&amp; </span>nowTime + PRE_READ_MS &gt; jobInfo.get<span class="hljs-constructor">TriggerNextTime()</span>) &#123;<br>                        <span class="hljs-comment">// 1、求当前任务下一次触发时间所处一分钟的第N秒 make ring second</span><br>                        <span class="hljs-built_in">int</span> ringSecond = (<span class="hljs-built_in">int</span>)((jobInfo.get<span class="hljs-constructor">TriggerNextTime()</span>/<span class="hljs-number">1000</span>)%<span class="hljs-number">60</span>);<br>                        <span class="hljs-comment">// 2、将当前任务ID和ringSecond放进时间轮里面 push time ring</span><br>                        push<span class="hljs-constructor">TimeRing(<span class="hljs-params">ringSecond</span>, <span class="hljs-params">jobInfo</span>.<span class="hljs-params">getId</span>()</span>);<br>                        <span class="hljs-comment">// 3、刷新上一次触发 和 下一次待触发时间 fresh next</span><br>                        refresh<span class="hljs-constructor">NextValidTime(<span class="hljs-params">jobInfo</span>, <span class="hljs-params">new</span> Date(<span class="hljs-params">jobInfo</span>.<span class="hljs-params">getTriggerNextTime</span>()</span>));<br>                    &#125;<br>    <br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-comment">// 当前时间 小于 下一次触发时间</span><br>                    <span class="hljs-comment">// 2.3、trigger-pre-read：time-ring trigger &amp;&amp; make next-trigger-time</span><br>                    <span class="hljs-comment">// 1、求当前任务下一次触发时间所处一分钟的第N秒 make ring second</span><br>                    <span class="hljs-built_in">int</span> ringSecond = (<span class="hljs-built_in">int</span>)((jobInfo.get<span class="hljs-constructor">TriggerNextTime()</span>/<span class="hljs-number">1000</span>)%<span class="hljs-number">60</span>);<br>                    <span class="hljs-comment">// 2、将当前任务ID和ringSecond放进时间轮里面 push time ring</span><br>                    push<span class="hljs-constructor">TimeRing(<span class="hljs-params">ringSecond</span>, <span class="hljs-params">jobInfo</span>.<span class="hljs-params">getId</span>()</span>);<br>                    <span class="hljs-comment">// 3、刷新上一次触发 和 下一次待触发时间 fresh next</span><br>                    refresh<span class="hljs-constructor">NextValidTime(<span class="hljs-params">jobInfo</span>, <span class="hljs-params">new</span> Date(<span class="hljs-params">jobInfo</span>.<span class="hljs-params">getTriggerNextTime</span>()</span>));<br>                &#125;<br>            &#125;<br>    <br>            <span class="hljs-comment">// 3、更新数据库执行器信息，如trigger_last_time、trigger_next_time update trigger info</span><br>            <span class="hljs-keyword">for</span> (XxlJobInfo jobInfo: scheduleList) &#123;<br>                <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobAdminConfig</span>.</span></span>get<span class="hljs-constructor">AdminConfig()</span>.get<span class="hljs-constructor">XxlJobInfoDao()</span>.schedule<span class="hljs-constructor">Update(<span class="hljs-params">jobInfo</span>)</span>;<br>            &#125;<br>    <br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            preReadSuc = <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-comment">// tx stop</span><br>    &#125; catch (Exception e) &#123;<br>        <span class="hljs-keyword">if</span> (!scheduleThreadToStop) &#123;<br>            logger.error(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, JobScheduleHelper#scheduleThread error:&#123;&#125;&quot;</span>, e);<br>        &#125;<br>    &#125; finally &#123;<br>        <span class="hljs-comment">// 提交事务，释放数据库select for update的锁 commit</span><br>        .......................省略.............   <br>    &#125;<br>    long cost = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>-start;<br>    <br>    <span class="hljs-comment">// 如果执行太快了，就稍微sleep等待一下 Wait seconds, align second</span><br>    <span class="hljs-keyword">if</span> (cost &lt; <span class="hljs-number">1000</span>) &#123; <span class="hljs-comment">// scan-overtime, not wait</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// pre-read period: success &gt; scan each second; fail &gt; skip this period;</span><br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TimeUnit</span>.</span><span class="hljs-module"><span class="hljs-identifier">MILLISECONDS</span>.</span></span>sleep((preReadSuc?<span class="hljs-number">1000</span>:PRE_READ_MS) - <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span>%<span class="hljs-number">1000</span>);<br>        &#125; catch (InterruptedException e) &#123;<br>            <span class="hljs-keyword">if</span> (!scheduleThreadToStop) &#123;<br>                logger.error(e.get<span class="hljs-constructor">Message()</span>, e);<br>            &#125;<br>        &#125;<br>    &#125;);<br>    scheduleThread.set<span class="hljs-constructor">Daemon(<span class="hljs-params">true</span>)</span>;<br>    scheduleThread.set<span class="hljs-constructor">Name(<span class="hljs-string">&quot;xxl-job, admin JobScheduleHelper#scheduleThread&quot;</span>)</span>;<br>    scheduleThread.start<span class="hljs-literal">()</span>;<br><br><br>    <span class="hljs-comment">// 时间轮线程，用于取出每秒的数据，然后处理 ring thread</span><br>    ringThread = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Thread(<span class="hljs-params">new</span> Runnable()</span> &#123;<br>        @Override<br>        public void run<span class="hljs-literal">()</span> &#123;<br>            <span class="hljs-keyword">while</span> (!ringThreadToStop) &#123;<br>                <span class="hljs-comment">// align second</span><br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TimeUnit</span>.</span><span class="hljs-module"><span class="hljs-identifier">MILLISECONDS</span>.</span></span>sleep(<span class="hljs-number">1000</span> - <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>current<span class="hljs-constructor">TimeMillis()</span> % <span class="hljs-number">1000</span>);<br>                &#125; catch (InterruptedException e) &#123;<br>                    <span class="hljs-keyword">if</span> (!ringThreadToStop) &#123;<br>                        logger.error(e.get<span class="hljs-constructor">Message()</span>, e);<br>                    &#125;<br>                &#125;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// second data</span><br>                    List&lt;Integer&gt; ringItemData = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;<span class="hljs-literal">()</span>;<br>                    <span class="hljs-comment">// 获取当前所处的一分钟第几秒，然后for两次，第二次是为了重跑前面一个刻度没有被执行的的job list，避免前面的刻度遗漏了</span><br>                    <span class="hljs-built_in">int</span> nowSecond = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Calendar</span>.</span></span>get<span class="hljs-constructor">Instance()</span>.get(Calendar.SECOND); <span class="hljs-comment">// 避免处理耗时太长，跨过刻度，向前校验一个刻度；</span><br>                    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) &#123;<br>                        List&lt;Integer&gt; tmpData = ringData.remove( (nowSecond+<span class="hljs-number">60</span>-i)%<span class="hljs-number">60</span> );<br>                        <span class="hljs-keyword">if</span> (tmpData != null) &#123;<br>                            ringItemData.add<span class="hljs-constructor">All(<span class="hljs-params">tmpData</span>)</span>;<br>                        &#125;<br>                    &#125;<br>    <br>                    <span class="hljs-comment">// ring trigger</span><br>                    logger.debug(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, time-ring beat : &quot;</span> + nowSecond + <span class="hljs-string">&quot; = &quot;</span> + <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">as</span><span class="hljs-constructor">List(<span class="hljs-params">ringItemData</span>)</span> );<br>                    <span class="hljs-keyword">if</span> (ringItemData.size<span class="hljs-literal">()</span> &gt; <span class="hljs-number">0</span>) &#123;<br>                        <span class="hljs-comment">// do trigger</span><br>                        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> jobId: ringItemData) &#123;<br>                            <span class="hljs-comment">// 执行触发器 do trigger</span><br>                            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">JobTriggerPoolHelper</span>.</span></span>trigger(jobId, TriggerTypeEnum.CRON, -<span class="hljs-number">1</span>, null, null, null);<br>                        &#125;<br>                        <span class="hljs-comment">// 清除当前刻度列表的数据 clear</span><br>                        ringItemData.clear<span class="hljs-literal">()</span>;<br>                    &#125;<br>                &#125; catch (Exception e) &#123;<br>                    <span class="hljs-keyword">if</span> (!ringThreadToStop) &#123;<br>                        logger.error(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, JobScheduleHelper#ringThread error:&#123;&#125;&quot;</span>, e);<br>                    &#125;<br>                &#125;<br>            &#125;<br>            logger.info(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, JobScheduleHelper#ringThread stop&quot;</span>);<br>        &#125;<br>    &#125;);<br>    ringThread.set<span class="hljs-constructor">Daemon(<span class="hljs-params">true</span>)</span>;<br>    ringThread.set<span class="hljs-constructor">Name(<span class="hljs-string">&quot;xxl-job, admin JobScheduleHelper#ringThread&quot;</span>)</span>;<br>    ringThread.start<span class="hljs-literal">()</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2></li>
+</ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6987415823690235934">Xxl-Job调度器原理解析</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/xxl-job/">#xxl-job</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Xxl-Job调度器原理解析</div>
+      <div>https://baymax55.github.io/2022/09/19/java/Xxl-Job调度器原理解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月19日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/19/other/GitHubPages+Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99/" title="GitHubPages+Hexo搭建个人博客网站">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GitHubPages+Hexo搭建个人博客网站</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/19/java/Xxl-Job%E6%89%A7%E8%A1%8C%E5%99%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" title="Xxl-Job执行器原理解析">
+                        <span class="hidden-mobile">Xxl-Job执行器原理解析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

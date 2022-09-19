@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xxl-Job执行器原理解析">
+<meta property="og:url" content="https://baymax55.github.io/2022/09/19/java/Xxl-Job%E6%89%A7%E8%A1%8C%E5%99%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并接入多家公司线上产品线，开箱即用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/xxl-job.png">
+<meta property="article:published_time" content="2022-09-19T00:59:05.498Z">
+<meta property="article:modified_time" content="2022-09-19T00:59:05.498Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="xxl-job">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/xxl-job.png">
+  
+  
+  
+  <title>Xxl-Job执行器原理解析 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Xxl-Job执行器原理解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-19 08:59" pubdate>
+          2022年9月19日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          83 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Xxl-Job执行器原理解析</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年9月19日 早上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <blockquote>
+<p>项目解析源码地址：<a target="_blank" rel="noopener" href="https://gitee.com/lidishan/xxl-job-code-analysis">xxl-job</a><br>xxl-job版本：2.3.0<br>Xxl-Job分为执行器、调度器。而我们平时的客户端就属于一个执行器，执行器启动的时候会自动注册到调度器上，然后调度器进行远程调度。</p>
+</blockquote>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b32956275e1a464992be32767fbcdbf3~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.image" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h2 id="执行器初始化过程步骤如下"><a href="#执行器初始化过程步骤如下" class="headerlink" title="执行器初始化过程步骤如下"></a>执行器初始化过程步骤如下</h2><blockquote>
+<p>1 通过加了@Conguration注解的XxlJobConfig初始化，并生成beanName=xxlJobExecutor的Bean<br>2 注册的BeanName=XxlJobConfig，会进行初始化，步骤如下：  </p>
+<blockquote>
+<ul>
+<li>  扫描所有bean，加载加了@XxlJob注解类，并记录在jobHandlerRepository</li>
+<li>  选择工厂类：GlueFactory 或 SpringGlueFactory</li>
+</ul>
+<blockquote>
+<p>-- SpringGlueFactory会拦截当前实例属性 判断是否加了@Resource或@Autowired注解，如果存在就获取当前对应的bean实例，然后通过反射注入成员中</p>
+</blockquote>
+<ul>
+<li>  启动，其步骤如下：</li>
+</ul>
+<blockquote>
+<p>-– 1 初始化存放执行日志目录文件 — 2 初始化执行者，管理客户端 — 3 初始化日志清除线程，一天执行一次，默认清除N天(可配置)前数据 — 4 初始化回调触发器线程，线程执行完会把数据回调调度器接口告诉他结果 — 5 初始化执行服务器，初始化netty服务器，并发客户端信息注册到调度器上</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr>
+<h2 id="接下来对各个源码进行一定的解析"><a href="#接下来对各个源码进行一定的解析" class="headerlink" title="接下来对各个源码进行一定的解析"></a>接下来对各个源码进行一定的解析</h2><h3 id="1-通过加了-Conguration注解的XxlJobConfig初始化，并生成beanName-xxlJobExecutor的Bean"><a href="#1-通过加了-Conguration注解的XxlJobConfig初始化，并生成beanName-xxlJobExecutor的Bean" class="headerlink" title="1     通过加了@Conguration注解的XxlJobConfig初始化，并生成beanName=xxlJobExecutor的Bean"></a>1     通过加了@Conguration注解的XxlJobConfig初始化，并生成beanName=xxlJobExecutor的Bean</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XxlJobConfig</span> &#123;<span class="hljs-comment">//     注入XxlJob相关的配置信息，并生成Bean     xxlJobExecutor</span><br>    <span class="hljs-meta">@Value</span>(<span class="hljs-string">&quot;$&#123;xxl.job.admin.addresses&#125;&quot;</span>)<br>    <span class="hljs-keyword">private</span> <span class="hljs-title class_">String</span> adminAddresses;<br>    <span class="hljs-comment">//省略</span><br>    <span class="hljs-meta">@Bean</span><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">XxlJobSpringExecutor</span> <span class="hljs-title function_">xxlJobExecutor</span>(<span class="hljs-params"></span>) &#123;<br>        logger.<span class="hljs-title function_">info</span>(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job config init.&quot;</span>);<br>        <span class="hljs-title class_">XxlJobSpringExecutor</span> xxlJobSpringExecutor = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XxlJobSpringExecutor</span>();<br>        <span class="hljs-comment">//省略</span><br>        <span class="hljs-keyword">return</span> xxlJobSpringExecutor;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-注册的BeanName-XxlJobConfig，会进行初始化，步骤如下"><a href="#2-注册的BeanName-XxlJobConfig，会进行初始化，步骤如下" class="headerlink" title="2     注册的BeanName=XxlJobConfig，会进行初始化，步骤如下"></a>2     注册的BeanName=XxlJobConfig，会进行初始化，步骤如下</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">XxlJobSpringExecutor</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">XxlJobExecutor</span> <span class="hljs-title">implements</span> <span class="hljs-title">ApplicationContextAware</span>, <span class="hljs-title">SmartInitializingSingleton</span>, <span class="hljs-title">DisposableBean</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> static <span class="hljs-keyword">final</span> <span class="hljs-type">Logger</span> logger = <span class="hljs-type">LoggerFactory</span>.getLogger(<span class="hljs-type">XxlJobSpringExecutor</span>.<span class="hljs-keyword">class</span>);<br><br>    <span class="hljs-comment">// start</span><br>    <span class="hljs-meta">@Override</span><br>    public void afterSingletonsInstantiated() &#123;<br>        <span class="hljs-comment">// init JobHandler Repository</span><br>        <span class="hljs-comment">/*initJobHandlerRepository(applicationContext);*/</span><br>        <span class="hljs-comment">// 扫描所有bean，加载加了@XxlJob注解类，并记录在jobHandlerRepository                init JobHandler Repository (for method)</span><br>        initJobHandlerMethodRepository(applicationContext);<br>        <span class="hljs-comment">// 选择工厂类：GlueFactory 或 SpringGlueFactory               选择工厂类：GlueFactory 或 SpringGlueFactory               refresh GlueFactory</span><br>        <span class="hljs-type">GlueFactory</span>.refreshInstance(<span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 启动，其步骤如下：</span><br>        <span class="hljs-comment">//--- 1 初始化存放执行日志目录文件</span><br>        <span class="hljs-comment">//--- 2 初始化执行者，管理客户端</span><br>        <span class="hljs-comment">//--- 3 初始化日志清除线程</span><br>        <span class="hljs-comment">//--- 4 初始化回调触发器线程</span><br>        <span class="hljs-comment">//--- 5 初始化执行服务器</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">super</span>.start();<br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-type">Exception</span> e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">RuntimeException</span>(e);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="上面我们对启动super-start-步骤来做具体的分析，其分析代码如下："><a href="#上面我们对启动super-start-步骤来做具体的分析，其分析代码如下：" class="headerlink" title="上面我们对启动super.start()步骤来做具体的分析，其分析代码如下："></a>上面我们对启动super.start()步骤来做具体的分析，其分析代码如下：</h4><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public void start<span class="hljs-literal">()</span> throws Exception &#123;<br>    <span class="hljs-comment">// 1 初始化存放执行日志目录文件 init logpath</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">XxlJobFileAppender</span>.</span></span>init<span class="hljs-constructor">LogPath(<span class="hljs-params">logPath</span>)</span>;<br>    <span class="hljs-comment">// 2 初始化执行者，管理客户端 init invoker, admin-client</span><br>    init<span class="hljs-constructor">AdminBizList(<span class="hljs-params">adminAddresses</span>, <span class="hljs-params">accessToken</span>)</span>;<br>    <span class="hljs-comment">// 3 初始化日志清除线程 init JobLogFileCleanThread</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">JobLogFileCleanThread</span>.</span></span>get<span class="hljs-constructor">Instance()</span>.start(logRetentionDays);<br>    <span class="hljs-comment">// 4 初始化回调触发器线程 init TriggerCallbackThread</span><br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TriggerCallbackThread</span>.</span></span>get<span class="hljs-constructor">Instance()</span>.start<span class="hljs-literal">()</span>;<br>    <span class="hljs-comment">// 5 初始化执行服务器 init executor-server</span><br>    init<span class="hljs-constructor">EmbedServer(<span class="hljs-params">address</span>, <span class="hljs-params">ip</span>, <span class="hljs-params">port</span>, <span class="hljs-params">appname</span>, <span class="hljs-params">accessToken</span>)</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="启动super-start-gt-初始化存放执行日志目录文件"><a href="#启动super-start-gt-初始化存放执行日志目录文件" class="headerlink" title="启动super.start() -&gt;          初始化存放执行日志目录文件"></a>启动super.start() -&gt;          初始化存放执行日志目录文件</h4><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">private</span> <span class="hljs-type">static</span> <span class="hljs-type">String</span> logBasePath = <span class="hljs-string">&quot;/data/applogs/xxl-job/jobhandler&quot;</span>;<br><span class="hljs-keyword">private</span> <span class="hljs-type">static</span> <span class="hljs-type">String</span> glueSrcPath = logBasePath.<span class="hljs-built_in">concat</span>(<span class="hljs-string">&quot;/gluesource&quot;</span>);<br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">initLogPath</span><span class="hljs-params">(<span class="hljs-type">String</span> logPath)</span> </span>&#123;<br>    <span class="hljs-comment">// init 判断有没有自定义目录</span><br>    <span class="hljs-keyword">if</span> (logPath != null &amp;&amp; logPath.<span class="hljs-built_in">trim</span>().<span class="hljs-built_in">length</span>() &gt; <span class="hljs-number">0</span>) &#123;<br>        logBasePath = logPath;<br>    &#125;<br>    <span class="hljs-comment">// mk base dir 如果当前目录为空，就创建一个</span><br>    <span class="hljs-built_in">File</span> logPathDir = <span class="hljs-keyword">new</span> <span class="hljs-built_in">File</span>(logBasePath);<br>    <span class="hljs-keyword">if</span> (!logPathDir.<span class="hljs-built_in">exists</span>()) &#123;<br>        logPathDir.<span class="hljs-built_in">mkdirs</span>();<br>    &#125;<br>    logBasePath = logPathDir.<span class="hljs-built_in">getPath</span>();<span class="hljs-comment">// 获取创建的目录路径</span><br><br>    <span class="hljs-comment">// mk glue dir 创建glue目录路径，没有就创建然后获取</span><br>    <span class="hljs-built_in">File</span> glueBaseDir = <span class="hljs-keyword">new</span> <span class="hljs-built_in">File</span>(logPathDir, <span class="hljs-string">&quot;gluesource&quot;</span>);<br>    <span class="hljs-keyword">if</span> (!glueBaseDir.<span class="hljs-built_in">exists</span>()) &#123;<br>        glueBaseDir.<span class="hljs-built_in">mkdirs</span>();<br>    &#125;<br>    glueSrcPath = glueBaseDir.<span class="hljs-built_in">getPath</span>();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="启动super-start-gt-初始化执行者，管理客户端"><a href="#启动super-start-gt-初始化执行者，管理客户端" class="headerlink" title="启动super.start() -&gt; 初始化执行者，管理客户端"></a>启动super.start() -&gt; 初始化执行者，管理客户端</h4><blockquote>
+<p>-- 把调度管理器的地址写入adminBizList中<br>-- 启动super.start() -&gt; 初始化日志清除线程</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">start</span><span class="hljs-params">(<span class="hljs-keyword">final</span> <span class="hljs-type">long</span> logRetentionDays)</span>&#123;<br><br>    <span class="hljs-comment">// 日志最多也只能清除三天前的 limit min value</span><br>    <span class="hljs-keyword">if</span> (logRetentionDays &lt; <span class="hljs-number">3</span> ) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 启动一个本地线程，用于处理日志清除</span><br>    localThread = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>            <span class="hljs-keyword">while</span> (!toStop) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 清除日志目录中超过logRetentionDays天的日志文件 clean log dir, over logRetentionDays</span><br>                    File[] childDirs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(XxlJobFileAppender.getLogPath()).listFiles();<br>                    <span class="hljs-keyword">if</span> (childDirs!=<span class="hljs-literal">null</span> &amp;&amp; childDirs.length&gt;<span class="hljs-number">0</span>) &#123;<br>                    <span class="hljs-comment">// today</span><br>                    <span class="hljs-type">Calendar</span> <span class="hljs-variable">todayCal</span> <span class="hljs-operator">=</span> Calendar.getInstance();<br>                    todayCal.set(Calendar.HOUR_OF_DAY,<span class="hljs-number">0</span>);<br>                    todayCal.set(Calendar.MINUTE,<span class="hljs-number">0</span>);<br>                    todayCal.set(Calendar.SECOND,<span class="hljs-number">0</span>);<br>                    todayCal.set(Calendar.MILLISECOND,<span class="hljs-number">0</span>);<br>                    <span class="hljs-type">Date</span> <span class="hljs-variable">todayDate</span> <span class="hljs-operator">=</span> todayCal.getTime();<br>                    <span class="hljs-keyword">for</span> (File childFile: childDirs) &#123;<br>                        <span class="hljs-comment">// valid</span><br>                        <span class="hljs-keyword">if</span> (!childFile.isDirectory()) &#123;<br>                            <span class="hljs-keyword">continue</span>;<br>                        &#125;<br>                        <span class="hljs-keyword">if</span> (childFile.getName().indexOf(<span class="hljs-string">&quot;-&quot;</span>) == -<span class="hljs-number">1</span>) &#123;<br>                            <span class="hljs-keyword">continue</span>;<br>                        &#125;<br>                        <span class="hljs-comment">// file create date</span><br>                        <span class="hljs-type">Date</span> <span class="hljs-variable">logFileCreateDate</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>                        <span class="hljs-keyword">try</span> &#123;<br>                            <span class="hljs-comment">// 将日志文件名转为时间</span><br>                            <span class="hljs-type">SimpleDateFormat</span> <span class="hljs-variable">simpleDateFormat</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleDateFormat</span>(<span class="hljs-string">&quot;yyyy-MM-dd&quot;</span>);<br>                            logFileCreateDate = simpleDateFormat.parse(childFile.getName());<br>                        &#125; <span class="hljs-keyword">catch</span> (ParseException e) &#123;<br>                            logger.error(e.getMessage(), e);<br>                        &#125;<br>                        <span class="hljs-keyword">if</span> (logFileCreateDate == <span class="hljs-literal">null</span>) &#123;<br>                            <span class="hljs-keyword">continue</span>;<br>                        &#125;<br>                        <span class="hljs-comment">// 如果文件时间超过logRetentionDays天，就进行删除</span><br>                        <span class="hljs-keyword">if</span> ((todayDate.getTime(<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="启动super-start-gt-初始化回调触发器线程"><a href="#启动super-start-gt-初始化回调触发器线程" class="headerlink" title="启动super.start() -&gt; 初始化回调触发器线程"></a>启动super.start() -&gt; 初始化回调触发器线程</h4><blockquote>
+<p>回调job执行结果给调度器，告诉调度器已执行完</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 启动执行结果回调线程</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">start</span>()</span> &#123;<br>    <span class="hljs-comment">// 判断是否合法的admin地址 valid</span><br>    <span class="hljs-keyword">if</span> (XxlJobExecutor.getAdminBizList() == <span class="hljs-literal">null</span>) &#123;<br>        logger.warn(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, executor callback config fail, adminAddresses is null.&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 启动回调触发线程 callback</span><br>    triggerCallbackThread = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() &#123;<br>        @Override<br>        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>()</span> &#123;<br>            <span class="hljs-comment">// 进入回调循环处理中 normal callback</span><br>            <span class="hljs-keyword">while</span>(!toStop)&#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 任务执行完，会把执行结果塞入 LinkedBlockingQueue 中，然后LinkedBlockingQueue.tack()是阻塞形的，会阻塞等待执行结果</span><br>                    HandleCallbackParam callback = getInstance().callBackQueue.take();<br>                    <span class="hljs-keyword">if</span> (callback != <span class="hljs-literal">null</span>) &#123;<br><br>                        <span class="hljs-comment">// 把执行结果全部搞出来，然后塞入callbackParamList，然后批量回调处理 callback list param</span><br>                        List&lt;HandleCallbackParam&gt; callbackParamList = <span class="hljs-keyword">new</span> ArrayList&lt;HandleCallbackParam&gt;();<br>                        <span class="hljs-built_in">int</span> drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);<br>                        callbackParamList.<span class="hljs-keyword">add</span>(callback);<br>                        <span class="hljs-comment">// callback, will retry if error</span><br>                        <span class="hljs-keyword">if</span> (callbackParamList!=<span class="hljs-literal">null</span> &amp;&amp; callbackParamList.size()&gt;<span class="hljs-number">0</span>) &#123;<br>                            doCallback(callbackParamList);<span class="hljs-comment">// 回调执行结果，告诉admin，请求的结果是 addressUrl+&quot;api/callback&quot;</span><br>                        &#125;<br>                    &#125;<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;......&#125;<br>                    <span class="hljs-comment">// 进行回到后的回归操作 last callback</span><br>                    <span class="hljs-keyword">try</span> &#123;<br>                        List&lt;HandleCallbackParam&gt; callbackParamList = <span class="hljs-keyword">new</span> ArrayList&lt;HandleCallbackParam&gt;();<br>                        <span class="hljs-built_in">int</span> drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);<br>                        <span class="hljs-keyword">if</span> (callbackParamList!=<span class="hljs-literal">null</span> &amp;&amp; callbackParamList.size()&gt;<span class="hljs-number">0</span>) &#123;<br>                            doCallback(callbackParamList);<br>                        &#125;<br>                    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;..........&#125;<br>                    logger.info(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job, executor callback thread destory.&quot;</span>);<br>                &#125;<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="启动super-start-gt-初始化执行服务器"><a href="#启动super-start-gt-初始化执行服务器" class="headerlink" title="启动super.start() -&gt;初始化执行服务器"></a>启动super.start() -&gt;初始化执行服务器</h4><blockquote>
+<p>初始化netty服务器，并发客户端信息注册到调度器上</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 初始化执行服务器</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initEmbedServer</span><span class="hljs-params">(String address, String ip, <span class="hljs-type">int</span> port, String appname, String accessToken)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>    <span class="hljs-comment">// 填充ip和端口号 fill ip port</span><br>    port = port&gt;<span class="hljs-number">0</span>?port: NetUtil.findAvailablePort(<span class="hljs-number">9999</span>);<br>    ip = (ip!=<span class="hljs-literal">null</span>&amp;&amp;ip.trim().length()&gt;<span class="hljs-number">0</span>)?ip: IpUtil.getIp();<br>    <span class="hljs-comment">// 地址为空，就根据ip:port生成新的地址 generate address</span><br>    <span class="hljs-keyword">if</span> (address==<span class="hljs-literal">null</span> || address.trim().length()==<span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">ip_port_address</span> <span class="hljs-operator">=</span> IpUtil.getIpPort(ip, port); <span class="hljs-comment">// registry-address：default use address to registry , otherwise use         ip:port if address is null</span><br>        address = <span class="hljs-string">&quot;http://&#123;ip_port&#125;/&quot;</span>.replace(<span class="hljs-string">&quot;&#123;ip_port&#125;&quot;</span>, ip_port_address);<br>    &#125;<br>    <span class="hljs-comment">// accessToken</span><br>    <span class="hljs-keyword">if</span> (accessToken==<span class="hljs-literal">null</span> || accessToken.trim().length()==<span class="hljs-number">0</span>) &#123;<br>        logger.warn(<span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; xxl-job accessToken is empty. To ensure system security, please set the accessToken.&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// 实例化一个网络server start</span><br>    embedServer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EmbedServer</span>();<br>    embedServer.start(address, port, appname, accessToken);<span class="hljs-comment">// 启动server，基于netty</span><br>&#125;<br><span class="hljs-comment">// embedServer.start 调用的就是以下方法，启动nettyServer服务器，然后请求注册到调度器上，调度器会通过netty通知来调度job</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">start</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String address, <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> port, <span class="hljs-keyword">final</span> String appname, <span class="hljs-keyword">final</span> String accessToken)</span> &#123;<br>    executorBiz = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ExecutorBizImpl</span>();<br>    thread = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>            <span class="hljs-comment">// param</span><br>            <span class="hljs-type">EventLoopGroup</span> <span class="hljs-variable">bossGroup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NioEventLoopGroup</span>();<br>            <span class="hljs-type">EventLoopGroup</span> <span class="hljs-variable">workerGroup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NioEventLoopGroup</span>();<br>            <span class="hljs-type">ThreadPoolExecutor</span> <span class="hljs-variable">bizThreadPool</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadPoolExecutor</span>(<span class="hljs-number">0</span>, <span class="hljs-number">200</span>, <span class="hljs-number">60L</span>, TimeUnit.SECONDS,<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedBlockingQueue</span>&lt;Runnable&gt;(<span class="hljs-number">2000</span>), <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadFactory</span>() &#123;xxxxx&#125;);<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-comment">// start server</span><br>                <span class="hljs-type">ServerBootstrap</span> <span class="hljs-variable">bootstrap</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ServerBootstrap</span>();<br>                bootstrap.group(bossGroup, workerGroup)<br>                    .channel(NioServerSocketChannel.class)<br>                    ............省略.................<br>                    .addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">EmbedHttpServerHandler</span>(executorBiz, accessToken, bizThre<br></code></pre></td></tr></table></figure>
+
+
+<p>上面启动了nettyServer，并且对应的实现handler为EmbedHttpServerHandler，通过监听，最终调用如下代码：</p>
+<p>-- 路径为：EmbedHttpServerHandler-&gt;channelRead0-&gt;process()-&gt;executorBiz.run(triggerParam)-&gt;ExecutorBizImpl#run()</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 执行job任务最终会调用到这里</span><br><span class="hljs-comment">* @param triggerParam 执行参数</span><br><span class="hljs-comment">*/</span><br>@Override<br><span class="hljs-keyword">public</span> ReturnT&lt;<span class="hljs-keyword">String</span>&gt; run(TriggerParam triggerParam) &#123;<br>    <span class="hljs-comment">// 加载出对应的jobHandler + jobThread load old：jobHandler + jobThread</span><br>    JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());<br>    IJobHandler jobHandler = jobThread!=<span class="hljs-literal">null</span>?jobThread.getHandler():<span class="hljs-type">null</span>;<br>    <span class="hljs-keyword">String</span> removeOldReason = <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">// valid：jobHandler + jobThread</span><br>    GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());<br>    <span class="hljs-keyword">if</span> (GlueTypeEnum.BEAN == glueTypeEnum) &#123;<span class="hljs-comment">// bean的方式调用，现在一般都是这个方式，其他方式是怎么处理的就不解析了</span><br>        <span class="hljs-comment">// new jobhandler</span><br>        IJobHandler <span class="hljs-keyword">new</span><span class="hljs-type">JobHandler</span> = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());<br>        <span class="hljs-comment">// 验证旧的任务处理器，如果不相等，就创建一个新的 valid old jobThread</span><br>        <span class="hljs-keyword">if</span> (jobThread!=<span class="hljs-literal">null</span> &amp;&amp; jobHandler != <span class="hljs-keyword">new</span><span class="hljs-type">JobHandler</span>) &#123;<br>            <span class="hljs-comment">// change handler, need kill old thread</span><br>            removeOldReason = <span class="hljs-string">&quot;change jobhandler or glue type, and terminate the old job thread.&quot;</span>;<br>            jobThread = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 任务线程</span><br>            jobHandler = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 任务处理器</span><br>        &#125;<br>        <span class="hljs-comment">// 验证处理器并再次赋值 valid handler</span><br>        <span class="hljs-keyword">if</span> (jobHandler == <span class="hljs-literal">null</span>) &#123;<br>            jobHandler = <span class="hljs-keyword">new</span><span class="hljs-type">JobHandler</span>;<br>            <span class="hljs-keyword">if</span> (jobHandler == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ReturnT</span>&lt;<span class="hljs-keyword">String</span>&gt;(ReturnT.FAIL_CODE, <span class="hljs-string">&quot;job handler [&quot;</span> + triggerParam.getExecutorHandler() + <span class="hljs-string">&quot;] not found.&quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) &#123;......省略多种其他方式......&#125;<br><br>    <span class="hljs-comment">// 执行block策略 executor block strategy</span><br>    <span class="hljs-keyword">if</span> (jobThread != <span class="hljs-literal">null</span>) &#123;<br>        ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), <span class="hljs-literal">null</span>);<br>        <span class="hljs-keyword">if</span> (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) &#123;<span class="hljs-comment">// 废弃后面来的</span><br>            <span class="hljs-comment">// discard when running</span><br>            <span class="hljs-keyword">if</span> (jobThread.isRunningOrHasQueue()) &#123;<span class="hljs-comment">// 如果有运行中线程，就终止当前调用</span><br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ReturnT</span>&lt;<span class="hljs-keyword">String</span>&gt;(ReturnT.FAIL_CODE, <span class="hljs-string">&quot;block strategy effect：&quot;</span>+ExecutorBlockStrategyEnum.DISCARD_LATER.getTitle());<br>            &#125;<br>        &#125; <br>        <br></code></pre></td></tr></table></figure>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6987409807430909966">Xxl-Job执行器原理解析</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/xxl-job/">#xxl-job</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Xxl-Job执行器原理解析</div>
+      <div>https://baymax55.github.io/2022/09/19/java/Xxl-Job执行器原理解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月19日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/19/java/Xxl-Job%E8%B0%83%E5%BA%A6%E5%99%A8%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/" title="Xxl-Job调度器原理解析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Xxl-Job调度器原理解析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/13/k8s/modified%20subpath%20configmap%20mount%20fails%20when%20container%20restarts/" title="modified subpath configmap mount fails when container restarts">
+                        <span class="hidden-mobile">modified subpath configmap mount fails when container restarts</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
