@@ -1,0 +1,796 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Spring配置属性管理—Value注解解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring配置属性管理(一)-Value注解解析">
+<meta property="og:url" content="https://baymax55.github.io/2022/09/23/spring/Spring%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86%E2%80%94%20@Value%E6%B3%A8%E8%A7%A3%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="Spring配置属性管理—Value注解解析">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/spring.png">
+<meta property="article:published_time" content="2022-09-23T00:44:15.475Z">
+<meta property="article:modified_time" content="2022-09-23T01:38:45.807Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="Value">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/spring.png">
+  
+  
+  
+  <title>Spring配置属性管理(一)-Value注解解析 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Spring配置属性管理(一)-Value注解解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-23 08:44" pubdate>
+          2022年9月23日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          90 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Spring配置属性管理(一)-Value注解解析</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年9月23日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>为了能够更好的说明nacos-spring-project的设计原理，我们将首先介绍一下在Spring框架中是如何管理系统属性以及用户的配置属性的。本文将从一个项目中常用的属性使用例子入手，简要的分析属性解析注入的过程，在后续的文章中将从Environment的角度分析Spring是如何进行全局的属性管理的（# Spring配置属性管理（二）— Environment）</p>
+<h1 id="Value注解"><a href="#Value注解" class="headerlink" title="@Value注解"></a>@Value注解</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;test&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String test;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在项目中，如上面的代码片段所示，我们通常会在Service Bean中利用@Value注解来注入配置文件（例如application.properties）中的某些自定义配置属性，这些属性实际上都是由Spring Environment负责进行统一管理与解析的，而由AutowiredAnnotationBeanPostProcessor负责在Bean中对@Value注解进行解析注入属性的。</p>
+<p>AutowiredAnnotationBeanPostProcessor实现了SmartInstantiationAwareBeanPostProcessor以及MergedBeanDefinitionPostProcessor接口，在程序初始化时主要完成了两件事：</p>
+<ul>
+<li>在postProcessMergedBeanDefinition接口中解析每个Bean的BeanDefinition，查找Bean中所有被定义的@Value以及@Autowired(本文不作细致分析)，并解析成InjectionMetadata</li>
+<li>在postProcessProperties接口中找到Bean以及对应属性的InjectionMetadata，由InjectionMetadata来负责对PropertyValues进行注入</li>
+</ul>
+<h1 id="postProcessMergedBeanDefinition"><a href="#postProcessMergedBeanDefinition" class="headerlink" title="postProcessMergedBeanDefinition"></a>postProcessMergedBeanDefinition</h1><p>在postProcessMergedBeanDefinition中最重要的任务就是从BeanDefinition中构造出InjectionMetadata，InjectionMetadata顾名思义即表示了每个Bean注入的元信息。AutowiredAnnotationBeanPostProcessor中的injectionMetadataCache缓存了所有Bean的InjectionMetadata，而InjectionMetadata中每个需要被注入的点都用一个InjectedElement来表示。</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs oxygene"># org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.buildAutowiringMetadata<br><br>	<span class="hljs-keyword">private</span> InjectionMetadata buildAutowiringMetadata(<span class="hljs-keyword">final</span> <span class="hljs-keyword">Class</span>&lt;?&gt; clazz) <span class="hljs-comment">&#123;</span><br><span class="hljs-comment">		if (!AnnotationUtils.isCandidateClass(clazz, this.autowiredAnnotationTypes)) &#123;</span><br><span class="hljs-comment">			return InjectionMetadata.EMPTY;</span><br><span class="hljs-comment">		&#125;</span><br><br>		List&lt;InjectionMetadata.InjectedElement&gt; elements = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;()<span class="hljs-punctuation">;</span><br>		<span class="hljs-keyword">Class</span>&lt;?&gt; targetClass = clazz<span class="hljs-punctuation">;</span><br><br>		<span class="hljs-keyword">do</span> <span class="hljs-comment">&#123;</span><br><span class="hljs-comment">			final List&lt;InjectionMetadata.InjectedElement&gt; currElements = new ArrayList&lt;&gt;();</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">			ReflectionUtils.doWithLocalFields(targetClass, field -&gt; &#123;</span><br><span class="hljs-comment">			 //获取Field上的@Value或@Autowired注解</span><br><span class="hljs-comment">				MergedAnnotation&lt;?&gt; ann = findAutowiredAnnotation(field);</span><br><span class="hljs-comment">				if (ann != null) &#123;</span><br><span class="hljs-comment">				//忽略静态属性</span><br><span class="hljs-comment">					if (Modifier.isStatic(field.getModifiers())) &#123;</span><br><span class="hljs-comment">						if (logger.isInfoEnabled()) &#123;</span><br><span class="hljs-comment">							logger.info(&quot;Autowired annotation is not supported on static fields: &quot; + field);</span><br><span class="hljs-comment">						&#125;</span><br>						return<span class="hljs-punctuation">;</span><br>					&#125;<br>					   <span class="hljs-comment">//判断属性上的required参数</span><br>					boolean required = determineRequiredStatus(ann)<span class="hljs-punctuation">;</span><br>					currElements.add(<span class="hljs-keyword">new</span> AutowiredFieldElement(field, required))<span class="hljs-punctuation">;</span><br>				&#125;<br>			&#125;)<span class="hljs-punctuation">;</span><br><br>			ReflectionUtils.doWithLocalMethods(targetClass, <span class="hljs-keyword">method</span> -&gt; <span class="hljs-comment">&#123;</span><br><span class="hljs-comment">				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);</span><br><span class="hljs-comment">				if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) &#123;</span><br><span class="hljs-comment">					return;</span><br><span class="hljs-comment">				&#125;</span><br>				<span class="hljs-title function_">MergedAnnotation</span>&lt;?&gt; <span class="hljs-title function_">ann</span> = <span class="hljs-title function_">findAutowiredAnnotation</span><span class="hljs-params">(bridgedMethod)</span>;<br>				<span class="hljs-keyword">if</span> (ann != null &amp;&amp; <span class="hljs-keyword">method</span>.equals(ClassUtils.getMostSpecificMethod(<span class="hljs-keyword">method</span>, <span class="hljs-title function_">clazz</span>))) <span class="hljs-comment">&#123;</span><br><span class="hljs-comment">					if (Modifier.isStatic(method.getModifiers())) &#123;</span><br><span class="hljs-comment">						if (logger.isInfoEnabled()) &#123;</span><br><span class="hljs-comment">							logger.info(&quot;Autowired annotation is not supported on static methods: &quot; + method);</span><br><span class="hljs-comment">						&#125;</span><br>						<span class="hljs-title function_">return</span>;<br>					&#125;<br>					<span class="hljs-keyword">if</span> (<span class="hljs-keyword">method</span>.getParameterCount() == <span class="hljs-number">0</span>) <span class="hljs-comment">&#123;</span><br><span class="hljs-comment">						if (logger.isInfoEnabled()) &#123;</span><br><span class="hljs-comment">							logger.info(&quot;Autowired annotation should only be used on methods with parameters: &quot; +</span><br><span class="hljs-comment">									method);</span><br><span class="hljs-comment">						&#125;</span><br>					&#125;<br>					boolean required = determineRequiredStatus(ann)<span class="hljs-punctuation">;</span><br>					PropertyDescriptor pd = BeanUtils.findPropertyForMethod(bridgedMethod, clazz)<span class="hljs-punctuation">;</span><br>					currElements.add(<span class="hljs-keyword">new</span> AutowiredMethodElement(<span class="hljs-keyword">method</span>, <span class="hljs-title function_">required</span>, <span class="hljs-title function_">pd</span>));<br>				&#125;<br>			&#125;)<span class="hljs-punctuation">;</span><br><br>			elements.addAll(<span class="hljs-number">0</span>, currElements)<span class="hljs-punctuation">;</span><br>			targetClass = targetClass.getSuperclass()<span class="hljs-punctuation">;</span><br>		&#125;<br>		<span class="hljs-keyword">while</span> (targetClass != null &amp;&amp; targetClass != Object.class)<span class="hljs-punctuation">;</span><br><br>		return InjectionMetadata.forElements(elements, clazz)<span class="hljs-punctuation">;</span><br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="postProcessProperties"><a href="#postProcessProperties" class="headerlink" title="postProcessProperties"></a>postProcessProperties</h1><p>在postProcessProperties函数中首先会根据当前的Bean找到解析过的InjectionMetadata，然后利用InjectionMetadata的inject函数完成注入，inject函数中会遍历所有的InjectionElement并调用其Inject方法来完成每个注入点的注入，这里我们以AutowiredFieldElement为例，重点看一下配置属性是如解析并注入到Bean当中的。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"># org.springframework.beans.factory.<span class="hljs-keyword">annotation</span>.AutowiredAnnotationBeanPostProcessor.AutowiredFieldElement.inject<br><br>		<span class="hljs-meta">@Override</span><br>		<span class="hljs-keyword">protected</span> void inject(Object bean, <span class="hljs-meta">@Nullable</span> String beanName, <span class="hljs-meta">@Nullable</span> PropertyValues pvs) throws Throwable &#123;<br>			Field field = (Field) <span class="hljs-keyword">this</span>.member;<br>			Object value;<br>			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.cached) &#123;<br>				value = resolvedCachedArgument(beanName, <span class="hljs-keyword">this</span>.cachedFieldValue);<br>			&#125;<br>			<span class="hljs-keyword">else</span> &#123;<br>				DependencyDescriptor desc = new DependencyDescriptor(field, <span class="hljs-keyword">this</span>.required);<br>				desc.setContainingClass(bean.getClass());<br>				Set&lt;String&gt; autowiredBeanNames = new LinkedHashSet&lt;&gt;(<span class="hljs-number">1</span>);<br>				Assert.state(beanFactory != <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;No BeanFactory available&quot;</span>);<br>				TypeConverter typeConverter = beanFactory.getTypeConverter();<br>				<span class="hljs-keyword">try</span> &#123;<br>					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);<br>				&#125;<br>				<span class="hljs-keyword">catch</span> (BeansException ex) &#123;<br>					<span class="hljs-keyword">throw</span> new UnsatisfiedDependencyException(<span class="hljs-literal">null</span>, beanName, new InjectionPoint(field), ex);<br>				&#125;<br>				synchronized (<span class="hljs-keyword">this</span>) &#123;<br>					<span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.cached) &#123;<br>						<span class="hljs-keyword">if</span> (value != <span class="hljs-literal">null</span> || <span class="hljs-keyword">this</span>.required) &#123;<br>							<span class="hljs-keyword">this</span>.cachedFieldValue = desc;<br>							registerDependentBeans(beanName, autowiredBeanNames);<br>							<span class="hljs-keyword">if</span> (autowiredBeanNames.size() == <span class="hljs-number">1</span>) &#123;<br>								String autowiredBeanName = autowiredBeanNames.iterator().next();<br>								<span class="hljs-keyword">if</span> (beanFactory.containsBean(autowiredBeanName) &amp;&amp;<br>										beanFactory.isTypeMatch(autowiredBeanName, field.getType())) &#123;<br>									<span class="hljs-keyword">this</span>.cachedFieldValue = new ShortcutDependencyDescriptor(<br>											desc, autowiredBeanName, field.getType());<br>								&#125;<br>							&#125;<br>						&#125;<br>						<span class="hljs-keyword">else</span> &#123;<br>							<span class="hljs-keyword">this</span>.cachedFieldValue = <span class="hljs-literal">null</span>;<br>						&#125;<br>						<span class="hljs-keyword">this</span>.cached = <span class="hljs-literal">true</span>;<br>					&#125;<br>				&#125;<br>			&#125;<br>			<span class="hljs-keyword">if</span> (value != <span class="hljs-literal">null</span>) &#123;<br>				ReflectionUtils.makeAccessible(field);<br>				field.<span class="hljs-keyword">set</span>(bean, value);<br>			&#125;<br>		&#125;<br><br></code></pre></td></tr></table></figure>
+<p>在InjectionElement的inject函数中利用resolveFieldValue来解析出Field当前的值，然后同样是利用反射机制将其注入到Bean中。在resolveFieldValue最终会调用DefaultListableBeanFactory的doResolveDependency来完成属性的解析。</p>
+<p>在doResolveDependency函数中首先会调用 resolveEmbeddedValue 来对@Value注解上的value属性进行解析，如果解析出来是SpEL的表达式的话会利用evaluateBeanDefinitionString函数进行二次解析。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><code class="hljs dart"># org.springframework.beans.<span class="hljs-keyword">factory</span>.support.DefaultListableBeanFactory.doResolveDependency<br><br>	<span class="hljs-meta">@Nullable</span><br>	public <span class="hljs-built_in">Object</span> doResolveDependency(DependencyDescriptor descriptor, <span class="hljs-meta">@Nullable</span> <span class="hljs-built_in">String</span> beanName,<br>			<span class="hljs-meta">@Nullable</span> <span class="hljs-built_in">Set</span>&lt;<span class="hljs-built_in">String</span>&gt; autowiredBeanNames, <span class="hljs-meta">@Nullable</span> TypeConverter typeConverter) throws BeansException &#123;<br><br>		InjectionPoint previousInjectionPoint = ConstructorResolver.setCurrentInjectionPoint(descriptor);<br>		<span class="hljs-keyword">try</span> &#123;<br>			<span class="hljs-built_in">Object</span> shortcut = descriptor.resolveShortcut(<span class="hljs-keyword">this</span>);<br>			<span class="hljs-keyword">if</span> (shortcut != <span class="hljs-keyword">null</span>) &#123;<br>				<span class="hljs-keyword">return</span> shortcut;<br>			&#125;<br><br>			Class&lt;?&gt; type = descriptor.getDependencyType();<br>			<span class="hljs-built_in">Object</span> value = getAutowireCandidateResolver().getSuggestedValue(descriptor);<br>			<span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>) &#123;<br>				<span class="hljs-keyword">if</span> (value instanceof <span class="hljs-built_in">String</span>) &#123;<br>					<span class="hljs-built_in">String</span> strVal = resolveEmbeddedValue((<span class="hljs-built_in">String</span>) value);<br>					BeanDefinition bd = (beanName != <span class="hljs-keyword">null</span> &amp;&amp; containsBean(beanName) ?<br>							getMergedBeanDefinition(beanName) : <span class="hljs-keyword">null</span>);<br>					value = evaluateBeanDefinitionString(strVal, bd);<br>				&#125;<br>				TypeConverter converter = (typeConverter != <span class="hljs-keyword">null</span> ? typeConverter : getTypeConverter());<br>				<span class="hljs-keyword">try</span> &#123;<br>					<span class="hljs-keyword">return</span> converter.convertIfNecessary(value, type, descriptor.getTypeDescriptor());<br>				&#125;<br>				<span class="hljs-keyword">catch</span> (UnsupportedOperationException ex) &#123;<br>					<span class="hljs-comment">// A custom TypeConverter which does not support TypeDescriptor resolution...</span><br>					<span class="hljs-keyword">return</span> (descriptor.getField() != <span class="hljs-keyword">null</span> ?<br>							converter.convertIfNecessary(value, type, descriptor.getField()) :<br>							converter.convertIfNecessary(value, type, descriptor.getMethodParameter()));<br>				&#125;<br>			&#125;<br><br>			<span class="hljs-built_in">Object</span> multipleBeans = resolveMultipleBeans(descriptor, beanName, autowiredBeanNames, typeConverter);<br>			<span class="hljs-keyword">if</span> (multipleBeans != <span class="hljs-keyword">null</span>) &#123;<br>				<span class="hljs-keyword">return</span> multipleBeans;<br>			&#125;<br><br>			<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; matchingBeans = findAutowireCandidates(beanName, type, descriptor);<br>			<span class="hljs-keyword">if</span> (matchingBeans.isEmpty()) &#123;<br>				<span class="hljs-keyword">if</span> (isRequired(descriptor)) &#123;<br>					raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);<br>				&#125;<br>				<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>			&#125;<br><br>			<span class="hljs-built_in">String</span> autowiredBeanName;<br>			<span class="hljs-built_in">Object</span> instanceCandidate;<br><br>			<span class="hljs-keyword">if</span> (matchingBeans.size() &gt; <span class="hljs-number">1</span>) &#123;<br>				autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);<br>				<span class="hljs-keyword">if</span> (autowiredBeanName == <span class="hljs-keyword">null</span>) &#123;<br>					<span class="hljs-keyword">if</span> (isRequired(descriptor) || !indicatesMultipleBeans(type)) &#123;<br>						<span class="hljs-keyword">return</span> descriptor.resolveNotUnique(descriptor.getResolvableType(), matchingBeans);<br>					&#125;<br>					<span class="hljs-keyword">else</span> &#123;<br>						<span class="hljs-comment">// In case of an optional Collection/Map, silently ignore a non-unique case:</span><br>						<span class="hljs-comment">// possibly it was meant to be an empty collection of multiple regular beans</span><br>						<span class="hljs-comment">// (before 4.3 in particular when we didn&#x27;t even look for collection beans).</span><br>						<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>					&#125;<br>				&#125;<br>				instanceCandidate = matchingBeans.<span class="hljs-keyword">get</span>(autowiredBeanName);<br>			&#125;<br>			<span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-comment">// We have exactly one match.</span><br>				<span class="hljs-built_in">Map</span>.Entry&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt; entry = matchingBeans.entrySet().iterator().next();<br>				autowiredBeanName = entry.getKey();<br>				instanceCandidate = entry.getValue();<br>			&#125;<br><br>			<span class="hljs-keyword">if</span> (autowiredBeanNames != <span class="hljs-keyword">null</span>) &#123;<br>				autowiredBeanNames.add(autowiredBeanName);<br>			&#125;<br>			<span class="hljs-keyword">if</span> (instanceCandidate instanceof Class) &#123;<br>				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, <span class="hljs-keyword">this</span>);<br>			&#125;<br>			<span class="hljs-built_in">Object</span> result = instanceCandidate;<br>			<span class="hljs-keyword">if</span> (result instanceof NullBean) &#123;<br>				<span class="hljs-keyword">if</span> (isRequired(descriptor)) &#123;<br>					raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);<br>				&#125;<br>				result = <span class="hljs-keyword">null</span>;<br>			&#125;<br>			<span class="hljs-keyword">if</span> (!ClassUtils.isAssignableValue(type, result)) &#123;<br>				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanNotOfRequiredTypeException(autowiredBeanName, type, instanceCandidate.getClass());<br>			&#125;<br>			<span class="hljs-keyword">return</span> result;<br>		&#125;<br>		<span class="hljs-keyword">finally</span> &#123;<br>			ConstructorResolver.setCurrentInjectionPoint(previousInjectionPoint);<br>		&#125;<br>	&#125;<br></code></pre></td></tr></table></figure>
+<p>我们这里重点关注的是 resolveEmbeddedValue，在这个函数中会遍历所有注册StringValueResolver来对Value注解中的值进行解析。那么StringValueResolver又是在什么地方被添加到BeanFactory中的呢，通过引用关系查找我们不难发现添加StringValueResolver的地方有两处，一处是在PlaceholderConfigurerSupport中，一处则是在AbstractApplicationContext的BeanFactory初始化结束的函数中。</p>
+<p>当AbstractApplicationContext中没有注册StringValueResolver时，才会注入一个默认的StringValueResolver，而这个默认的StringValueResolver则是利用Environment来完成属性的解析（strVal -&gt; getEnvironment().resolvePlaceholders(strVal)）。</p>
+<p>而在Spring Boot项目中通常会自动配置一个PropertySourcesPlaceholderConfigurer的Bean来协助解析占位符，这个Bean的一方面提供了占位符的解析，另一方面对Environment进行了二次封装，加入了用户可配置的自定义属性解析，使得属性解析的数据源更加的丰富。</p>
+<p>实际上这两个对于属性的解析的StringValueResolver最终利用的都是 PropertySourcesPropertyResolver，PropertySourcesPropertyResolver在resolvePlaceholders函数中主要经历两个步骤，首先利用PropertyPlaceholderHelper解析出字符串中所有的占位符（例如${test})，然后使用PropertySourcesPropertyResolver中getPropertyAsRawString解析出占位符中应该被替换的属性（即查找属性源中test属性）进行替换，最后返回该值。</p>
+<p>PropertyPlaceholderHelper是通过遍历字符串的方式递归的解析所有的占位符，逻辑相对比较简单就不做深入的分析。getPropertyAsRawString函数最终的属性查找利用的是PropertySourcesPropertyResolver中的PropertySources属性，PropertySources中包含了多个PropertySource，每个PropertySource就代表一个数据配置源，可以是系统环境变量、JVM变量、配置文件或是自定义配置的本地变量（PropertySourcesPropertyResolver中提供的功能）等等。根据前面的分析我们可以知道，PropertySourcesPropertyResolver在Spring框架的代码中有两处实例化，一个是ApplicationContext在创建Enviroment时创建的默认的PropertySourcesPropertyResolver，其中的PropertySources由Enviroment提供，一个是PropertySourcesPlaceholderConfigurer创建的PropertySourcesPropertyResolver，其中的PropertySources由Enviroment与自定义的本地属性合并而成。</p>
+<p>经过上述过程的跟踪分析，其实我们不难发现，在Spring框架中ApplicationContext中的Environment是Spring默认的属性源管理器，每个属性源都会对应一个PropertySource，属性的获取与解析是最终是通过PropertySourcesPropertyResolver来完成的。想要自定义属性源可以有两种实现方式，一是配置PropertySourcesPlaceholderConfigurer，二是通过Environment来注入新的属性源。</p>
+<p>最后，附上一张关于@Value注解属性解析中关键函数的调用时序图，在下一篇文章中我们将会从Environment的角度来分析Spring-core中org.springframework.core.env包中关于属性加载与解析的部分。<br><img src="img.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6992792024231444493">Spring配置属性管理（一）— @Value注解解析</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+        <a href="/tags/Value/">#Value</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Spring配置属性管理(一)-Value注解解析</div>
+      <div>https://baymax55.github.io/2022/09/23/spring/Spring配置属性管理— @Value注解解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月23日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/23/spring/Spring%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86--Environment/" title="Spring配置属性管理--Environment">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring配置属性管理--Environment</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/22/java/nacos/NacosSpringProject%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%901/" title="NacosSpringProject配置管理源码分析(一)">
+                        <span class="hidden-mobile">NacosSpringProject配置管理源码分析(一)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
