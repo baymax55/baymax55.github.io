@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/netty.png">
 <meta property="article:published_time" content="2022-10-09T01:38:24.110Z">
-<meta property="article:modified_time" content="2022-10-09T09:53:13.511Z">
+<meta property="article:modified_time" content="2022-10-10T08:43:43.908Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="netty">
 <meta name="twitter:card" content="summary_large_image">
@@ -282,7 +282,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年10月9日 下午
+                    本文最后更新于：2022年10月10日 下午
                   
                 
               </p>
@@ -489,7 +489,7 @@ pipeline.addLast(new MyServerHandler());
 <p>于是Netty设计了这个ChannelHandlerContext上下文对象，就可以拿到channel、pipeline等对象，就可以进行读写等操作。<br><img src="img_14.png" srcset="/img/loading.gif" lazyload></p>
 <p>通过类图，ChannelHandlerContext是一个接口，下面有三个实现类。</p>
 <p>实际上ChannelHandlerContext在pipeline中是一个链表的形式。看一段源码就明白了：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//ChannelPipeline实现类DefaultChannelPipeline的构造器方法</span><br><span class="hljs-keyword">protected</span> <span class="hljs-title function_">DefaultChannelPipeline</span><span class="hljs-params">(Channel channel)</span> &#123;<br>    <span class="hljs-built_in">this</span>.channel = ObjectUtil.checkNotNull(channel, <span class="hljs-string">&quot;channel&quot;</span>);<br>    succeededFuture = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SucceededChannelFuture</span>(channel, <span class="hljs-literal">null</span>);<br>    voidPromise =  <span class="hljs-keyword">new</span> <span class="hljs-title class_">VoidChannelPromise</span>(channel, <span class="hljs-literal">true</span>);<br>    <span class="hljs-comment">//设置头结点head，尾结点tail</span><br>    tail = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TailContext</span>(<span class="hljs-built_in">this</span>);<br>    head = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HeadContext</span>(<span class="hljs-built_in">this</span>);<br>    <br>    head.next = tail;<br>    tail.prev = head;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">//ChannelPipeline实现类DefaultChannelPipeline的构造器方法</span><br>protected <span class="hljs-constructor">DefaultChannelPipeline(Channel <span class="hljs-params">channel</span>)</span> &#123;<br>    this.channel = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ObjectUtil</span>.</span></span>check<span class="hljs-constructor">NotNull(<span class="hljs-params">channel</span>, <span class="hljs-string">&quot;channel&quot;</span>)</span>;<br>    succeededFuture = <span class="hljs-keyword">new</span> <span class="hljs-constructor">SucceededChannelFuture(<span class="hljs-params">channel</span>, <span class="hljs-params">null</span>)</span>;<br>    voidPromise =  <span class="hljs-keyword">new</span> <span class="hljs-constructor">VoidChannelPromise(<span class="hljs-params">channel</span>, <span class="hljs-params">true</span>)</span>;<br>    <span class="hljs-comment">//设置头结点head，尾结点tail</span><br>    tail = <span class="hljs-keyword">new</span> <span class="hljs-constructor">TailContext(<span class="hljs-params">this</span>)</span>;<br>    head = <span class="hljs-keyword">new</span> <span class="hljs-constructor">HeadContext(<span class="hljs-params">this</span>)</span>;<br>    <br>    head.next = tail;<br>    tail.prev = head;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>下面我用一张图来表示，会更加清晰一点：<br><img src="img_15.png" srcset="/img/loading.gif" lazyload><br>5.9 EventLoopGroup</p>
 <hr>
@@ -503,10 +503,13 @@ pipeline.addLast(new MyServerHandler());
 
 <p>这段代码可以确定执行的方式是轮询机制，接下来debug调试一下：</p>
 <p><img src="img_4.png" srcset="/img/loading.gif" lazyload alt="img_4.png"><br>它这里还有一个判断，如果线程数不是2的N次方，则采用取模算法实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> EventExecutor <span class="hljs-title function_">next</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> executors[Math.abs(idx.getAndIncrement() % executors.length)];<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-title class_">EventExecutor</span> <span class="hljs-title function_">next</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> executors[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(idx.<span class="hljs-title function_">getAndIncrement</span>() % executors.<span class="hljs-property">length</span>)];<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzU1OTgzNTAzNQ==&mid=2247483871&idx=1&sn=713a6e11422a815d9f98e1ccf71d19c2">超详细Netty入门，看这篇就够了！</a></li>
+<li><a target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd35406">一文了解Netty整体流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd38161">45 张图深度解析 Netty 架构与原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://dongzl.github.io/netty-handbook/#/">Netty 学习手册</a></li>
 </ul>
 
               
@@ -594,6 +597,12 @@ pipeline.addLast(new MyServerHandler());
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/10/10/network/Netty%E4%B9%8BChannel/" title="Netty之Channel">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Netty之Channel</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
