@@ -1,0 +1,1147 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="分布式共识算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式一致性 Raft 与 JRaft">
+<meta property="og:url" content="https://baymax55.github.io/2022/10/31/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%20Raft%20%E4%B8%8E%20JRaft/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="分布式共识算法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/key.png">
+<meta property="article:published_time" content="2022-10-31T00:36:42.362Z">
+<meta property="article:modified_time" content="2022-10-31T00:36:42.362Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="Raft">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="JRaft">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/key.png">
+  
+  
+  
+  <title>分布式一致性 Raft 与 JRaft - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="分布式一致性 Raft 与 JRaft"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-31 08:36" pubdate>
+          2022年10月31日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          98 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">分布式一致性 Raft 与 JRaft</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年10月31日 早上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="如何理解分布式共识"><a href="#如何理解分布式共识" class="headerlink" title="如何理解分布式共识?"></a>如何理解分布式共识?</h2><ul>
+<li>  <strong>多个参与者</strong> 针对 <strong>某一件事</strong> 达成完全 <strong>一致</strong> ：一件事，一个结论</li>
+<li>  已达成一致的结论，不可推翻</li>
+</ul>
+<h2 id="有哪些分布式共识算法"><a href="#有哪些分布式共识算法" class="headerlink" title="有哪些分布式共识算法?"></a>有哪些分布式共识算法?</h2><ul>
+<li>  Paxos：被认为是分布式共识算法的根本，其他都是其变种，但是 paxos 论文中只给出了单个提案的过程，并没有给出复制状态机中需要的 multi-paxos 的相关细节的描述，实现 paxos 具有很高的工程复杂度（如多点可写，允许日志空洞等）</li>
+<li>  Zab：被应用在 zookeeper 中，业界使用广泛，但没有抽象成通用的 library</li>
+<li>  Raft：以容易理解著称，业界也涌现出很多 raft 实现，比如大名鼎鼎的 etcd, braft, tikv 等</li>
+</ul>
+<h1 id="什么是-Raft？"><a href="#什么是-Raft？" class="headerlink" title="什么是 Raft？"></a>什么是 Raft？</h1><p><a target="_blank" rel="noopener" href="https://raft.github.io/">Raft</a> 是一种更易于理解的分布式共识算法，核心协议本质上还是师承 paxos 的精髓，不同的是依靠 raft 模块化的拆分以及更加简化的设计，raft 协议相对更容易实现。</p>
+<p>模块化的拆分主要体现在：Raft 把一致性协议划分为 Leader 选举、MemberShip 变更、日志复制、Snapshot 等几个几乎完全解耦的模块</p>
+<p>更加简化的设计则体现在：Raft 不允许类似 paxos 中的乱序提交、简化系统中的角色状态（只有 Leader、Follower、Candidate三种角色）、限制仅 Leader 可写入、使用随机化的超时时间来设计 Leader Election 等等</p>
+<h2 id="特点：Strong-Leader"><a href="#特点：Strong-Leader" class="headerlink" title="特点：Strong Leader"></a>特点：Strong Leader</h2><ol>
+<li> 系统中必须存在且同一时刻只能有一个 leader，只有 leader 可以接受 clients 发过来的请求</li>
+<li> Leader 负责主动与所有 followers 通信，负责将’提案’发送给所有 followers，同时收集多数派的 followers 应答</li>
+<li> Leader 还需向所有 followers 主动发送心跳维持领导地位(保持存在感)</li>
+</ol>
+<p>一句话总结 Strong Leader: <strong>“你们不要 BB! 按我说的做，做完了向我汇报!”</strong> 另外，身为 leader 必须保持一直 BB(heartbeat) 的状态，否则就会有别人跳出来想要 BB</p>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*5Cw5Qp1oyYQAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="strong-leader.png | left | 350x250"></p>
+<h2 id="复制状态机"><a href="#复制状态机" class="headerlink" title="复制状态机"></a>复制状态机</h2><p>对于一个无限增长的序列 a[1, 2, 3…]，如果对于任意整数 i，a[i] 的值满足分布式一致性，这个系统就满足一致性状态机的要求 基本上所有的真实系统都会有源源不断的操作，这时候单独对某个特定的值达成一致显然是不够的。为了让真实系统保证所有的副本的一致性，通常会把操作转化为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Write-ahead_logging">write-ahead-log</a>(WAL)。然后让系统中所有副本对 WAL 保持一致，这样每个副本按照顺序执行 WAL 里的操作，就能保证最终的状态是一致的</p>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*OiwGTZnO2uMAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="st.png | left | 450x250"></p>
+<ol>
+<li> Client 向 leader 发送写请求</li>
+<li> Leader 把’操作’转化为 WAL 写本地 log 的同时也将 log 复制到所有 followers</li>
+<li> Leader 收到多数派应答, 将 log 对应的’操作’ 应用到状态机</li>
+<li> 回复 client 处理结果</li>
+</ol>
+<h2 id="Raft-中的基本概念"><a href="#Raft-中的基本概念" class="headerlink" title="Raft 中的基本概念"></a>Raft 中的基本概念</h2><h3 id="Raft-node-的-3-种角色-状态"><a href="#Raft-node-的-3-种角色-状态" class="headerlink" title="Raft-node 的 3 种角色/状态"></a>Raft-node 的 3 种角色/状态</h3><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*EK6gQYwiBXkAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="raft-node | left | 400x250"></p>
+<ol>
+<li> Follower：完全被动，不能发送任何请求，只接受并响应来自 leader 和 candidate 的 message，每个节点启动后的初始状态一定是 follower</li>
+<li> Leader：处理所有来自客户端的请求，以及复制 log 到所有 followers</li>
+<li> Candidate：用来竞选一个新 leader （candidate 由 follower 触发超时而来）</li>
+</ol>
+<h3 id="Message-的-3-种类型"><a href="#Message-的-3-种类型" class="headerlink" title="Message 的 3 种类型"></a>Message 的 3 种类型</h3><ol>
+<li> RequestVote RPC：由 candidate 发出，用于发送投票请求</li>
+<li> AppendEntries (Heartbeat) RPC：由 leader 发出，用于 leader 向 followers 复制日志条目，也会用作 Heartbeat （日志条目为空即为 Heartbeat）</li>
+<li> InstallSnapshot RPC：由 leader 发出，用于快照传输，虽然多数情况都是每个服务器独立创建快照，但是leader 有时候必须发送快照给一些落后太多的 follower，这通常发生在 leader 已经丢弃了下一条要发给该follower 的日志条目(Log Compaction 时清除掉了) 的情况下</li>
+</ol>
+<h3 id="任期逻辑时钟"><a href="#任期逻辑时钟" class="headerlink" title="任期逻辑时钟"></a>任期逻辑时钟</h3><ol>
+<li> 时间被划分为一个个任期 (term)，term id 按时间轴单调递增</li>
+<li> 每一个任期的开始都是 leader 选举，选举成功之后，leader 在任期内管理整个集群，也就是 <strong>‘选举 + 常规操作’</strong></li>
+<li> 每个任期最多一个 leader，可能没有 leader (spilt-vote 导致)</li>
+</ol>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*CTpYRa_CB_4AAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="term.png | left | 500x200"></p>
+<h2 id="Raft-功能分解"><a href="#Raft-功能分解" class="headerlink" title="Raft 功能分解"></a>Raft 功能分解</h2><h3 id="Leader-选举"><a href="#Leader-选举" class="headerlink" title="Leader 选举"></a>Leader 选举</h3><ul>
+<li>  超时驱动：Heartbeat/Election timeout</li>
+<li>  随机的超时时间：降低选举碰撞导致选票被瓜分的概率</li>
+<li>选举流程：<ul>
+<li>Follower –&gt; Candidate (选举超时触发)<ul>
+<li>  赢得选举：Candidate –&gt; Leader</li>
+<li>  另一个节点赢得选举：Candidate –&gt; Follower</li>
+<li>  一段时间内没有任何节点器赢得选举：Candidate –&gt; Candidate</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>选举动作：<ul>
+<li>  Current term++</li>
+<li>  发送 RequestVote RPC</li>
+</ul>
+</li>
+<li>New Leader 选取原则 (最大提交原则)<ul>
+<li>  Candidates include log info in RequestVote RPCs(index &amp; term of last log entry)</li>
+<li>  During elections, choose candidate with log most likely to contain all committed entries</li>
+<li>  Voting server V denies vote if its log is “more complete”: (lastTermV &gt; lastTermC) || ((lastTermV == lastTermC) &amp;&amp; (lastIndexV &gt; lastIndexC))</li>
+<li>  Leader will have “most complete” log among electing majority</li>
+</ul>
+</li>
+<li>  安全性：一个 term，最多选出一个 leader，可以没 leader，下一个 term 再选</li>
+</ul>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*vC1PR4snguoAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="safe-term | left | 450x80"></p>
+<ul>
+<li>影响 raft 选举成功率的几个时间参数：<ul>
+<li>  RTT(Round Trip Time)：网络延时</li>
+<li>  Heartbeat timeout：心跳间隔，通常应该比 election timeout 小一个数量级，目的是让 leader 能够持续发送心跳来阻止 followers 触发选举</li>
+<li>  Election timeout：Leader 与 followers 间通信超时触发选举的时间</li>
+<li>  MTBF(Meantime Between Failure)：Servers 连续常规故障时间间隔 <code>RTT &lt;&lt; Heartbeat timeout &lt; Election timeout(ET) &lt;&lt; MTBF</code></li>
+</ul>
+</li>
+<li>  随机选主触发时间：<code>Random(ET, 2ET)</code></li>
+</ul>
+<h3 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h3><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*dY0aTYArhPIAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="log-replication | left | 450x200"></p>
+<ul>
+<li>Raft 日志格式<ul>
+<li>  <code>(TermId, LogIndex, LogValue)</code></li>
+<li>  其中 <code>(TermId, LogIndex)</code> 能确定唯一一条日志</li>
+</ul>
+</li>
+<li>Log replication 关键点<ul>
+<li>  连续性：日志不允许出现空洞</li>
+<li>有效性：<ul>
+<li>  不同节点，拥有相同 term 和 logIndex 的日志 value 一定相同</li>
+<li>  Leader 上的日志一定是有效的</li>
+<li>  Follower 上的日志是否有效，通过 leader 日志对比判断</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Followers 日志有效性检查<ul>
+<li>  AppendEntries RPC 中还会携带前一条日志的唯一标识 <code>(prevTermId, prevLogIndex)</code></li>
+<li>  递归推导</li>
+</ul>
+</li>
+<li>Followers 日志恢复<ul>
+<li>  Leader 将 nextIndex 递减并重发 AppendEntries，直到与 leader 日志一致</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*8xqPR7ZR7EsAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="log-replication-2.png | left | 400x150"></p>
+<h3 id="Commit-Index-推进"><a href="#Commit-Index-推进" class="headerlink" title="Commit Index 推进"></a>Commit Index 推进</h3><ul>
+<li>CommitIndex <code>(TermId, LogIndex)</code>：<ul>
+<li>  所谓 commitIndex，就是已达成多数派，可以应用到状态机的最新的日志位置</li>
+<li>  日志被复制到 followers 后，先持久化，并不能马上被应用到状态机</li>
+<li>  只有 leader 知道日志是否达成多数派，是否可以应用到状态机</li>
+<li>  Followers 记录 leader 发来的当前 commitIndex，所有小于等于 commitIndex 的日志均可以应用到状态机</li>
+</ul>
+</li>
+<li>CommitIndex推进：<ul>
+<li>  Leader 在下一个 AppendEntries RPC (也包括 Heartbeat)中携带当前的 commitIndex</li>
+<li>  Followers 检查日志有效性通过则接受 AppendEntries 并同时更新本地 commitIndex，最后把所有小于等于 commitIndex 的日志应用到状态机</li>
+</ul>
+</li>
+</ul>
+<h3 id="AppendEntries-RPC"><a href="#AppendEntries-RPC" class="headerlink" title="AppendEntries RPC"></a>AppendEntries RPC</h3><ul>
+<li>  完整信息: (currentTerm, logEntries[], prevTerm, prevLogIndex, commitTerm, commitLogIndex)</li>
+<li>  currentTerm, logEntries[]：日志信息，为了效率，日志通常为多条</li>
+<li>  prevTerm, prevLogIndex：日志有效性检查</li>
+<li>  commitTerm, commitLogIndex：最新的提交日志位点(commitIndex)</li>
+</ul>
+<h3 id="阶段小结：现在我们能用-raft-做什么"><a href="#阶段小结：现在我们能用-raft-做什么" class="headerlink" title="阶段小结：现在我们能用 raft 做什么?"></a>阶段小结：现在我们能用 raft 做什么?</h3><ul>
+<li>  连续确定多个提案，确保集群中各个系统节点状态完全一致</li>
+<li>  自动选主，保证在只有少数派宕机的情况下持续可用</li>
+<li>  日志强同步，宕机后零数据丢失</li>
+</ul>
+<h1 id="什么是-JRaft？"><a href="#什么是-JRaft？" class="headerlink" title="什么是 JRaft？"></a>什么是 JRaft？</h1><p>JRaft 是一个基于 <a target="_blank" rel="noopener" href="https://raft.github.io/">RAFT</a> 一致性算法的生产级高性能 Java 实现，支持 MULTI-RAFT-GROUP，适用于高负载低延迟的场景。 使用 JRaft 你可以专注于自己的业务领域，由 JRaft 负责处理所有与 RAFT 相关的技术难题，并且 JRaft 非常易于使用，你可以通过几个示例在很短的时间内掌握它。</p>
+<p>JRaft 是从百度的 <a target="_blank" rel="noopener" href="https://github.com/brpc/braft">braft</a> 移植而来，做了一些优化和改进，感谢百度 braft 团队开源了如此优秀的 C++ RAFT 实现</p>
+<h2 id="JRaft-整体功能-amp-性能优化"><a href="#JRaft-整体功能-amp-性能优化" class="headerlink" title="JRaft 整体功能&amp;性能优化"></a>JRaft 整体功能&amp;性能优化</h2><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*68HaTJZQxVUAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="feature | left | 500x450"></p>
+<h3 id="功能支持"><a href="#功能支持" class="headerlink" title="功能支持"></a>功能支持</h3><ul>
+<li>  Leader election：Leader 选举，这个不多说，上面已介绍过 raft 中的 leader 机制</li>
+<li>Log replication and recovery：日志复制和日志恢复<ul>
+<li>  Log replication 就是要保证已经被 commit 的数据一定不会丢失，即一定要成功复制到多数派</li>
+<li>Log recovery 包含两个方面：<ul>
+<li>Current term 日志恢复<ul>
+<li>  主要针对一些 follower 节点重启加入集群或者是新增 follower 节点后如何追日志</li>
+</ul>
+</li>
+<li>Prev term 日志恢复<ul>
+<li>  主要针对 leader 切换前后的日志一致性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>  Snapshot and log compaction：定时生成 snapshot，实现 log compaction 加速启动和恢复，以及 InstallSnapshot 给 followers 拷贝数据，如下图：</li>
+</ul>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*a3xDT5mfSP4AAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="snapshot.png | left | 250x200"></p>
+<ul>
+<li>  Membership change：用于集群线上配置变更，比如增加节点、删除节点、替换节点等</li>
+<li>  Transfer leader：主动变更 leader，用于重启维护，leader 负载平衡等</li>
+<li>Symmetric network partition tolerance：对称网络分区容忍性  <img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*N_rBQ6oKsv4AAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="symmetric-net-partition-tolerance | left | 200x150">  如上图 S1 为当前 leader，网络分区造成 S2 不断增加本地 term，为了避免网络恢复后 S2 发起选举导致正在工作的 leader step-down，从而导致整个集群重新发起选举，JRaft 中增加了 pre-vote 来避免这个问题的发生。<ul>
+<li>  JRaft 中在 request-vote 之前会先进行 pre-vote(currentTerm + 1, lastLogIndex, lastLogTerm)，多数派成功后才会转换状态为 candidate 发起真正的 request-vote，所以分区后的节点，pre-vote 不会成功，也就不会导致集群一段时间内无法正常提供服务</li>
+</ul>
+</li>
+<li>Asymmetric network partition tolerance：非对称网络分区容忍性  <img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*sHgoQa2jywwAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="asymmetric-net-partition-tolerance | left | 200x150">  如上图 S1 为当前 leader，S2 不断超时触发选主，S3 提升 term 打断当前 lease，从而拒绝 leader 的更新。<ul>
+<li>  在 JRaft 中增加了一个 tick 的检查，每个 follower 维护一个时间戳记录下收到 leader 上数据更新的时间(也包括心跳)，只有超过 election timeout 之后才允许接受 request-vote 请求</li>
+</ul>
+</li>
+<li>Fault tolerance：容错性，少数派故障不影响系统整体可用性，包括但不限于：<ul>
+<li>  机器掉电</li>
+<li>  强杀应用</li>
+<li>  慢节点(GC, OOM 等)</li>
+<li>  网络故障</li>
+<li>  其他各种奇葩原因导致 raft 节点无法正常工作</li>
+</ul>
+</li>
+<li>Workaround when quorate peers are dead：多数派故障时，整个 grop 已不具备可用性，安全的做法是等待多数节点恢复，只有这样才能保证数据安全；但是如果业务更加追求系统可用性，可以放弃数据一致性的话，JRaft 提供了手动触发 reset_peers 的指令以迅速重建整个集群，恢复集群可用</li>
+<li>Metrics：JRaft 内置了基于 <a target="_blank" rel="noopener" href="https://metrics.dropwizard.io/4.0.0/getting-started.html">metrics</a> 类库的性能指标统计，具有丰富的性能统计指标，利用这些指标数据可以帮助用户更容易找出系统性能瓶颈</li>
+<li>Jepsen：除了几百个单元测试以及部分 chaos 测试之外, JRaft 还使用 <a target="_blank" rel="noopener" href="https://github.com/jepsen-io/jepsen">jepsen</a> 这个分布式验证和故障注入测试框架模拟了很多种情况，都已验证通过：<ul>
+<li>  随机分区，一大一小两个网络分区</li>
+<li>  随机增加和移除节点</li>
+<li>  随机停止和启动节点</li>
+<li>  随机 kill -9 和启动节点</li>
+<li>  随机划分为两组，互通一个中间节点，模拟分区情况</li>
+<li>  随机划分为不同的 majority 分组</li>
+</ul>
+</li>
+</ul>
+<h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><p>除了功能上的完整性，JRaft 还做了很多性能方面的优化，这里有一份 KV 场景（get/put）的 <a target="_blank" rel="noopener" href="https://github.com/alipay/sofa-jraft/wiki/Benchmark-%E6%95%B0%E6%8D%AE">benchmark</a> 数据, 在小数据包，读写比例为 9:1，保证线性一致读的场景下，三副本最高可以达到 40w+ 的 ops。</p>
+<p>这里挑重点介绍几个优化点:</p>
+<ul>
+<li>Batch: 我们知道互联网两大优化法宝便是 cache 和 batch，JRaft 在 batch 上花了较大心思，整个链路几乎都是 batch 的，依靠 disruptor 的 MPSC 模型批量消费，对整体性能有着极大的提升，包括但不限于：<ul>
+<li>  批量提交 task</li>
+<li>  批量网络发送</li>
+<li>本地 IO batch 写入<ul>
+<li>  要保证日志不丢，一般每条 log entry 都要进行 fsync 同步刷盘，比较耗时，JRaft 中做了合并写入的优化</li>
+</ul>
+</li>
+<li>  批量应用到状态机 需要说明的是，虽然 JRaft 中大量使用了 batch 技巧，但对单个请求的延时并无任何影响，JRaft 中不会对请求做延时的攒批处理</li>
+</ul>
+</li>
+<li>  Replication pipeline：流水线复制，通常 leader 跟 followers 节点的 log 同步是串行 batch 的方式，每个 batch 发送之后需要等待 batch 同步完成之后才能继续发送下一批(ping-pong)，这样会导致较长的延迟。JRaft 中通过 leader 跟 followers 节点之间的 pipeline 复制来改进，非常有效降低了数据同步的延迟, 提高吞吐。经我们测试，开启 pipeline 可以将吞吐提升 30% 以上，详细数据请参照 <a target="_blank" rel="noopener" href="https://github.com/alipay/sofa-jraft/wiki/Benchmark-%E6%95%B0%E6%8D%AE">benchmark</a></li>
+<li>  Append log in parallel：在 JRaft 中 leader 持久化 log entries 和向 followers 发送 log entries 是并行的</li>
+<li>  Fully concurrent replication：Leader 向所有 follwers 发送 log 也是完全相互独立和并发的</li>
+<li>  Asynchronous：JRaft 中整个链路几乎没有任何阻塞，完全异步的，是一个完全的 callback 编程模型</li>
+<li>  ReadIndex：优化 raft read 走 raft log 的性能问题，每次 read，仅记录 commitIndex，然后发送所有 peers heartbeat 来确认 leader 身份，如果 leader 身份确认成功，等到 appliedIndex &gt;= commitIndex，就可以返回 client read 了，基于 ReadIndex follower 也可以很方便的提供线性一致读，不过 commitIndex 是需要从 leader 那里获取，多了一轮 RPC；关于线性一致读文章后面会详细分析</li>
+<li>  Lease Read：JRaft 还支持通过租约 (lease) 保证 leader 的身份，从而省去了 ReadIndex 每次 heartbeat 确认 leader 身份，性能更好，但是通过时钟维护 lease 本身并不是绝对的安全（时钟漂移问题，所以 JRaft 中默认配置是 ReadIndex，因为通常情况下 ReadIndex 性能已足够好</li>
+</ul>
+<h2 id="JRaft-设计"><a href="#JRaft-设计" class="headerlink" title="JRaft 设计"></a>JRaft 设计</h2><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*b3tDQoaFCNkAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="jraft-design | left | 700x550"></p>
+<ul>
+<li>  Node：Raft 分组中的一个节点，连接封装底层的所有服务，用户看到的主要服务接口，特别是 <code>apply(task)</code> 用于向 raft group 组成的复制状态机集群提交新任务应用到业务状态机</li>
+<li>存储：上图靠下的部分均为存储相关<ul>
+<li>Log 存储，记录 raft 用户提交任务的日志，将日志从 leader 复制到其他节点上。<ul>
+<li>  LogStorage 是存储实现，默认实现基于 RocksDB 存储，你也可以很容易扩展自己的日志存储实现</li>
+<li>  LogManager 负责对底层存储的调用，对调用做缓存、批量提交、必要的检查和优化</li>
+</ul>
+</li>
+<li>  Metadata 存储，元信息存储，记录 raft 实现的内部状态，比如当前 term、投票给哪个节点等信息</li>
+<li>Snapshot 存储，用于存放用户的状态机 snapshot 及元信息，可选。<ul>
+<li>  SnapshotStorage 用于 snapshot 存储实现。</li>
+<li>  SnapshotExecutor 用于 snapshot 实际存储、远程安装、复制的管理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>状态机<ul>
+<li>  StateMachine：用户核心逻辑的实现，核心是 <code>onApply(Iterator)</code> 方法, 应用通过 <code>Node#apply(task)</code> 提交的日志到业务状态机</li>
+<li>  FSMCaller:封装对业务 StateMachine 的状态转换的调用以及日志的写入等,一个有限状态机的实现,做必要的检查、请求合并提交和并发处理等</li>
+</ul>
+</li>
+<li>复制<ul>
+<li>  Replicator：用于 leader 向 followers 复制日志，也就是 raft 中的 AppendEntries 调用，包括心跳存活检查等</li>
+<li>  ReplicatorGroup：用于单个 raft group 管理所有的 replicator，必要的权限检查和派发</li>
+</ul>
+</li>
+<li>RPC：RPC 模块用于节点之间的网络通讯<ul>
+<li>  RPC Server：内置于 Node 内的 RPC 服务器，接收其他节点或者客户端发过来的请求，转交给对应服务处理</li>
+<li>  RPC Client：用于向其他节点发起请求，例如投票、复制日志、心跳等</li>
+</ul>
+</li>
+<li>  KV Store：KV Store 是各种 Raft 实现的一个典型应用场景，JRaft 中包含了一个嵌入式的分布式 KV 存储实现（JRaft-RheaKV）。</li>
+</ul>
+<h3 id="JRaft-Group"><a href="#JRaft-Group" class="headerlink" title="JRaft Group"></a>JRaft Group</h3><p>单个节点的 JRaft-node 是没什么实际意义的，下面是三副本的 JRaft 架构图</p>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*1wYDQJvcbSEAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="jraft-group | left | 700x550"></p>
+<h3 id="JRaft-Multi-Group"><a href="#JRaft-Multi-Group" class="headerlink" title="JRaft Multi Group"></a>JRaft Multi Group</h3><p>单个 Raft group 是无法解决大流量的读写瓶颈的，JRaft 自然也要支持 multi-raft-group</p>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*DFDHRbIAh0sAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="jraft-multi-group | left | 700x550"></p>
+<h2 id="JRaft-实现细节解析之高效的线性一致读"><a href="#JRaft-实现细节解析之高效的线性一致读" class="headerlink" title="JRaft 实现细节解析之高效的线性一致读"></a>JRaft 实现细节解析之高效的线性一致读</h2><p>什么是线性一致读? 所谓线性一致读，一个简单的例子就是在 t1 的时刻我们写入了一个值，那么在 t1 之后，我们一定能读到这个值，不可能读到 t1 之前的旧值 (想想 java 中的 volatile 关键字，说白了线性一致读就是在分布式系统中实现 java volatile 语义)</p>
+<p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*hVE6RZ9SElEAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="read-only-safe | left | 700x250"></p>
+<p>如上图 Client A、B、C、D 均符合线性一致读，其中 D 看起来是 stale read，其实并不是，D 请求横跨了 3 个阶段，而读可能发生在任意时刻，所以读到 1 或 2 都行</p>
+<p><strong>重要：接下来的讨论均基于一个大前提，就是业务状态机的实现必须是满足线性一致性的，简单说就是也要具有 java volatile 的语义</strong></p>
+<ul>
+<li>要实现线性一致读，首先我们简单直接一些，是否可以直接从当前 leader 节点读?<ul>
+<li>  仔细一想，这显然行不通，因为你无法确定这一刻当前的 ‘leader’ 真的是 leader，比如在网络分区的情况下，它可能已经被推翻王朝却不自知</li>
+</ul>
+</li>
+<li>最简单易懂的实现方式：同 ‘写’ 请求一样，’读’ 请求也走一遍 raft 协议 (raft log)  <img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*ofC8QJB_2McAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="raft-log | left | 400x160"><ul>
+<li>  这一定是可以的，但性能上显然不会太出色，走 raft log 不仅仅有日志落盘的开销，还有日志复制的网络开销，另外还有一堆的 raft ‘读日志’ 造成的磁盘占用开销，这在读比重很大的系统中通常是无法被接受的</li>
+</ul>
+</li>
+<li>ReadIndex Read<ul>
+<li>这是 raft 论文中提到的一种优化方案，具体来说：<ul>
+<li>  (1) Leader 将自己当前 log 的 commitIndex 记录到一个 local 变量 ReadIndex 里面</li>
+<li>  (2) 接着向 followers 发起一轮 heartbeat，如果半数以上节点返回了对应的 heartbeat response，那么 leader 就能够确定现在自己仍然是 leader (证明了自己是自己)</li>
+<li>  (3) Leader 等待自己的状态机执行，直到 applyIndex 超过了 ReadIndex，这样就能够安全的提供 Linearizable Read 了，也不必管读的时刻是否 leader 已飘走 (思考：为什么等到 applyIndex 超过了 ReadIndex 就可以执行读请求?)</li>
+<li>  (4) Leader 执行 read 请求，将结果返回给 Client</li>
+</ul>
+</li>
+<li>通过ReadIndex，也可以很容易在 followers 节点上提供线性一致读：<ul>
+<li>  Follower 节点向 leader 请求最新的 ReadIndex</li>
+<li>  Leader 执行上面前 3 步的过程(确定自己真的是 leader)，并返回 ReadIndex 给 follower</li>
+<li>  Follower 等待自己的 applyIndex 超过了 ReadIndex</li>
+<li>  Follower 执行 read 请求，将结果返回给 client （JRaft 中可配置是否从 follower 读取，默认不打开）</li>
+</ul>
+</li>
+<li>ReadIndex小结<ul>
+<li>  相比较于走 raft log 的方式，ReadIndex 省去了磁盘的开销，能大幅度提升吞吐，结合 JRaft 的 batch + pipeline ack + 全异步机制，三副本的情况下 leader 读的吞吐可以接近于 RPC 的吞吐上限</li>
+<li>  延迟取决于多数派中最慢的一个 heartbeat response，理论上对于降低延时的效果不会非常显著</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Lease Read<ul>
+<li>  Lease read 与 ReadIndex 类似，但更进一步，不仅省去了 log，还省去了网络交互。它可以大幅提升读的吞吐也能显著降低延时</li>
+<li>  基本的思路是 leader 取一个比 election timeout 小的租期(最好小一个数量级)，在租约期内不会发生选举，这就确保了 leader 不会变，所以可以跳过 ReadIndex 的第二步，也就降低了延时。可以看到 Lease read 的正确性和时间是挂钩的，因此时间的实现至关重要，如果时钟漂移严重，这套机制就会有问题</li>
+<li>实现方式：<ul>
+<li>  定时 heartbeat 获得多数派响应，确认 leader 的有效性 (在 JRaft 中默认的 heartbeat 间隔是 election timeout 的十分之一)</li>
+<li>  在租约有效时间内，可以认为当前 leader 是 raft group 内的唯一有效 leader，可忽略 ReadIndex 中的 heartbeat 确认步骤(2)</li>
+<li>  Leader 等待自己的状态机执行，直到 applyIndex 超过了 ReadIndex，这样就能够安全的提供 Linearizable Read 了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>更进一步：Wait Free<ul>
+<li>  到目前为止 lease 省去了 ReadIndex 的第 2 步(heartbeat)，实际上还能再进一步，继续省去第 3 步</li>
+<li>我们想想前面的实现方案的本质是什么：<ul>
+<li>  首先我们定义两个状态：日志状态（log_state）和状态机状态（st_state），Leader 的 log_state 反映了当前 raft group 最新的数据状态，因为所有的写请求一定都先记录在 raft log 中</li>
+<li>  当 leader 接收到 read_request 那一刻，以 log_state 作为逻辑时间参考点，等到 st_state 追上之前记录 log_state 时，显然 read_request 那个时间点的所有数据已经全部应用到状态机，自然是能保证线性一致读了(只要你的业务状态机能保证可见性)</li>
+<li>  <strong>总结起来即是等待当前节点的状态机达到了接收 read_request 那一刻的时间点相同甚至更新的状态（applyIndex &gt;= commitIndex）</strong></li>
+</ul>
+</li>
+<li>  通过以上分析可以看到 applyIndex &gt;= commitIndex 的约束其实很保守，<strong>本质上我们只要保证当前时刻，当前节点状态机一定是最新即可</strong></li>
+<li>那么问题来了，leader 节点的状态机能保证一定是最新的吗?<ul>
+<li>  首先 leader 节点的 log 一定是最新的，即使新选举产生的 leader，它也一定包含全部的 commit log，但它的状态机却可能落后于旧的 leader</li>
+<li>  不过等到 leader 成功应用了自己当前 term 的第一条 log 之后，它的状态机就一定是最新的</li>
+<li>  所以可以得出结论：当 leader 已经成功应用了自己 term 的第一条 log 之后，不需要再取 commitIndex，也不用等状态机，直接读，一定是线性一致读</li>
+</ul>
+</li>
+<li>  小结：可以想象，Wait Free 机制将最大程度的降低读延迟，JRaft 暂未实现 wait free 这一优化, 不过已经在计划中</li>
+</ul>
+</li>
+</ul>
+<p>在 JRaft 中发起一次线性一致读请求的代码展示：</p>
+<pre><code class="hljs">// KV 存储实现线性一致读
+public void readFromQuorum(String key, AsyncContext asyncContext) &#123;
+    // 请求 ID 作为请求上下文传入
+    byte[] reqContext = new byte[4];
+    Bits.putInt(reqContext, 0, requestId.incrementAndGet());
+    // 调用 readIndex 方法, 等待回调执行
+    this.node.readIndex(reqContext, new ReadIndexClosure() &#123;
+
+        @Override
+        public void run(Status status, long index, byte[] reqCtx) &#123;
+            if (status.isOk()) &#123;
+                try &#123;
+                    // ReadIndexClosure 回调成功，可以从状态机读取最新数据返回
+                    // 如果你的状态实现有版本概念，可以根据传入的日志 index 编号做读取
+                    asyncContext.sendResponse(new ValueCommand(fsm.getValue(key)));
+                &#125; catch (KeyNotFoundException e) &#123;
+                    asyncContext.sendResponse(GetCommandProcessor.createKeyNotFoundResponse());
+                &#125;
+            &#125; else &#123;
+                // 特定情况下，比如发生选举，该读请求将失败
+                asyncContext.sendResponse(new BooleanCommand(false, status.getErrorMsg()));
+            &#125;
+        &#125;
+    &#125;);
+&#125;
+</code></pre>
+<h1 id="JRaft-应用场景？"><a href="#JRaft-应用场景？" class="headerlink" title="JRaft 应用场景？"></a>JRaft 应用场景？</h1><ol>
+<li> Leader 选举</li>
+<li> 分布式锁服务，比如 zookeeper，在 JRaft 中的 RheaKV 模块提供了完整的分布式锁实现</li>
+<li> 高可靠的元信息管理，可直接基于 JRaft-RheaKV 存储</li>
+<li> 分布式存储系统，如分布式消息队列、分布式文件系统、分布式块系统等等</li>
+</ol>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><ol>
+<li> RheaKV：基于 JRaft 实现的嵌入式、分布式、高可用、强一致的 KV 存储类库</li>
+<li> AntQ Streams QCoordinator：使用 JRaft 在 Coordinator 集群内做选举、使用 JRaft-RheaKV 做元信息存储等功能</li>
+<li> Schema Registry：高可靠 schema 管理服务，类似 kafka schema registry，存储部分基于 JRaft-RheaKV</li>
+<li> SOFA 服务注册中心元信息管理模块：IP 数据信息注册，要求写数据达到各个节点一致，并且在少数派节点挂掉时保证不影响数据正常存储</li>
+</ol>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="一、基于-JRaft-设计一个简单的-KV-Store"><a href="#一、基于-JRaft-设计一个简单的-KV-Store" class="headerlink" title="一、基于 JRaft 设计一个简单的 KV Store"></a>一、基于 JRaft 设计一个简单的 KV Store</h3><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*D1N5TZSqQlgAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="kv | left | 700x550"></p>
+<h3 id="二、基于-JRaft-的-RheaKV-的设计"><a href="#二、基于-JRaft-的-RheaKV-的设计" class="headerlink" title="二、基于 JRaft 的 RheaKV 的设计"></a>二、基于 JRaft 的 RheaKV 的设计</h3><p><img src="https://gw.alipayobjects.com/mdn/rms_da499f/afts/img/A*6K1mTq0z-TkAAAAAAAAAAABjARQnAQ" srcset="/img/loading.gif" lazyload alt="rheakv | left | 700x550"></p>
+<h4 id="功能名词"><a href="#功能名词" class="headerlink" title="功能名词"></a>功能名词</h4><p><strong>PD</strong> 全局的中心总控节点，负责整个集群的调度，不需要自管理的集群可不启用 PD (一个 PD 可管理多个集群，基于 clusterId 隔离)</p>
+<p><strong>Store</strong> 集群中的一个物理存储节点，一个 store 包含一个或多个 region</p>
+<p><strong>Region</strong> 最小的 KV 数据单元，每个 region 都有一个左闭右开的区间 [startKey, endKey), 可根据请求流量/负载/数据量大小等指标自动分裂以及自动副本搬迁</p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
+<li>  嵌入式</li>
+<li>  强一致性</li>
+<li>自驱动<ul>
+<li>  自诊断, 自优化, 自决策</li>
+</ul>
+</li>
+</ul>
+<p>以上几点(尤其2，3) 基本都是依托于 JRaft 自身的功能来实现，详细介绍请参考 JRaft 文档</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.sofastack.tech/projects/sofa-jraft/consistency-raft-jraft/">分布式一致性 Raft 与 JRaft</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alipay/sofa-jraft">JRaft 源码</a></li>
+<li><a target="_blank" rel="noopener" href="https://raft.github.io/">https://raft.github.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://raft.github.io/slides/raftuserstudy2013.pdf">https://raft.github.io/slides/raftuserstudy2013.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/hedengcheng/tech/tree/master/distributed">Paxos/Raft：分布式一致性算法原理剖析及其在实战中的应用</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/brpc/braft/blob/master/docs/cn/raft_protocol.md">braft 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://pingcap.com/blog-cn/linearizability-and-raft/">https://pingcap.com/blog-cn/linearizability-and-raft/</a></li>
+<li><a target="_blank" rel="noopener" href="https://aphyr.com/posts/313-strong-consistency-models">https://aphyr.com/posts/313-strong-consistency-models</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51063866">https://zhuanlan.zhihu.com/p/51063866</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Raft/">#Raft</a>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
+      
+        <a href="/tags/JRaft/">#JRaft</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>分布式一致性 Raft 与 JRaft</div>
+      <div>https://baymax55.github.io/2022/10/31/分布式一致性 Raft 与 JRaft/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月31日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/01/spring/Spring%E4%B8%AD%E7%9A%84bean%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%90%97%EF%BC%9F/" title="Spring 中的bean 是线程安全的吗？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring 中的bean 是线程安全的吗？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/31/spring/RestTemplate%E4%B8%BA%E4%BD%95%E5%BF%85%E9%A1%BB%E6%90%AD%E9%85%8DMultiValueMap/" title="RestTemplate为何必须搭配MultiValueMap">
+                        <span class="hidden-mobile">RestTemplate为何必须搭配MultiValueMap</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
