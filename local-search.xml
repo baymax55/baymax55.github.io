@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Java泛型与Json反序列化</title>
+    <link href="/2022/11/08/java/Java%E6%B3%9B%E5%9E%8B%E4%B8%8EJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <url>/2022/11/08/java/Java%E6%B3%9B%E5%9E%8B%E4%B8%8EJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
+    
+    <content type="html"><![CDATA[<p>Java的JSON库有很多，本文分析google的Gson和alibaba的fastjson，在Java泛型场景反序列化的一些有意思的行为。考虑下面的json字符串：</p><pre><code class="hljs">[    &quot;2147483648&quot;,    &quot;2147483647&quot;]</code></pre><p>用fastjson在不指定类型的情况下解析，下面的代码输出啥：</p><pre><code class="hljs">JSON.parseArray(s).forEach(o -&gt; &#123; System.out.println(o.getClass()); &#125;);</code></pre><p>答案是：</p><pre><code class="hljs">class java.lang.Longclass java.lang.Integer</code></pre><p>是不是感觉有点儿奇怪，两个都是数字啊，居然输出了不同的类型，原因我们下面细讲。再看看Gson， 用Gson解析并且不指定泛型类型的话，下面的代码输出啥：</p><pre><code class="hljs">new Gson().fromJson(s, List.class).forEach(o -&gt; &#123; System.out.println(o.getClass()); &#125;);</code></pre><p>答案是：</p><pre><code class="hljs">class java.lang.Doubleclass java.lang.Double</code></pre><p>这次两个都是Double类型，明明是整数啊，为啥到Gson这里变成Double了？</p><p>我们试了两个Json库，解析相同的json字符串，得到全然不同的结果。如果在实际使用的时候，用这种方式反序列化JSON，很容易出现BUG，而且是运行时才可能出现，这种问题一旦出现往往很难排查。因此为了保证泛型类型Json反序列化的正确性，一定要明确指定泛型的类型。下面我们先看看正确的解析应该怎么写，再深度探讨一下内部的原理。</p><h2 id="正确的泛型Json反序列化"><a href="#正确的泛型Json反序列化" class="headerlink" title="正确的泛型Json反序列化"></a>正确的泛型Json反序列化</h2><p>fastjson和Gson都提供了泛型类型的反序列化方案，先来看看fastjson，对于上面的case，正确的反序列化代码如下：</p><pre><code class="hljs">JSON.parseObject(s, new TypeReference&lt;List&lt;Long&gt;&gt;()&#123;&#125;).forEach(o -&gt; &#123; System.out.println(o.getClass()); &#125;);</code></pre><p>创建一个确定泛型类型的<code>TypeReference</code>子类（这里是匿名内部类），将这个子类传递给fastjson以帮助fastjson在运行时获得泛型的具体类型信息，从而实现泛型正确反序列化。Gson的方案与fastjson相同，或者应该反过来说fastjson的方案与Gson相同。大家感兴趣的话可以看看fastjson的<code>TypeReference</code>和Gson的<code>TypeToken</code>代码，基本上fastjson就是抄袭Gson，连注释都抄了……。Gson指定泛型类型的反序列化方法如下，也是创建一个确定泛型类型的匿名子类：</p><pre><code class="hljs">new Gson().&lt;List&lt;Long&gt;&gt;fromJson(s, new TypeToken&lt;List&lt;Long&gt;&gt;()&#123;&#125;.getType()).forEach(o -&gt; &#123; System.out.println(o.getClass()); &#125;);</code></pre><p>由于fastjson的方案是来自Gson，以下只讨论Gson的泛型反序列化原理。为什么泛型的反序列化显得这么麻烦呢，非要通过子类化的方式，不能直接告诉Gson泛型的类型吗？是的，Java是真的做不到，其实理由很简单，泛型类既然是泛型，意味着就不应该带有具体泛型类型的信息，因此泛型类的字节码本身就不应该也无法保存泛型类型，但是子类如果继承一个明确泛型类型的父类（父类是一个泛型类型，Gson里面就是TypeToken），子类必须保存父类的明确类型信息，通过<code>Class</code>类的<code>getGenericSuperclass</code>方法能够获得父类类型信息，该类型信息包含了父类具体的泛型类型信息。这个方法帮助Java的泛型体系完整化了，是非常重要的一个方法。</p><h2 id="类库设计分析"><a href="#类库设计分析" class="headerlink" title="类库设计分析"></a>类库设计分析</h2><p>面对相同的设计问题，fastjson与Gson在很多点上的选择不同，借此机会可以一窥类库设计的思想，让我们一一来看。</p><h3 id="是静态方法还是实例化"><a href="#是静态方法还是实例化" class="headerlink" title="是静态方法还是实例化"></a>是静态方法还是实例化</h3><p>使用Gson之前，必须进行实例化，Gson提供了两种方式：一种是无参数构造器，一种是通过GsonBuilder，后者能够进行更多的定制，但无论是哪种方法，都需要实例化一个Gson对象。但是Fastjson使用之前是不需要实例化的，直接使用JSON类的静态方法即可实现json序列化和反序列化。这一点上来讲，Fastjson比较方便，虽然Gson是线程安全的，可以用static变量来声明一个Gson实例（饿汉模式的单例）然后全局使用，但是还是比Fastjson多了一步。但是Gson这么做的好处是如果序列化（反序列化）的定制比较多，可以在初始化的时候完成复杂的扩展定制，使用的时候依然保持简单，Fastjson就需要每次都传递额外的参数来实现。总体来讲各有优化，Gson是线程安全的，大部分场景都是定义全局的静态单例，用起来跟Fastjson差不多。<strong>Gson在这里的选择倾向于希望对外的接口保持一致和简单</strong>，即无论怎么定制逻辑，Json的序列化和反序列化就那么几个方法，内部逻辑可以定制，但是使用接口不用改变。</p><h3 id="数字的默认类型"><a href="#数字的默认类型" class="headerlink" title="数字的默认类型"></a>数字的默认类型</h3><p>对于数字类型，如果没有明确指定类型，Gson默认都解析成Double类型，而Fastjson会根据数字的不同，解析成Long、Integer或者BigDecimal。我们在生产中用Fastjson就遇到这种问题：由于集合没有指定泛型类型，反序列化的时候，不同大小的数字被反序列化成了不同的类型，导致业务逻辑出错。这种未制定类型情况下，感觉Gson的处理更合适一些，既然未指定类型，对外的默认类型始终是Double，接口对外的心智更稳定。</p><h3 id="集合类型反序列化"><a href="#集合类型反序列化" class="headerlink" title="集合类型反序列化"></a>集合类型反序列化</h3><p>对于列表类型的反序列化，Fastjson提供了parseArray系列方法，这样很多情况下可以避免使用<code>TypeReference</code>，代码写起来更简单。但是Gson就没有这种方法，如果需要解析列表，必须使用<code>TypeToken&lt;List&lt;Xxx&gt;&gt;</code>，并没有为列表设置特殊的方法，这里依然能看到 <strong>Gson希望对外的接口保持一致和简单</strong> ，即便牺牲一点儿方便性。</p><h3 id="泛型反序列化"><a href="#泛型反序列化" class="headerlink" title="泛型反序列化"></a>泛型反序列化</h3><p>为了解析泛型，Gson和Fastjson都提供了类似的机制（Gson使用TypeToken承载类型，而Fastjson使用TypeReference承载类型），利用子类继承确定泛型父类的方式，获得类型，区别是Gson的接口只接受Type类型的参数，不接受TypeToken参数，这是因为Type是JDK的自带类型，而TypeToken是Gson额外引入的，这种设计的效果是<strong>Gson的接口非常简单</strong>。Fastjson的接口可以支持Type参数，也支持TypeReference参数。</p><h3 id="Gson和Fastjson的对外方法对比"><a href="#Gson和Fastjson的对外方法对比" class="headerlink" title="Gson和Fastjson的对外方法对比"></a>Gson和Fastjson的对外方法对比</h3><p>说了这么多，下面两张图，对比一下Fastjson对外同的公共方法数量和Gson提供的公共方法数量，有比较直观的感觉：</p><p><img src="img.png"><br>Gson对外接口-数量明显更少<br><img src="fastjson1.jpg"><br><img src="fastjson2.jpg"><br><img src="fastjson3.jpg"></p><p>FastJson对外接口-数量明显非常多</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>整体上能明显看出来fastjson更多是长出来的，接口多而全，应该是不断有人提需求不断实现的结果，而Gson是设计出来的，接口的一致性很强，高内聚低耦合，有些时候宁愿牺牲接口的便利性，也要保证接口对外的一致性、简单和概念完整，从设计上我是崇尚Gson的设计理念的，但实际的开发过程更容易演变成fastjson的模式，在中国程序员的地位真的不够高。</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.jianshu.com/p/f0fe42636d19">Java泛型与Json反序列化</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>代码大全（第2版）</title>
     <link href="/2022/11/04/book/%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8%EF%BC%88%E7%AC%AC2%E7%89%88%EF%BC%89/"/>
     <url>/2022/11/04/book/%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A8%EF%BC%88%E7%AC%AC2%E7%89%88%EF%BC%89/</url>
@@ -738,11 +763,11 @@
   
   
   <entry>
-    <title>Template method</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
+    <title>Adapter</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
     
-    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
     
     
     <categories>
@@ -763,11 +788,11 @@
   
   
   <entry>
-    <title>Adapter</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
+    <title>Template method</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
     
-    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
     
     
     <categories>
