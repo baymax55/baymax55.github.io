@@ -4,6 +4,137 @@
   
   
   <entry>
+    <title>理解maven命令package、install、deploy的联系与区别</title>
+    <link href="/2022/11/16/maven/%E7%90%86%E8%A7%A3maven%E5%91%BD%E4%BB%A4package%E3%80%81install%E3%80%81deploy%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/"/>
+    <url>/2022/11/16/maven/%E7%90%86%E8%A7%A3maven%E5%91%BD%E4%BB%A4package%E3%80%81install%E3%80%81deploy%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/</url>
+    
+    <content type="html"><![CDATA[<p>我们在用maven构建java项目时，最常用的打包命令有mvn package、mvn install、deploy，这三个命令都可完成打jar包或war（当然也可以是其它形式的包）的功能，但这三个命令还是有区别的。下面通过分别执行这三个命令的输出结果，来分析各自所执行的maven的生命周期。</p><h2 id="mvn-clean-package"><a href="#mvn-clean-package" class="headerlink" title="mvn clean package"></a>mvn clean package</h2><p><img src="img.png"></p><p><img src="img_1.png"></p><h2 id="mvn-clean-install"><a href="#mvn-clean-install" class="headerlink" title="mvn clean install"></a>mvn clean install</h2><p><img src="img_2.png"></p><p><img src="img_3.png"></p><h2 id="mvn-clean-deploy（忽略最后的BUILD-FAILURE）"><a href="#mvn-clean-deploy（忽略最后的BUILD-FAILURE）" class="headerlink" title="mvn clean deploy（忽略最后的BUILD FAILURE）"></a>mvn clean deploy（忽略最后的BUILD FAILURE）</h2><p><img src="img_4.png"></p><p><img src="img_5.png"></p><p>通过三个命令的输出我们可以看出三者的区别在于包函的maven生命的阶段和执行目标(goal)不同。上一篇文章 <code>https://blog.csdn.net/zhaojianting/article/details/80321488</code>　中介绍了maven的生命周期和各种插件，不明白的请参考此博文。maven生命周期（lifecycle）由各个阶段组成，每个阶段由maven的插件plugin来执行完成。生命周期（lifecycle）主要包括clean、resources、complie、install、pacakge、testResources、testCompile、deploy等，其中带test开头的都是用业编译测试代码或运行单元测试用例的。</p><p>仔细查看上面的输出结果截图，可以发现，</p><ul><li>  <strong>mvn clean package依次执行了clean、resources、compile、testResources、testCompile、test、jar(打包)等７个阶段。</strong></li><li>  <strong>mvn clean install依次执行了clean、resources、compile、testResources、testCompile、test、jar(打包)、install等8个阶段。</strong></li><li>  <strong>mvn clean deploy依次执行了clean、resources、compile、testResources、testCompile、test、jar(打包)、install、deploy等９个阶段。</strong></li></ul><p>由上面的分析可知主要区别如下，</p><ul><li>  <strong>package命令完成了项目编译、单元测试、打包功能，但没有把打好的可执行jar包（war包或其它形式的包）布署到本地maven仓库和远程maven私服仓库</strong></li><li>  <strong>install命令完成了项目编译、单元测试、打包功能，同时把打好的可执行jar包（war包或其它形式的包）布署到本地maven仓库，但没有布署到远程maven私服仓库</strong></li><li>  <strong>deploy命令完成了项目编译、单元测试、打包功能，同时把打好的可执行jar包（war包或其它形式的包）布署到本地maven仓库和远程maven私服仓库</strong></li></ul><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul><li><a href="https://blog.csdn.net/zhaojianting/article/details/80324533">理解maven命令package、install、deploy的联系与区别</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>maven命令</tag>
+      
+      <tag>maven</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Idea Spring Boot配置文件.yaml或.properties不能自动提示的有效解决办法</title>
+    <link href="/2022/11/16/idea/Idea%20Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.yaml%E6%88%96.properties%E4%B8%8D%E8%83%BD%E8%87%AA%E5%8A%A8%E6%8F%90%E7%A4%BA%E7%9A%84%E6%9C%89%E6%95%88%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
+    <url>/2022/11/16/idea/Idea%20Spring%20Boot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.yaml%E6%88%96.properties%E4%B8%8D%E8%83%BD%E8%87%AA%E5%8A%A8%E6%8F%90%E7%A4%BA%E7%9A%84%E6%9C%89%E6%95%88%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<p>SpringBoot项目的配置文件.yaml/.yml/.properties文件编写的时候没有自动提示，网上的解决办法五花八门，不一定适合具体个人的IDE环境，下面总结一套能解决绝大部分情况的方案：</p><p>先给出能自动识别的图样：</p><p><img src="https://img-blog.csdnimg.cn/20200706173341248.png"></p><p>步骤1：先检查IDEA是否安装了支持SpringBoot项目的插件（如果是通过IDEA创建的SpringBoot项目都集成了），如下图所示：</p><p><img src="https://img-blog.csdnimg.cn/20200706172519407.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hmd2R4dA==,size_16,color_FFFFFF,t_70"></p><p>步骤2：检查IDEA的文件类型识别器File Types是否支持.yaml,.yml,.properties结尾的文件</p><p><img src="https://img-blog.csdnimg.cn/20200706172951189.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hmd2R4dA==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20200706173204672.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hmd2R4dA==,size_16,color_FFFFFF,t_70"></p><p>步骤3：查看.yaml,.yml,.properties文件的图标是否变成绿叶形状，如果没有，则重启Idea看看（正常情况重启后应该可以）。</p><p>步骤4：查看如果经过上面三步后还没有，则删掉.yaml文件，重新建一个.yaml文件（或.properties文件）。然后按下图所示把配置文件添加到工程的module中的配置文件目录下：（这一步主要针对application.properties文件正常了，但是自定义的.properties如开始给出的图中custom.properties文件没有变绿叶状的情况）</p><p>鼠标选中项目根目录，邮件，点击Open Module Settings<img src="https://img-blog.csdnimg.cn/2020070617471625.png"></p><p><img src="https://img-blog.csdnimg.cn/20200706174756544.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hmd2R4dA==,size_16,color_FFFFFF,t_70"></p><p>到这里，小伙伴们的Spring Boot配置文件就能正常自动识别啦~~，快去体验一下吧</p><p><img src="https://img-blog.csdnimg.cn/20200706174939284.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hmd2R4dA==,size_16,color_FFFFFF,t_70"></p><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul><li><a href="https://blog.csdn.net/xfwdxt/article/details/107163389">Idea Spring Boot配置文件.yaml或.properties不能自动提示的有效解决办法</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>idea</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>spring-boot-configuration-processor 的作用</title>
+    <link href="/2022/11/16/spring/spring-boot-configuration-processor%20%E7%9A%84%E4%BD%9C%E7%94%A8/"/>
+    <url>/2022/11/16/spring/spring-boot-configuration-processor%20%E7%9A%84%E4%BD%9C%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<p>为什么在IDEA中使用SpringBoot的时候, 我们在配置文件中总能在输入spring时会得到很多的输入提示?</p><p><img src="img.png"></p><p>这是由于在Spring的项目中 (我们依赖的jar) 包含了很多 <code>meta-data</code>, 也就是元数据, 这些数据并不是在项目运行中有什么作用. 而是在开发期间能够通过ide的处理给我们更多的便捷提示.</p><hr><p>下面我们一起来看一下依赖的jar里面都有什么?</p><p><img src="img_1.png"></p><p>spring-configuration-metadata.json 这个就是<code>spring配置元数据</code>. 我们经常输入的server.port在这里面就有配置.  </p><p><img src="img_2.png"></p><p>上图就是自动提示的内容. 我们一起看看在metadata中都是怎么写的<br><img src="img_3.png"></p><pre><code class="hljs">    &#123;      &quot;name&quot;: &quot;server.port&quot;,                          # 配置名称      &quot;type&quot;: &quot;java.lang.Integer&quot;,                    # 数据类型      &quot;description&quot;: &quot;Server HTTP port.&quot;,             # 描述      &quot;sourceType&quot;: &quot;org.springframework.boot.autoconfigure.web.ServerProperties&quot;,  # 配置项来源      &quot;defaultValue&quot;: 8080  # 默认值    &#125;</code></pre><p>再来看看来源的类<br><img src="img_4.png"></p><p>这样就看到了数据出处了.<br>显而易见的是, 除了默认值之外, 字段的注释也会一并被写到metadata中.</p><p>那么接下来看看如何添加默认值.<br><img src="img_5.png"></p><p>给字段配置上默认值之后会自动的被处理到metadata中</p><p><img src="img_6.png">  </p><p>这样在输入的时候就会有提示<br><img src="img_7.png"></p><p>以上就是spring-boot-configuration-processor大致的作用了.</p><p>maven依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-configuration-processor<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">optional</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">optional</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure><p>版本号随着你的spring-boot版本变化</p><p>当你编写好属性文件， 并添加注解之后, 需要你编译一下项目才能在配置文件编写的时候弹出提示。如果不编译是不会有提示的。 编译好的文件在target包下可以看到<br><img src="img_8.png"></p><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul><li><a href="https://www.jianshu.com/p/ca22783b0a35">spring-boot-configuration-processor 的作用</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>spring</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>原生linux安装docker方式(WSL)</title>
+    <link href="/2022/11/16/docker/%E5%8E%9F%E7%94%9Flinux%E5%AE%89%E8%A3%85docker%E6%96%B9%E5%BC%8F(WSL)/"/>
+    <url>/2022/11/16/docker/%E5%8E%9F%E7%94%9Flinux%E5%AE%89%E8%A3%85docker%E6%96%B9%E5%BC%8F(WSL)/</url>
+    
+    <content type="html"><![CDATA[<p>wsl2已经完整使用了linux内核了，此种方式和先前在linux虚拟机安装docker类似，步骤如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">curl -fsSL https://get.docker.com -o get-docker.sh</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo sh get-docker.sh</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo service docker start</span><br><br></code></pre></td></tr></table></figure><p>执行脚本安装过程中，脚本提示“建议使用Docker Desktop for windows”，20s内按Ctrl+C会退出安装，所以需要等待20s，另外此种方式需要访问外网。</p><blockquote><p>export http_proxy=<a href="http://172.16.10.133:7890/">http://172.16.10.133:7890</a><br>export https_proxy=<a href="http://172.16.10.133:7890/">http://172.16.10.133:7890</a></p></blockquote><p>检查docker安装正常</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">检查dockerd进程启动</span><br>service docker status<br>ps aux|grep docker<br><span class="hljs-meta prompt_"># </span><span class="language-bash">检查拉取镜像等正常</span><br>docker pull busybox<br>docker images<br></code></pre></td></tr></table></figure><blockquote><p>注意：不同于完全linux虚拟机方式，WLS2下通过apt install docker-ce命令安装的docker无法启动，因为WSL2方式的ubuntu里面没有systemd。上述官方get-docker.sh安装的docker，dockerd进程是用ubuntu传统的init方式而非systemd启动的。</p></blockquote><p>对于使用 systemd 的系统，请在 <code>/etc/docker/daemon.json</code> 中写入如下内容（如果文件不存在请新建该文件）</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">&#123;<br>    &quot;registry-mirrors&quot; : [<br>        &quot;http://registry-1.docker.io&quot;,<br>        &quot;http://mirror.baidubce.com&quot;,<br>        &quot;http://docker.mirrors.ustc.edu.cn&quot;<br>    ],<br>    &quot;insecure-registries&quot;:[&quot;harbor.xxx.com&quot;]<br>&#125;<br>&gt;注意：该文件必须符合 json 规范，否则 Docker 将不能启动。<br></code></pre></td></tr></table></figure><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul><li><a href="https://zhuanlan.zhihu.com/p/148511634">win10利用WSL2安装docker的2种方式</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>docker</tag>
+      
+      <tag>WSL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>类与对象的比较</title>
+    <link href="/2022/11/14/excerpt/%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%AF%94%E8%BE%83/"/>
+    <url>/2022/11/14/excerpt/%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%AF%94%E8%BE%83/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h1><p><strong>面向对象设计的一个核心概念就是对象 (obiect) 与类(class)的区分。对象是指运行期间在程序中实际存在的具体实体(enity)，而类是指在程序源码中存在的静态事物。对象是动态的，它拥有你在程序运行期间所能得到的具体的值和属性。例如，你可以定义一个名为 Person 的类，它具有姓名年龄、性别等属性。在程序运行期间，你可以有 nancy、hank、diane、tony 等对象一一它们是类的具体实例。如果你熟悉数据库术语的话，类与对象的关系就如同“模式(schema)”与“实例(instance)”一样。你可以把类看做是蛋糕模具而把对象看做是蛋糕。在本书中，对这两个术语的使用并非十分正规，一般情况也会或多或少互换地使用类和对象这两个术语。</strong></p><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul><li>代码大全（第2版）</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>excerpt</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>class</tag>
+      
+      <tag>object</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>spotless-maven-plugin</title>
     <link href="/2022/11/09/maven/%E4%BD%BF%E7%94%A8spotless-maven-plugin%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81/"/>
     <url>/2022/11/09/maven/%E4%BD%BF%E7%94%A8spotless-maven-plugin%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81/</url>
@@ -813,6 +944,31 @@
   
   
   <entry>
+    <title>Adapter</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
+    
+    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Template method</title>
     <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
     <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
@@ -838,11 +994,11 @@
   
   
   <entry>
-    <title>Adapter</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
+    <title>Strategy</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/</url>
     
-    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/strategy/">Strategy</a></li></ul>]]></content>
     
     
     <categories>
@@ -882,31 +1038,6 @@
       <tag>设计模式</tag>
       
       <tag>设计原则</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Strategy</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/Strategy/</url>
-    
-    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/strategy/">Strategy</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>IT</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>设计模式</tag>
       
     </tags>
     
@@ -1204,31 +1335,6 @@
   
   
   <entry>
-    <title>tldr命令</title>
-    <link href="/2022/09/13/linux/tldr/"/>
-    <url>/2022/09/13/linux/tldr/</url>
-    
-    <content type="html"><![CDATA[<p>The tldr pages are a community effort to simplify the beloved man pages with practical examples.</p><h2 id="类似命令"><a href="#类似命令" class="headerlink" title="类似命令"></a>类似命令</h2><h3 id="man"><a href="#man" class="headerlink" title="man"></a>man</h3><h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><h3 id="cheat"><a href="#cheat" class="headerlink" title="cheat"></a>cheat</h3><p>Linux cheat 命令是一个实用程序，可以用来搜索和显示你想要使用的命令的使用示例</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://tldr.sh/">tldr</a></li><li><a href="https://linux.cn/article-14961-1.html">“作弊”：只需要知道这一个 Linux 命令就够了</a></li><li><a href="https://github.com/cheat/cheat">cheat</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>IT</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>linux command</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>rabbitMQ实现延迟消息队列</title>
     <link href="/2022/09/13/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
     <url>/2022/09/13/mq/rabbitMQ%E5%AE%9E%E7%8E%B0%E5%BB%B6%E8%BF%9F%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
@@ -1250,6 +1356,31 @@
       <tag>延迟队列</tag>
       
       <tag>mq</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>tldr命令</title>
+    <link href="/2022/09/13/linux/tldr/"/>
+    <url>/2022/09/13/linux/tldr/</url>
+    
+    <content type="html"><![CDATA[<p>The tldr pages are a community effort to simplify the beloved man pages with practical examples.</p><h2 id="类似命令"><a href="#类似命令" class="headerlink" title="类似命令"></a>类似命令</h2><h3 id="man"><a href="#man" class="headerlink" title="man"></a>man</h3><h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><h3 id="cheat"><a href="#cheat" class="headerlink" title="cheat"></a>cheat</h3><p>Linux cheat 命令是一个实用程序，可以用来搜索和显示你想要使用的命令的使用示例</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://tldr.sh/">tldr</a></li><li><a href="https://linux.cn/article-14961-1.html">“作弊”：只需要知道这一个 Linux 命令就够了</a></li><li><a href="https://github.com/cheat/cheat">cheat</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>linux command</tag>
       
     </tags>
     
@@ -1472,11 +1603,11 @@
   
   
   <entry>
-    <title>Java新特性教程</title>
-    <link href="/2022/09/13/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/"/>
-    <url>/2022/09/13/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/</url>
+    <title>Java中field和property的区别</title>
+    <link href="/2022/09/13/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <url>/2022/09/13/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
     
-    <content type="html"><![CDATA[<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul><li><a href="https://www.wdbyte.com/java-feature/">Java 新特性教程</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>field和property中文的翻译差不多，实际上是两个不同的概念。</p><blockquote><p>field: A data member of a class. Unless specified otherwise, a field is not static.</p><p>property: Characteristics of an object that users can set, such as the color of a window.</p><p>摘自：<a href="https://docs.oracle.com/javase/tutorial/information/glossary.html#P">Glossary of Terms</a></p></blockquote><p>我的理解是，field指那些在类的内部，未通过getter/setter访问的成员变量。而property指的是通过getter/setter访问的成员变量</p><p><img src="img.png"></p><p>如上图所示我们新建一个Demo类，在没有设置getter/setter方法时，filed1,filed2,filed3,filed4都是field，然后我给property1和property2添加getter/setter方法后，getProperty1(), setProperty1()和property1就变成了一个property。</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://xinxingastro.github.io/2018/07/21/Java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/">Java中field和property的区别</a></li></ul>]]></content>
     
     
     <categories>
@@ -1497,11 +1628,11 @@
   
   
   <entry>
-    <title>Java中field和property的区别</title>
-    <link href="/2022/09/13/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <url>/2022/09/13/java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <title>Java新特性教程</title>
+    <link href="/2022/09/13/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/"/>
+    <url>/2022/09/13/java/Java%20%E6%96%B0%E7%89%B9%E6%80%A7%E6%95%99%E7%A8%8B/</url>
     
-    <content type="html"><![CDATA[<p>field和property中文的翻译差不多，实际上是两个不同的概念。</p><blockquote><p>field: A data member of a class. Unless specified otherwise, a field is not static.</p><p>property: Characteristics of an object that users can set, such as the color of a window.</p><p>摘自：<a href="https://docs.oracle.com/javase/tutorial/information/glossary.html#P">Glossary of Terms</a></p></blockquote><p>我的理解是，field指那些在类的内部，未通过getter/setter访问的成员变量。而property指的是通过getter/setter访问的成员变量</p><p><img src="img.png"></p><p>如上图所示我们新建一个Demo类，在没有设置getter/setter方法时，filed1,filed2,filed3,filed4都是field，然后我给property1和property2添加getter/setter方法后，getProperty1(), setProperty1()和property1就变成了一个property。</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://xinxingastro.github.io/2018/07/21/Java/Java%E4%B8%ADfield%E5%92%8Cproperty%E7%9A%84%E5%8C%BA%E5%88%AB/">Java中field和property的区别</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul><li><a href="https://www.wdbyte.com/java-feature/">Java 新特性教程</a></li></ul>]]></content>
     
     
     <categories>
@@ -1547,31 +1678,6 @@
   
   
   <entry>
-    <title>Integer.toString() vs String.valueOf()</title>
-    <link href="/2022/09/13/java/Integer.toString()vsString.valueOf()/"/>
-    <url>/2022/09/13/java/Integer.toString()vsString.valueOf()/</url>
-    
-    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.baeldung.com/java-tostring-valueof">Integer.toString() vs String.valueOf() in Java</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>IT</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>java</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>JMH - Java 代码性能基准测试</title>
     <link href="/2022/09/13/java/JMH-Java%20%E4%BB%A3%E7%A0%81%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/"/>
     <url>/2022/09/13/java/JMH-Java%20%E4%BB%A3%E7%A0%81%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/</url>
@@ -1591,6 +1697,31 @@
       <tag>java</tag>
       
       <tag>JMH</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Integer.toString() vs String.valueOf()</title>
+    <link href="/2022/09/13/java/Integer.toString()vsString.valueOf()/"/>
+    <url>/2022/09/13/java/Integer.toString()vsString.valueOf()/</url>
+    
+    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.baeldung.com/java-tostring-valueof">Integer.toString() vs String.valueOf() in Java</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>java</tag>
       
     </tags>
     
