@@ -1,0 +1,1147 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="咱们从头到尾说一次 Spring 事务管理（器）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="咱们从头到尾说一次 Spring 事务管理（器）">
+<meta property="og:url" content="https://baymax55.github.io/2022/11/29/spring/%E5%92%B1%E4%BB%AC%E4%BB%8E%E5%A4%B4%E5%88%B0%E5%B0%BE%E8%AF%B4%E4%B8%80%E6%AC%A1%20Spring%20%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%EF%BC%88%E5%99%A8%EF%BC%89/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="咱们从头到尾说一次 Spring 事务管理（器）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/spring.png">
+<meta property="article:published_time" content="2022-11-29T01:39:45.379Z">
+<meta property="article:modified_time" content="2022-11-29T01:50:26.087Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="事务">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/spring.png">
+  
+  
+  
+  <title>咱们从头到尾说一次 Spring 事务管理（器） - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="咱们从头到尾说一次 Spring 事务管理（器）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-29 09:39" pubdate>
+          2022年11月29日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          97 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">咱们从头到尾说一次 Spring 事务管理（器）</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年11月29日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p><strong>事务管理</strong>，一个被说烂的也被看烂的话题，还是八股文中的基础股之一。但除了八股文中需要熟读并背诵的那些个传播行为之外，背后的“为什么”和核心原理更为重要。  </p>
+<p>写这篇文章之前，我也翻过一些事务管理器原理介绍文章，但大多都是生硬的翻译源码，一个劲的给源码加注释。这种源码翻译的文章虽说有帮助，但对读者来说体验并不好，很容易陷入代码的一些细节里，并不能帮助读者快速的了解事务管理的全貌，以及设计思路。  </p>
+<p>本文会从设计角度，一步步的剖析 Spring 事务管理的设计思路（都会设计事务管理器了，还能不不会用么？）</p>
+<h2 id="为什么需要事务管理？"><a href="#为什么需要事务管理？" class="headerlink" title="为什么需要事务管理？"></a>为什么需要事务管理？</h2><p>先看看如果没有事务管理器的话，如果<strong>想让多个操作（方法/类）处在一个事务里</strong>应该怎么做：</p>
+<pre><code class="hljs">// MethodA:
+public void methodA()&#123;
+    Connection connection = acquireConnection();
+    try&#123;
+        int updated = connection.prepareStatement().executeUpdate();
+        methodB(connection);
+        connection.commit();
+    &#125;catch (Exception e)&#123;
+        rollback(connection);
+    &#125;finally &#123;
+        releaseConnection(connection);
+    &#125;
+&#125;
+
+// MethodB:
+public void methodB(Connection connection)&#123;
+    int updated = connection.prepareStatement().executeUpdate();
+&#125;
+</code></pre>
+<p>或者用 ThreadLocal 存储 Connection？</p>
+<pre><code class="hljs">static ThreadLocal&lt;Connection&gt; connHolder = new ThreadLocal&lt;&gt;();
+
+// MethodA:
+public void methodA()&#123;
+    Connection connection = acquireConnection();
+    connHolder.set(connection);
+    try&#123;
+        int updated = connection.prepareStatement().executeUpdate();
+        methodB();
+        connection.commit();
+    &#125;catch (Exception e)&#123;
+        rollback(connection);
+    &#125;finally &#123;
+        releaseConnection(connection);
+        connHolder.remove();
+    &#125;
+&#125;
+
+// MethodB:
+public void methodB()&#123;
+    Connection connection = connHolder.get();
+    int updated = connection.prepareStatement().executeUpdate();
+&#125;
+</code></pre>
+<p>还是有点恶心，再抽象一下？将绑定 Connection 的操作提取为公共方法：</p>
+<pre><code class="hljs">static ThreadLocal&lt;Connection&gt; connHolder = new ThreadLocal&lt;&gt;();
+
+private void bindConnection()&#123;
+    Connection connection = acquireConnection();
+    connHolder.set(connection);
+&#125;
+
+private void unbindConnection()&#123;
+    releaseConnection(connection);
+    connHolder.remove();
+&#125;
+
+// MethodA:
+public void methodA()&#123;
+    try&#123;
+        bindConnection();
+        int updated = connection.prepareStatement().executeUpdate();
+        methoB();
+        connection.commit();
+    &#125;catch (Exception e)&#123;
+        rollback(connection);
+    &#125;finally &#123;
+        unbindConnection();
+    &#125;
+&#125;
+
+// MethodB:
+public void methodB()&#123;
+    Connection connection = connHolder.get();
+    int updated = connection.prepareStatement().executeUpdate();
+&#125;
+</code></pre>
+<p>现在看起来好点了，不过我有一个新的需求：想让 methodB 独立一个新事务，单独提交和回滚，不影响 methodA  </p>
+<p>这……可就有点难搞了，ThreadLocal 中已经绑定了一个 Connection，再新事务的话就不好办了  </p>
+<p>那如果再复杂点呢，methodB 中需要调用 methodC，methodC 也需要一个独立事务……  </p>
+<p>而且，每次 bind/unbind 的操作也有点太傻了，万一哪个方法忘了写 unbind ，最后来一个连接泄露那不是完蛋了！  </p>
+<p>好在 Spring 提供了事务管理器，帮我们解决了这一系列痛点。</p>
+<h2 id="Spring-事务管理解决了什么问题？"><a href="#Spring-事务管理解决了什么问题？" class="headerlink" title="Spring 事务管理解决了什么问题？"></a>Spring 事务管理解决了什么问题？</h2><p>Spring 提供的事务管理可以帮我们管理事务相关的资源，比如 JDBC 的 Connection、Hibernate 的 Session、Mybatis 的 SqlSession。如说上面的 Connection 绑定到 ThreadLocal 来解决共享一个事务的这种方式，Spring 事务管理就已经帮我们做好了。  </p>
+<p>还可以帮我们处理复杂场景下的嵌套事务，比如前面说到的 methodB/methodC 独立事务。</p>
+<h3 id="什么是嵌套事务？"><a href="#什么是嵌套事务？" class="headerlink" title="什么是嵌套事务？"></a>什么是嵌套事务？</h3><p>还是拿上面的例子来说， methodA 中调用了 methodB，两个方法都有对数据库的操作，而且都需要事务：</p>
+<pre><code class="hljs">// MethodA:
+public void methodA()&#123;
+    int updated = connection.prepareStatement().executeUpdate();
+    methodB();
+    // ...
+&#125;
+
+// MethodB:
+public void methodB()&#123;
+    // ...
+&#125;
+</code></pre>
+<p><strong>这种多个方法调用链中都有事务的场景，就是嵌套事务。</strong>不过要注意的是，并不是说多个方法使用一个事务才叫嵌套，哪怕是不同的事务，只要在这个方法的调用链中，都是嵌套事务。</p>
+<h3 id="什么是事务传播行为？"><a href="#什么是事务传播行为？" class="headerlink" title="什么是事务传播行为？"></a>什么是事务传播行为？</h3><p>那调用链中的子方法，是用一个新事务，还是使用当前事务呢？这个子方法决定使用新事务还是当前事务（或不使用事务）的策略，就叫事务传播。  </p>
+<p>在 Spring 的事务管理中，<strong>这个子方法的事务处理策略叫做事务传播行为（Propogation Behavior）</strong>。</p>
+<h3 id="有哪些事务传播行为？"><a href="#有哪些事务传播行为？" class="headerlink" title="有哪些事务传播行为？"></a>有哪些事务传播行为？</h3><p>Spring 的事务管理支持多种传播行为</p>
+<p>REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。</p>
+<p>SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。</p>
+<p>MANDATORY：支持当前事务，如果当前没有事务，就抛出异常。</p>
+<p>REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起。</p>
+<p>NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。</p>
+<p>NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。</p>
+<p>NESTED：支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。</p>
+<p>但给这些传播行为分类之后，无非是以下三种：</p>
+<ol>
+<li> 优先使用当前事务</li>
+<li> 不使用当前事务，新建事务</li>
+<li> 不使用任何事务</li>
+</ol>
+<p>比如上面的例子中，methodB/methodC 独立事务，就属于第 2 种传播行为 - 不使用当前事务，新建事务</p>
+<h3 id="看个栗子"><a href="#看个栗子" class="headerlink" title="看个栗子"></a>看个栗子</h3><p>以 Spring JDBC + Spring <strong>注解版</strong>的事务举例。在默认的事务传播行为下，methodA 和 methodB 会使用同一个 Connection，在一个事务中</p>
+<pre><code class="hljs">@Transactional
+public void methodA()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+    methodB();
+&#125;
+
+@Transactional
+public void methodB()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+&#125;
+</code></pre>
+<p>如果我想让 methodB 不使用 methodA 的事务，自己新建一个连接/事务呢？只需要简单的配置一下 @Transactional 注解：</p>
+<pre><code class="hljs">@Transactional
+public void methodA()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+    methodB();
+&#125;
+
+// 传播行为配置为 - 方式2，不使用当前事务，独立一个新事务
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void methodB()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+&#125;
+</code></pre>
+<p>就是这么简单，获取 Connection/多方法共享 Connection/多方法共享+独享 Connection/提交/释放连接之类的操作，完全不需要我们操心，Spring 都替我们做好了。</p>
+<h3 id="怎么回滚？"><a href="#怎么回滚？" class="headerlink" title="怎么回滚？"></a>怎么回滚？</h3><p>在注解版的事务管理中，默认的的回滚策略是：抛出异常就回滚。这个默认策略挺好，连回滚都帮我们解决了，再也不用手动回滚。  </p>
+<p>但是如果在嵌套事务中，子方法独立新事务呢？这个时候哪怕抛出异常，也只能回滚子事务，不能直接影响前一个事务</p>
+<p>可如果这个抛出的异常不是 sql 导致的，比如校验不通过或者其他的异常，此时应该将当前的事务回滚吗？  </p>
+<p>这个还真不一定，谁说抛异常就要回滚，异常也不回滚行不行？  </p>
+<p>当然可以！抛异常和回滚事务本来就是两个问题，可以连在一起，也可以分开处理</p>
+<pre><code class="hljs">// 传播行为配置为 - 方式2，不使用当前事务，独立一个新事务
+
+// 指定 Exception 也不会滚
+@Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = Exception.class)
+public void methodB()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+&#125;
+</code></pre>
+<h3 id="每个事务-连接使用不同配置"><a href="#每个事务-连接使用不同配置" class="headerlink" title="每个事务/连接使用不同配置"></a>每个事务/连接使用不同配置</h3><p>除了传播和回滚之外，还可以给每个事务/连接使用不同的配置，比如不同的隔离级别：</p>
+<pre><code class="hljs">@Transactional
+public void methodA()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+    methodB();
+&#125;
+
+// 传播行为配置为 - 方式2，不使用当前事务，独立一个新事务
+// 这个事务/连接中使用 RC 隔离级别，而不是默认的 RR
+@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_UNCOMMITTED)
+public void methodB()&#123;
+    jdbcTemplate.batchUpdate(updateSql, params);
+&#125;
+</code></pre>
+<p>除了隔离级别之外，其他的 JDBC Connection 配置当然也是支持的，比如 readOnly。这样一来，虽然我们不用显示的获取 connection/session，但还是可以给嵌套中的每一个事务配置不同的参数，非常灵活。</p>
+<h3 id="功能总结"><a href="#功能总结" class="headerlink" title="功能总结"></a>功能总结</h3><p>好了，现在已经了解了 Spring 事务管理的所有核心功能，来总结一下这些核心功能点：</p>
+<ol>
+<li> 连接/资源管理 - 无需手动获取资源、共享资源、释放资源</li>
+<li> 嵌套事务的支持 - 支持嵌套事务中使用不同的资源策略、回滚策略</li>
+<li> 每个事务/连接使用不同的配置</li>
+</ol>
+<h2 id="事务管理器（TransactionManager）模型"><a href="#事务管理器（TransactionManager）模型" class="headerlink" title="事务管理器（TransactionManager）模型"></a>事务管理器（TransactionManager）模型</h2><p>其实仔细想想，事务管理的核心操作只有两个：提交和回滚。前面所谓的传播、嵌套、回滚之类的，都是基于这两个操作。  </p>
+<p>所以 Spring 将事务管理的核心功能抽象为一个<strong>事务管理器（Transaction Manager）</strong>，基于这个事务管理器核心，可以实现多种事务管理的方式。  </p>
+<p>这个核心的事务管理器只有三个功能接口：</p>
+<ol>
+<li><p> <strong>获取事务资源</strong>，资源可以是任意的，比如jdbc connection/hibernate mybatis session之类，然后绑定并存储</p>
+</li>
+<li><p> <strong>提交事务</strong> - 提交指定的事务资源</p>
+</li>
+<li><p><strong>回滚事务</strong> - 回滚指定的事务资源</p>
+<p> interface PlatformTransactionManager{</p>
+<pre><code class="hljs"> // 获取事务资源，资源可以是任意的，比如jdbc connection/hibernate mybatis session之类
+ TransactionStatus getTransaction(TransactionDefinition definition)
+         throws TransactionException;
+ 
+ // 提交事务
+ void commit(TransactionStatus status) throws TransactionException;
+ 
+ // 回滚事务
+ void rollback(TransactionStatus status) throws TransactionException;
+</code></pre>
+<p> }</p>
+</li>
+</ol>
+<h3 id="事务定义-TransactionDefinition"><a href="#事务定义-TransactionDefinition" class="headerlink" title="事务定义 - TransactionDefinition"></a>事务定义 - TransactionDefinition</h3><p>还记得上面的 @Transactional 注解吗，里面定义了传播行为、隔离级别、回滚策略、只读之类的属性，这个就是一次事务操作的定义。  </p>
+<p>在获取事务资源时，需要根据这个事务的定义来进行不同的配置：</p>
+<ol>
+<li> 比如配置了使用新事务，那么在获取事务资源时就需要创建一个新的，而不是已有的</li>
+<li> 比如配置了隔离级别，那么在首次创建资源（Connection）时，就需要给 Connection 设置 propagation</li>
+<li> 比如配置了只读属性，那么在首次创建资源（Connection）时，就需要给 Connection 设置 readOnly</li>
+</ol>
+<p>为什么要单独用一个 TransactionDefinition 来存储事务定义，直接用注解的属性不行吗？  </p>
+<p>当然可以，但注解的事务管理只是 Spring 提供的自动挡，还有适合老司机的手动挡事务管理（后面会介绍）；手动挡可用不了注解，所以单独建一个事务定义的模型，这样就可以实现通用。</p>
+<h3 id="事务状态-TransactionStatus"><a href="#事务状态-TransactionStatus" class="headerlink" title="事务状态 - TransactionStatus"></a>事务状态 - TransactionStatus</h3><p>那既然嵌套事务下，每个子方法的事务可能不同，所以还得有一个子方法事务的状态 - TransactionStatus，用来存储当前事务的一些数据和状态，比如事务资源（Connection）、回滚状态等。</p>
+<h3 id="获取事务资源"><a href="#获取事务资源" class="headerlink" title="获取事务资源"></a>获取事务资源</h3><p>事务管理器的第一步，就是根据事务定义来获取/创建资源了，这一步最麻烦的是要区分传播行为，不同传播行为下的逻辑不太一样。  </p>
+<p>“默认的传播行为下，使用当前事务”，怎么算有当前事务呢？  </p>
+<p>把事务资源存起来嘛，只要已经存在那就是有当前事务，直接获取已存储的事务资源就行。文中开头的例子也演示了，如果想让多个方法无感的使用同一个事务，可以用 ThreadLocal 存储起来，简单粗暴。  </p>
+<p>Spring 也是这么做的，不过它实现的更复杂一些，抽象了一层<strong>事务资源同步管理器 - TransactionSynchronizationManager（本文后面会简称 TxSyncMgr）</strong>，在这个同步管理器里使用 ThreadLocal 存储了事务资源（本文为了方便理解，尽可能的不贴非关键源码）。  </p>
+<p>剩下的就是根据不同传播行为，执行不同的策略了，分类之后只有 3 个条件分支：</p>
+<ol>
+<li><p> 当前有事务 - 根据不同传播行为处理不同</p>
+</li>
+<li><p> 当前没事务，但需要开启新事务</p>
+</li>
+<li><p>彻底不用事务 - 这个很少用</p>
+<p> public final TransactionStatus getTransaction(TransactionDefinition definition) {</p>
+<pre><code class="hljs"> //创建事务资源 - 比如 Connection
+ Object transaction = doGetTransaction();
+ 
+ if (isExistingTransaction(transaction)) &#123;
+     // 处理当前已有事务的场景
+     return handleExistingTransaction(def, transaction, debugEnabled);
+ &#125;else if (def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED ||
+             def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW ||
+             def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED)&#123;
+     
+     // 开启新事务
+     return startTransaction(def, transaction, debugEnabled, suspendedResources);
+ &#125;else &#123;
+     // 彻底不用事务
+ &#125;
+ 
+ // ...
+</code></pre>
+<p> }</p>
+</li>
+</ol>
+<p>先介绍一下<strong>分支 2 - 当前没事务，但需要开启新事务</strong>，这个逻辑相对简单一些。只需要新建事务资源，然后绑定到 ThreadLocal 即可：</p>
+<pre><code class="hljs">private TransactionStatus startTransaction(TransactionDefinition definition, Object transaction,
+            boolean debugEnabled, SuspendedResourcesHolder suspendedResources) &#123;
+        
+        // 创建事务
+        DefaultTransactionStatus status = newTransactionStatus(
+                definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+        
+        // 开启事务（beginTx或者setAutoCommit之类的操作）
+        // 然后将事务资源绑定到事务资源管理器 TransactionSynchronizationManager
+        doBegin(transaction, definition);
+</code></pre>
+<p>现在回到分支 <strong>1 - 当前有事务 - 根据不同传播行为处理不同</strong>，这个就稍微有点麻烦了。因为有子方法独立事务的需求，可是 TransactionSynchronizationManager 却只能存一个事务资源。</p>
+<h3 id="挂起（Suspend）和恢复（Resume）"><a href="#挂起（Suspend）和恢复（Resume）" class="headerlink" title="挂起（Suspend）和恢复（Resume）"></a>挂起（Suspend）和恢复（Resume）</h3><p>Spring 采用了一种<strong>挂起（Suspend） - 恢复（Resume）</strong>的设计来解决这个嵌套资源处理的问题。当子方法需要独立事务时，就将当前事务挂起，从 TxSyncMgr 中移除当前事务资源，创建新事务的状态时，将挂起的事务资源保存至新的事务状态 TransactionStatus 中；在子方法结束时，只需要再从子方法的事务状态中，再次拿出挂起的事务资源，重新绑定至 TxSyncMgr 即可完成恢复的操作。  </p>
+<p>整个挂起 - 恢复的流程，如下图所示：  </p>
+<p><img src="img_3.png" srcset="/img/loading.gif" lazyload><br><strong>注意：挂起操作是在获取事务资源这一步做的，而恢复的操作是在子方法结束时（提交或者回滚）中进行的。</strong>  </p>
+<p>这样一来，每个 TransactionStatus 都会保存挂起的前置事务资源，如果方法调用链很长，每次都是新事务的话，那这个 TransactionStatus 看起来就会像一个链表：  </p>
+<p><img src="img.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="提交事务"><a href="#提交事务" class="headerlink" title="提交事务"></a>提交事务</h3><p>获取资源、操作完毕后来到了提交事务这一步，这个提交操作比较简单，只有两步：</p>
+<ol>
+<li> 当前是新事务才提交</li>
+<li> 处理挂起资源</li>
+</ol>
+<p>怎么知道是新事务？  </p>
+<p>每经过一次事务嵌套，都会创建一个新的 TransactionStatus，这个事务状态里会记录当前是否是新事务。如果多个子方法都使用一个事务资源，那么除了第一个创建事务资源的 TransactionStatus 之外，其他都不是新事务。  </p>
+<p>如下图所示，A -&gt; B -&gt; C 时，由于 BC 都使用当前事务，那么虽然 ABC 所使用的事务资源是一样的，但是只有 A 的 TransactionStatus 是新事务，BC 并不是；那么在 BC 提交事务时，就不会真正的调用提交，只有回到 A 执行 commit 操作时，才会真正的调用提交操作。<br><img src="img_1.png" srcset="/img/loading.gif" lazyload><br>这里再解释下，为什么新事务才需要提交，而已经有事务却什么都不用做：</p>
+<p>因为对于新事务来说，这里的提交操作已经是事务完成了；而对于非新事务的场景，前置事务（即当前事务）还没有执行完，可能后面还有其他数据库操作，所以这个提交的操作得让当前事务创建方去做，这里并不能提交。</p>
+<h3 id="回滚事务"><a href="#回滚事务" class="headerlink" title="回滚事务"></a>回滚事务</h3><p>除了提交，还有回滚呢，回滚事务的逻辑和提交事务类似：</p>
+<ol>
+<li> 如果是新事务才回滚，原因上面已经介绍过了</li>
+<li> 如果不是新事务则只设置回滚标记</li>
+<li> 处理挂起资源</li>
+</ol>
+<p><strong>注意：事务管理器是不包含回滚策略这个东西的，回滚策略是 AOP 版的事务管理增强的功能，但这个功能并不属于核心的事务管理器</strong></p>
+<h2 id="自动挡与手动挡"><a href="#自动挡与手动挡" class="headerlink" title="自动挡与手动挡"></a>自动挡与手动挡</h2><p>Spring 的事务管理功能都是围绕着上面这个事务管理器运行的，提供了三种管理事务的方式，分别是：</p>
+<ol>
+<li> XML AOP 的事务管理 - 比较古老现在用的不多</li>
+<li> 注解版本的事务管理 - @Transactional</li>
+<li> TransactionTemplate - 手动挡的事务管理，也称编程式事务管理</li>
+</ol>
+<h3 id="自动挡"><a href="#自动挡" class="headerlink" title="自动挡"></a>自动挡</h3><p>XML/@Transactional 两种基于 AOP 的注解管理，其入口类是 TransactionInterceptor，是一个 AOP 的 Interceptor，负责调用事务管理器来实现事务管理。  </p>
+<p>因为核心功能都在事务管理器里实现，所以这个 AOP Interceptor 很简单，只是调用一下事务管理器，核心（伪）代码如下：</p>
+<pre><code class="hljs">public Object invoke(MethodInvocation invocation) throws Throwable &#123;
+    
+    // 获取事务资源
+    Object transaction = transactionManager.getTransaction(txAttr);    
+    Object retVal;
+    
+    try &#123;
+        // 执行业务代码
+        retVal = invocation.proceedWithInvocation();
+        
+        // 提交事务
+        transactionManager.commit(txStatus);
+    &#125; catch (Throwable ex)&#123;
+        // 先判断异常回滚策略，然后调用事务管理器的 rollback
+        rollbackOn(ex, txStatus);
+    &#125; 
+&#125;
+</code></pre>
+<p>并且 AOP 这种自动挡的事务管理还增加了一个回滚策略的玩法，这个是手动挡 TransactionTemplate 所没有的，但这个功能并不在事务管理器中，只是 AOP 版事务的一个增强。</p>
+<h3 id="手动挡"><a href="#手动挡" class="headerlink" title="手动挡"></a>手动挡</h3><p>TransactionTemplate 这个是手动挡的事务管理，虽然没有注解的方便，但是好在灵活，异常/回滚啥的都可以自己控制。  </p>
+<p>所以这个实现更简单，连异常回滚策略都没有，特殊的回滚方式还要自己设置（默认是任何异常都会回滚），核心（伪）代码如下：</p>
+<pre><code class="hljs">public &lt;T&gt; T execute(TransactionCallback&lt;T&gt; action) throws TransactionException &#123;
+    
+    // 获取事务资源
+    TransactionStatus status = this.transactionManager.getTransaction(this);
+    T result;
+    try &#123;
+        
+        // 执行 callback 业务代码
+        result = action.doInTransaction(status);
+    &#125;
+    catch (Throwable ex) &#123;
+        
+        // 调用事务管理器的 rollback
+        rollbackOnException(status, ex);
+    &#125;
+    
+    提交事务
+    this.transactionManager.commit(status);
+    &#125;
+&#125;
+</code></pre>
+<h3 id="为什么有这么方便的自动挡，还要手动挡？"><a href="#为什么有这么方便的自动挡，还要手动挡？" class="headerlink" title="为什么有这么方便的自动挡，还要手动挡？"></a>为什么有这么方便的自动挡，还要手动挡？</h3><p>因为手动挡更灵活啊，想怎么玩就怎么玩，比如我可以在一个方法中，执行多个数据库操作，但使用不同的事务资源：</p>
+<pre><code class="hljs">Integer rows = new TransactionTemplate((PlatformTransactionManager) transactionManager,
+                                       new DefaultTransactionDefinition(TransactionDefinition.ISOLATION_READ_UNCOMMITTED))
+    .execute(new TransactionCallback&lt;Integer&gt;() &#123;
+        @Override
+        public Integer doInTransaction(TransactionStatus status) &#123;
+            // update 0
+            int rows0 = jdbcTemplate.update(...);
+            
+            // update 1
+            int rows1 = jdbcTemplate.update(...);
+            return rows0 + rows1;
+        &#125;
+    &#125;);
+
+Integer rows2 = new TransactionTemplate((PlatformTransactionManager) transactionManager,
+                                        new DefaultTransactionDefinition(TransactionDefinition.ISOLATION_READ_UNCOMMITTED))
+    .execute(new TransactionCallback&lt;Integer&gt;() &#123;
+        @Override
+        public Integer doInTransaction(TransactionStatus status) &#123;
+            
+            // update 2
+            int rows2 = jdbcTemplate.update(...);
+            return rows2;
+        &#125;
+    &#125;);
+</code></pre>
+<p>在上面这个例子里，通过 TransactionTemplate 我们可以精确的控制 update0/update1 使用同一个事务资源和隔离级别，而 update2 单独使用一个事务资源，并且不需要新建类加注解的方式。</p>
+<h3 id="手自一体可以吗？"><a href="#手自一体可以吗？" class="headerlink" title="手自一体可以吗？"></a>手自一体可以吗？</h3><p>当然可以，只要我们使用的是同一个事务管理器的实例，因为绑定资源到同步资源管理器这个操作是在事务管理器中进行的。  </p>
+<p>AOP 版本的事务管理里，同样可以使用手动挡的事务管理继续操作，而且还可以使用同一个事务资源 。  </p>
+<p>比如下面这段代码，update1/update2 仍然在一个事务内，并且 update2 的 callback 结束后并不会提交事务，事务最终会在 methodA 结束时，TransactionInterceptor 中才会提交</p>
+<pre><code class="hljs">@Transactional
+public void methodA()&#123;
+    
+    // update 1
+    jdbcTemplate.update(...);
+    new TransactionTemplate((PlatformTransactionManager) transactionManager,
+                                        new DefaultTransactionDefinition(TransactionDefinition.ISOLATION_READ_UNCOMMITTED))
+    .execute(new TransactionCallback&lt;Integer&gt;() &#123;
+        @Override
+        public Integer doInTransaction(TransactionStatus status) &#123;
+            
+            // update 2
+            int rows2 = jdbcTemplate.update(...);
+            return rows2;
+        &#125;
+    &#125;);
+   
+&#125;
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Spring 的事务管理，其核心是一个抽象的事务管理器，XML/@Transactional/TransactionTemplate 几种方式都是基于这个事务管理器的，三中方式的核心实现区别并不大，只是入口不同而已。<br><img src="img_2.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000040130617">咱们从头到尾说一次 Spring 事务管理（器）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/520playboy/p/5532768.html">Spring AOP propagation七种属性值</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+        <a href="/tags/%E4%BA%8B%E5%8A%A1/">#事务</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>咱们从头到尾说一次 Spring 事务管理（器）</div>
+      <div>https://baymax55.github.io/2022/11/29/spring/咱们从头到尾说一次 Spring 事务管理（器）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月29日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/22/spring/springboot-starter%E4%B8%AD%E7%9A%84SPI%20%E6%9C%BA%E5%88%B6/" title="springboot-starter中的SPI 机制">
+                        <span class="hidden-mobile">springboot-starter中的SPI 机制</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
