@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Top 10 Java idioms I wish I&#39;d learned earlier">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Top 10 Java idioms I wish I&#39;d learned earlier">
+<meta property="og:url" content="https://baymax55.github.io/2022/12/29/java/Top%2010%20Java%20idioms%20I%20wish%20I'd%20learned%20earlier/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="Top 10 Java idioms I wish I&#39;d learned earlier">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta property="article:published_time" content="2022-12-29T00:48:56.045Z">
+<meta property="article:modified_time" content="2022-12-29T00:48:56.045Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+  
+  
+  
+  <title>Top 10 Java idioms I wish I&#39;d learned earlier - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Top 10 Java idioms I wish I&#39;d learned earlier"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-29 08:48" pubdate>
+          2022年12月29日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          79 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Top 10 Java idioms I wish I&#39;d learned earlier</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年12月29日 早上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>Hello guys, when your experience grow, your design, coding, refactoring and testing ability is the one which distinguish you from your competition. It’s quite possible that your experience grows but none of these skills grow because you are doing using them frequently in your day job. To be honest, you are not alone. Many people who works in big Investment banks like Citibank, Barclays Capital, UBS, or JP Morgan, spend more times fixing bugs and making config change, deployment and support then actually writing code from scratch or writing unit tests. While we will go with all those skills in coming articles, in this article, I am going to share popular Java coding idioms which can improve your coding skills.</p>
+<p>Coding idioms are tried and tested way of writing code for a particular scenario. They are tested so they are bug free and by using them, you inherently rule out many corner cases and bugs which can occur if you write your own code. They are much like patterns and libraries for reusability but very low level.</p>
+<p>One examples of idiom would include the most common way of writing an infinite loop (using where(true) rather than for(;;)).</p>
+<p>The word ‘Idiom’ should be translated as ‘standard practice’. That is, if one were to look through a number of Java projects looking for the solution to a specific problem then the most common solution would be considered ‘Idiomatic”</p>
+<p>So, if you want to improve your coding skills in Java, let’s take the first step and learn popular Java coding idioms</p>
+<h2 id="10-Popular-Java-Coding-Idioms-to-write-better-code"><a href="#10-Popular-Java-Coding-Idioms-to-write-better-code" class="headerlink" title="10 Popular Java Coding Idioms to write better code"></a>10 Popular Java Coding Idioms to write better code</h2><p>Here is a list of my favorite Java coding idioms which you can use to write better, cleaner, and robust code in Java:</p>
+<h3 id="1-Calling-equals-on-String-literal-or-Known-object"><a href="#1-Calling-equals-on-String-literal-or-Known-object" class="headerlink" title="1. Calling equals() on String literal or Known object"></a>1. Calling equals() on String literal or Known object</h3><p>For a long time while writing Java code, I used to invoke equals method like below:</p>
+<p>if(givenString.equals(“YES”)){<br>// do something.<br>}</p>
+<p>It’s natural because it reads better but its not safe. You can prevent a potential NPE by calling equals() on String literal, if one object is happen to be Sring literal or on known object e.g.</p>
+<p>“TRUE”.equals(givenBoolean)<br>“YES”.equals(givenString)</p>
+<p>if you do reverse e.g. givenBoolean.equals(“YES”) then it will throw NullPointerException if givenBoolean is null, but if you follow this idiom then it will just return false without throwing any NPE. This is a much better code, its safe and robust. In fact this is one of the <a target="_blank" rel="noopener" href="https://javarevisited.blogspot.com/2013/05/ava-tips-and-best-practices-to-avoid-nullpointerexception-program-application.html">popular ways to avoid NullPointerException in Java</a>.</p>
+<h3 id="2-Using-entrySet-to-loop-over-HashMap"><a href="#2-Using-entrySet-to-loop-over-HashMap" class="headerlink" title="2) Using entrySet to loop over HashMap"></a>2) Using entrySet to loop over HashMap</h3><p>I used to loop over HashMap using key set as shown below :</p>
+<p>Set keySet = map.keyset();</p>
+<p>for(Key k : keySet){<br>value v = map.get(k);<br>print(k, v)<br>}</p>
+<p>This does another lookup to get the value from Map, which could be O(n) in worst case. if you need both key and value, then its better to iterate over entry set rather than key set.</p>
+<p>Entry entrySet = map.entrySet();</p>
+<p>for(Entry e : entrySet){<br>Key k = e.getKey();<br>Value v = e.getValue();<br>}</p>
+<p>This is more efficient because you are getting value directly from object, which is always O(1).</p>
+<h3 id="3-Using-Enum-as-Singleton"><a href="#3-Using-Enum-as-Singleton" class="headerlink" title="3) Using Enum as Singleton"></a>3) Using Enum as Singleton</h3><p>I wish, I had know that we can write Singleton in just one line in Java as :</p>
+<p>public enum Singleton{<br>  INSTANCE;<br>}</p>
+<p>It’s thread-safe, robust and Java guaranteed just one instance even in case of Serialization and Deserialization.</p>
+<h3 id="4-Using-Arrays-asList-to-initialize-Collection-or-List-of-Set-of"><a href="#4-Using-Arrays-asList-to-initialize-Collection-or-List-of-Set-of" class="headerlink" title="4) Using Arrays.asList() to initialize Collection or List.of(), Set.of()"></a>4) Using Arrays.asList() to initialize Collection or List.of(), Set.of()</h3><p>Even If I know elements in advance, I used to initialize collection like this :</p>
+<p>List listOfCurrencies = new ArrayList();<br>listOfCurrencies.add(“USD/AUD”);<br>listOfCurrencies.add(“USD/JPY”);<br>listOfCurrencies.add(“USD/INR”);</p>
+<p>This is quite verbose, thankfully you can do all this in just one line by using this idiom, which take advantage and of Arrays.asList() and Collection’s copy constructor, as shown below :</p>
+<p>List listOfPairs = new ArrayList(Arrays.asList(“USD/AUD”, “USD/JPY”, “USD/INR”);</p>
+<p>Even though Arrays.asList returns a List, we need pass its output to ArrayList’s constructor because list returned by Arrays.asList() is of fixed length, you cannot add or remove elements there. BTW, its not just list but you can create Set or any other Collection as well e.g.</p>
+<p>Set primes = new HashSet(Arrays.asList(2, 3, 5, 7);</p>
+<p>And, from Java 9 onwards, you can use methods like List.of() and Set.of() to create a List and Set with values. They are actually better option because they return Immutable List and Set.</p>
+<h3 id="5-Checking-wait-condition-in-loop"><a href="#5-Checking-wait-condition-in-loop" class="headerlink" title="5. Checking wait() condition in loop"></a>5. Checking wait() condition in loop</h3><p>When I first started writing inter-thread communication code using wait(), notify() and notifyAll() method, I used if block to check if waiting condition is true or not, before calling wait() and notify() as shown below :</p>
+<p>synchronized(queue) {<br>  if(queue.isFull()){<br>  queue.wait();<br>  }<br>}</p>
+<p>Thankfully, I didn’t face any issue but I realized my mistake when I read Effective Java Item of wait() and notify(), which states that you should check waiting condition in loop because it’s possible for threads to get spurious notification, and its also possible that before you do anything the waiting condition is imposed again. So correct idiom to call wait() and notify() is following :</p>
+<p>synchronized(queue) {<br>  while(queue.isFull()){<br>   queue.wait();<br>  }<br>}</p>
+<h3 id="6-Catching-CloneNotSupportedException-and-returning-SubClass-instance"><a href="#6-Catching-CloneNotSupportedException-and-returning-SubClass-instance" class="headerlink" title="6. Catching CloneNotSupportedException and returning SubClass instance"></a>6. Catching CloneNotSupportedException and returning SubClass instance</h3><p>Even though Object cloning functionality of Java is heavily criticized for its poor implementation, if you have to implement clone() then following couple of best practices and using below idiom will help reducing pain :</p>
+<p>public Course clone() {<br>   Course c = null;<br>   try {<br>     c = (Course)super.clone();<br>   } catch (CloneNotSupportedException e) {} // Won’t happen</p>
+<p>   return c;<br>}</p>
+<p>This idiom leverages the fact that clone() will never throw CloneNotSupportedException, if a class implementers Cloneable interface. Returning Subtype is known as covariant method overriding and available from Java 5 but helps to reduce client side casting e.g. you client can now clone object without casting e.g.</p>
+<p>Course javaBeginners = new Course(“Java”, 100, 10);<br>Course clone = javaBeginners.clone();</p>
+<p>Earlier, even now with Date class, you have to explicitly cast the output of clone method as shown below :</p>
+<p>Date d = new Date();<br>Date clone = (Date) d.clone();</p>
+<h3 id="7-Using-interfaces-wherever-possible"><a href="#7-Using-interfaces-wherever-possible" class="headerlink" title="7. Using interfaces wherever possible"></a>7. Using interfaces wherever possible</h3><p>Even though I have been programming from long time, I have yet to realize full potential of interfaces. When I started coding, I used to use concrete classes e.g. ArrayList, Vector and HashMap to define return type of method, variable types or method argument types, as shown below :</p>
+<p>ArrayList<Integer> listOfNumbers = new ArrayList();</p>
+<p>public ArrayList<Integer> getNumbers(){<br>   return listOfNumbers;<br>}</p>
+<p>public void setNumbers(ArrayList<Integer> numbers){<br>   listOfNumbers = numbers;<br>}</p>
+<p>This is Ok, but its not flexible. You cannot pass another list to your methods, even though it is better than ArrayList and if tomorrow you need to switch to another implementation, you will have to change to all the places.</p>
+<p>Instead of doing this, you should appropriate interface type e.g. if you need list i.e. ordered collection with duplicates then use java.util.List, if you need set i.e. unordered collection without duplicates then use java.util.Set and if you just need a container then use Collection. This gives flexibility to pass alternative implementation.</p>
+<p>List<Integer> listOfNumbers;</p>
+<p>public List<Integer> getNumberS(){<br>return listOfNumbers;<br>}</p>
+<p>public void setNumbers(List<Integer> listOfNumbers){<br>this.listOfNumbers = listOfNumbers;<br>}</p>
+<p>If you want, you can even go one step further and use extends keyword in Generics as well for example you can define List as List&lt;? extends Number&gt; and then you can pass List<Integer> or List<Short> to this method.</p>
+<p><a target="_blank" rel="noopener" href="https://javarevisited.blogspot.com/2020/12/top-5-course-to-improve-coding-skills.html"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEiPzOPTl9SjiHdBst8xWV4YWgSTdjClqg-99oVVaR2nfNlDjM0ipaABtesrUzvbs_r7kwsULSF9fr5ok6G53-Yht0bntC34AAnEnM61OAtSdsZPO_QTvUE5vo5LKvLTLnj8ipQiGPH9eb-I6egF8nasOxzN6FV-rEJ2bU4jHT3kJZwK0D8tuWOPCHze=w577-h525" srcset="/img/loading.gif" lazyload alt="Top 10 Java idioms I wish I&#39;d learned earlier"></a></p>
+<h3 id="8-Using-Iterator-to-traverse-List"><a href="#8-Using-Iterator-to-traverse-List" class="headerlink" title="8. Using Iterator to traverse List"></a>8. Using Iterator to traverse List</h3><p>There are multiple ways to traverse or loop over a List in Java e.g. for loop with index, advanced for loop and Iterator. I used to use for loop with get() method as shown below :</p>
+<p>for(int i =0; i&lt;list.size; i++){<br>  String name = list.get(i)<br>}</p>
+<p>This works fine if you are iterating over ArrayList but given you are looping over List, its possible that List could be LinkedList or any other implementation, which might not support random access functionality e.g LinkedList. In that case time complexity of this loop will shoot up to N^2 becase get() is O(n) for LL. Using loop to go over List also has a disadvantage in terms of multi-threading e.g. <strong>CopyOnWriteArrayList</strong> - one thread changing list while another thread iterates over it using size() / get() leads to that IndexOutOfBoundsException.</p>
+<p>On the other hand Iterator is the standard way or idiomatic way to traverse a List as shown below :</p>
+<p>Iterator itr = list.iterator();<br>while(itr.hasNext()){<br>String name = itr.next();<br>}</p>
+<p>It’s safe and also guard against unpredictable behavior.</p>
+<h3 id="9-Writing-code-using-Dependency-Injection-in-mind"><a href="#9-Writing-code-using-Dependency-Injection-in-mind" class="headerlink" title="9) Writing code using Dependency Injection in mind"></a>9) Writing code using Dependency Injection in mind</h3><p>It was not long ago, I used to write code like this :</p>
+<p>public Game {</p>
+<p>   private HighScoreService service = HighScoreService.getInstance();</p>
+<p>   public showLeaderBoeard(){<br>      List listOfTopPlayers = service.getLeaderBoard();<br>     System.out.println(listOfTopPlayers);<br>   }</p>
+<p>}</p>
+<p>This code looks quite familiar and many of us will pass it on code review but it’s not how you should write your modern Java code. This code has three main problems :</p>
+<ol>
+<li><p>Game class is tightly coupled with HighScoreService class, its not possible to test Game class in isolation. You must need HighScoreService class.</p>
+</li>
+<li><p>Even if you create a HighScoreService class you cannot test Game reliably if your HighScoreService is making network connection, downloading data from servers etc. Problem is, <strong>you can not use a Mock instead of actual object here.</strong></p>
+</li>
+</ol>
+<p>You can get rid of these issues by writing your Java class as POJO and using DI as below :</p>
+<p>public Game {</p>
+<p>private HighScoreService service;</p>
+<p>public Game(HighScoreService svc){<br>this.service = svc;<br>}</p>
+<p>public showLeaderBoeard(){<br>List listOfTopPlayers = service.getLeaderBoard();<br>System.out.println(listOfTopPlayers);<br>}</p>
+<p>}</p>
+<h3 id="10-Closing-streams-in-their-own-try-block"><a href="#10-Closing-streams-in-their-own-try-block" class="headerlink" title="10. Closing streams in their own try block"></a>10. Closing streams in their own try block</h3><p>I used to close streams, InputStream and OutputStream like this :</p>
+<p>InputStream is = null;<br>OutputStream os = null;</p>
+<p>try {<br>is = new FileInputStream(“application.json”)<br>os = new FileOutPutStream(“application.log”)<br>}catch (IOException io) {</p>
+<p>}finally {<br>     is.close();<br>     os.close()<br>}</p>
+<p>problems, if first stream will throw exception then close from second will never be called. You can read more about this pattern in my earlier article, <a target="_blank" rel="noopener" href="https://javarevisited.blogspot.com/2014/10/right-way-to-close-inputstream-file-resource-in-java.html">right way to close Stream in Java</a>.</p>
+<p>That’s all about <strong>Java Idioms which can help you write better and more robust code</strong>. If you have been coding in Java for few years then most likely you already know these patterns but if you are just starting with Java or have 1 or 2 years of experience this idioms can help and open your mind with Java specific issues while writing code.</p>
+<p>With new releases, these idioms may be replaced with better API methods like List.of() but knowing them still better than not knowing them. Also, if you know or follow any other Java coding idioms feel free to share with us on comments, I love to learn from knowledgeable readers.</p>
+<p>I also plan to write second part of this article covering Java 8 idioms like using method reference instead of Lambdas etc. If you guys are interested, let me know in comments by saying yes, I would to see that article and any idiom you want to suggest.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://javarevisited.blogspot.com/2022/12/top-10-java-idioms-i-wish-id-learned.html">top-10-java-idioms-i-wish-id-learned</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Top 10 Java idioms I wish I&#39;d learned earlier</div>
+      <div>https://baymax55.github.io/2022/12/29/java/Top 10 Java idioms I wish I&#39;d learned earlier/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月29日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/29/spring/TransactionalEventListener%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="TransactionalEventListener使用场景以及实现原理">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">TransactionalEventListener使用场景以及实现原理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/29/java/difference-between-32-bit-and-64-bit/" title="Difference between 32-bit and 64-bit JVM in Java?">
+                        <span class="hidden-mobile">Difference between 32-bit and 64-bit JVM in Java?</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
