@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>Java双亲委派机制</title>
+    <link href="/2023/02/15/java/Java%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/"/>
+    <url>/2023/02/15/java/Java%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/</url>
+    
+    <content type="html"><![CDATA[<p>Java双亲委派机制是一种类加载机制，它在JVM中用于保证Java类的安全性和避免类的重复加载。</p><p>在Java双亲委派机制中，当一个类加载器要加载一个类时，它首先不会尝试自己去加载这个类，而是把这个请求委派给父类加载器去完成，如果父类加载器还存在父类加载器，则会一直委派给父类加载器去尝试加载，直到顶层的父类加载器，也就是启动类加载器为止。只有当父类加载器无法完成这个加载请求时，子加载器才会尝试自己去加载这个类。</p><p>这种机制可以避免Java类的重复加载，并且保证Java类的安全性，因为如果一个类已经被父类加载器加载过了，那么它就不会被子类加载器重复加载，这样就可以避免不同的类加载器加载了同一个类导致的类型不兼容的问题。同时，由于Java类加载器的层次结构是从上到下的，也就是由启动类加载器、扩展类加载器和应用程序类加载器组成，所以通过这种机制，可以保证Java类的加载过程是有序的，从而避免了不同的类加载器之间的干扰。</p><p>以下是一些参考链接：</p><ul><li>Java 双亲委派机制详解：<a href="https://www.cnblogs.com/duanxz/p/5301349.html">https://www.cnblogs.com/duanxz/p/5301349.html</a></li><li>Java ClassLoader 工作原理：<a href="https://www.ibm.com/developerworks/cn/java/j-lo-classloader/index.html">https://www.ibm.com/developerworks/cn/java/j-lo-classloader/index.html</a></li><li>Understanding Java Classloading：<a href="https://www.javaworld.com/article/2077265/understanding-java-classloading.html">https://www.javaworld.com/article/2077265/understanding-java-classloading.html</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Selenium针对两种上传文件方式的实现方案</title>
+    <link href="/2023/01/17/selenium/Selenium%E9%92%88%E5%AF%B9%E4%B8%A4%E7%A7%8D%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/"/>
+    <url>/2023/01/17/selenium/Selenium%E9%92%88%E5%AF%B9%E4%B8%A4%E7%A7%8D%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/</url>
+    
+    <content type="html"><![CDATA[<p>首先，将下面html代码保存到一个文件中</p><p>后续<strong>第一种上传文件方式</strong>的代码小案例都是访问此html的</p><pre><code class="hljs">&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;    &lt;meta charset=&quot;UTF-8&quot;&gt;    &lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;      &lt;input type=&quot;file&quot; name=&quot;pic&quot; id=&quot;pic&quot; /&gt;&lt;/body&gt;&lt;/html&gt;</code></pre><h2 id="方式一：input标签上传文件"><a href="#方式一：input标签上传文件" class="headerlink" title="方式一：input标签上传文件"></a>方式一：input标签上传文件</h2><hr><p>比较简单，可以定位input标签后，直接 .send_keys() 就可以了</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> selenium <span class="hljs-keyword">import</span> webdriver<br><br>driver = webdriver.Chrome(<span class="hljs-string">&quot;../resources/chromedriver.exe&quot;</span>)<br><span class="hljs-comment"># 需要自己修改路径</span><br>driver.get(<span class="hljs-string">&quot;file:///C://上传文件.html&quot;</span>)<br>driver.maximize_window()<br><span class="hljs-comment"># 定位上传文件元素input[type=file]</span><br>pic = driver.find_element_by_id(<span class="hljs-string">&quot;pic&quot;</span>)<br><span class="hljs-comment"># 上传文件</span><br>pic.send_keys(<span class="hljs-string">r&quot;C:/上传文件.html&quot;</span>)<br></code></pre></td></tr></table></figure><h2 id="方式二：非input标签上传文件"><a href="#方式二：非input标签上传文件" class="headerlink" title="方式二：非input标签上传文件"></a>方式二：非input标签上传文件</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">from pathlib import Path<br><br># 打开上传网站<br>driver.get(<span class="hljs-string">&quot;https://tinypng.com/&quot;</span>)<br>paths = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Path</span>.</span></span>cwd<span class="hljs-literal">()</span>.parent<br># 触发文件上传的操作<br>driver.find<span class="hljs-constructor">_element_by_css_selector(<span class="hljs-string">&quot;section.target&quot;</span>)</span>.click<span class="hljs-literal">()</span><br>time.sleep(<span class="hljs-number">2</span>)<br># 一级顶层窗口<br>dialog = win32gui.<span class="hljs-constructor">FindWindow(<span class="hljs-string">&quot;#32770&quot;</span>, <span class="hljs-string">&quot;打开&quot;</span>)</span><br># 二级窗口<br>comboBoxEx32 = win32gui.<span class="hljs-constructor">FindWindowEx(<span class="hljs-params">dialog</span>, 0, <span class="hljs-string">&quot;ComboBoxEx32&quot;</span>, None)</span><br># 三级窗口<br>comboBox = win32gui.<span class="hljs-constructor">FindWindowEx(<span class="hljs-params">comboBoxEx32</span>, 0, <span class="hljs-string">&quot;ComboBox&quot;</span>, None)</span><br># 四级窗口 -- 文件路径输入区域<br>edit = win32gui.<span class="hljs-constructor">FindWindowEx(<span class="hljs-params">comboBox</span>, 0, <span class="hljs-string">&quot;Edit&quot;</span>, None)</span><br># 二级窗口 -- 打开按钮<br>button = win32gui.<span class="hljs-constructor">FindWindowEx(<span class="hljs-params">dialog</span>, 0, <span class="hljs-string">&quot;Button&quot;</span>, None)</span><br># <span class="hljs-number">1</span>、输入文件路径<br>filepath = f<span class="hljs-string">&quot;&#123;paths&#125;resources11.png&quot;</span><br>win32gui.<span class="hljs-constructor">SendMessage(<span class="hljs-params">edit</span>, <span class="hljs-params">win32con</span>.WM_SETTEXT, None, <span class="hljs-params">filepath</span>)</span><br># <span class="hljs-number">2</span>、点击打开按钮<br>win32gui.<span class="hljs-constructor">SendMessage(<span class="hljs-params">dialog</span>, <span class="hljs-params">win32con</span>.WM_COMMAND, 1, <span class="hljs-params">button</span>)</span><br></code></pre></td></tr></table></figure><p>这个是写死的方法，直接照搬即可，因为涉及了第三方工具去定位Window元素，暂时不展开详解</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://developer.aliyun.com/article/910405">Selenium系列（十一） - 针对两种上传文件方式的实现方案</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Selenium</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>git撤销对文件的修改</title>
     <link href="/2023/01/09/git/git%E6%92%A4%E9%94%80%E5%AF%B9%E6%96%87%E4%BB%B6%E7%9A%84%E4%BF%AE%E6%94%B9/"/>
     <url>/2023/01/09/git/git%E6%92%A4%E9%94%80%E5%AF%B9%E6%96%87%E4%BB%B6%E7%9A%84%E4%BF%AE%E6%94%B9/</url>
@@ -1281,11 +1331,11 @@
   
   
   <entry>
-    <title>Adapter</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
+    <title>Template method</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
     
-    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
     
     
     <categories>
@@ -1306,11 +1356,11 @@
   
   
   <entry>
-    <title>Template method</title>
-    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/"/>
-    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/TemplateMethod/</url>
+    <title>Adapter</title>
+    <link href="/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/"/>
+    <url>/2022/09/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/adapter/</url>
     
-    <content type="html"><![CDATA[<p>Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm’s structure.</p><p><img src="/img/design-patterns/img_2.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/template-method/"> Template method</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p><img src="/img/design-patterns/img_1.png"></p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://java-design-patterns.com/patterns/adapter/">adapter</a></li></ul>]]></content>
     
     
     <categories>
