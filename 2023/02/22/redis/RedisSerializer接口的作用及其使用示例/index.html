@@ -16,25 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="DDD分层架构、洋葱架构、六边形架构">
+    <meta name="description" content="RedisSerializer接口的作用及其使用示例">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DDD分层架构、洋葱架构、六边形架构">
-<meta property="og:url" content="https://baymax55.github.io/2022/09/13/java/DDD%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84%E3%80%81%E6%B4%8B%E8%91%B1%E6%9E%B6%E6%9E%84%E3%80%81%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:title" content="RedisSerializer接口的作用及其使用示例">
+<meta property="og:url" content="https://baymax55.github.io/2023/02/22/redis/RedisSerializer%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%9C%E7%94%A8%E5%8F%8A%E5%85%B6%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="DDD分层架构、洋葱架构、六边形架构">
+<meta property="og:description" content="RedisSerializer接口的作用及其使用示例">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/software_architecture.png">
-<meta property="article:published_time" content="2022-09-13T07:41:37.808Z">
-<meta property="article:modified_time" content="2022-08-08T02:28:18.915Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/redis.png">
+<meta property="article:published_time" content="2023-02-22T07:01:47.558Z">
+<meta property="article:modified_time" content="2023-02-22T07:15:47.908Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="architecture">
-<meta property="article:tag" content="DDD">
+<meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/software_architecture.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/redis.png">
   
   
   
-  <title>DDD分层架构、洋葱架构、六边形架构 - Baymax55&#39;s Blog</title>
+  <title>RedisSerializer接口的作用及其使用示例 - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="DDD分层架构、洋葱架构、六边形架构"></span>
+            <span id="subtitle" data-typed-text="RedisSerializer接口的作用及其使用示例"></span>
           
         </div>
 
@@ -209,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-13 15:41" pubdate>
-          2022年9月13日 下午
+        <time datetime="2023-02-22 15:01" pubdate>
+          2023年2月22日 下午
         </time>
       </span>
     
@@ -221,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.4k 字
         
       </span>
     
@@ -232,7 +231,7 @@
         
         
         
-          14 分钟
+          13 分钟
         
       </span>
     
@@ -278,66 +277,27 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">DDD分层架构、洋葱架构、六边形架构</h1>
+            <h1 style="display: none">RedisSerializer接口的作用及其使用示例</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年8月8日 上午
+                    本文最后更新于：2023年2月22日 下午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h2 id="一、DDD分层架构"><a href="#一、DDD分层架构" class="headerlink" title="一、DDD分层架构"></a>一、DDD分层架构</h2><p>DDD分层架构中有很重要的依赖原则：每层只能与位于下方的层发生耦合，类似于网络的7层或TCP/IP的4层模型架构，每一层各司其职，并且只关心向下一层的实现，而不会出现各层耦合。</p>
-<p>DDD分层架构中包含四层：从上到下分别是用户接口层，应用层，领域层和基础层。</p>
-<p><img src="DDD%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="二、洋葱架构"><a href="#二、洋葱架构" class="headerlink" title="二、洋葱架构"></a>二、洋葱架构</h2><p>2008年Jeffrey Palermo已经提出了具有分层思想的洋葱架构，如下图，同心圆代表软件的不同部分，从里向外依次是领域模型，领域服务，应用服务和外层的基础设施和用户终端。</p>
-<p>洋葱架构根据依赖原则，定义了各层的依赖关系，越往里依赖程度越低，代码级别越高，越是核心能力。外圆代码依赖只能指向内圆，内圆不需要知道外圆的情况，这种架构也是典型的分层架构，和DDD分层架构一样，都体现了高内聚，低耦合的设计特性。洋葱架构也常作为指导微服务设计的重要架构之一。</p>
-<p><img src="%E6%B4%8B%E8%91%B1%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="三、六边形架构"><a href="#三、六边形架构" class="headerlink" title="三、六边形架构"></a>三、六边形架构</h2><p>2005年Alistair Cockburn提出了六边形架构，在这个架构中，将应用分为内六边形和外六边形两层，内六边形实现应用的核心业务逻辑。外六边形完成外部应用，基础资源等的交互和访问，对于与不同的外部系统交互，由外六边形的适配器负责协议转换，保证内六边形业务逻辑的干净。</p>
-<p>这种架构也是典型的分层架构，和DDD分层架构一样，都体现了高内聚，低耦合的设计特性。六边形也常作为指导微服务设计的重要架构之一。</p>
-<p><img src="%E5%85%AD%E8%BE%B9%E5%BD%A2%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="四、DDD分层协作"><a href="#四、DDD分层协作" class="headerlink" title="四、DDD分层协作"></a>四、DDD分层协作</h2><p>DDD各层的主要职责和怎么分工协作如下图：</p>
-<p><img src="DDD%E5%88%86%E5%B1%82%E5%8D%8F%E4%BD%9C.png" srcset="/img/loading.gif" lazyload></p>
-<p>PO（数据持久化对象）：与数据库字段映射的数据载体</p>
-<p>DO（领域对象）：领域模型核心业务对象的载体，包括实体和值对象</p>
-<p>DTO（数据传输对象）：用于前端和微服务交互的数据传输载体</p>
-<p><strong>用户接口层：主要有facade接口，Assembler转换器</strong></p>
+              <p>RedisSerializer 接口是 Redis 客户端用来序列化和反序列化数据的接口。RedisSerializer 接口的实现类可以将 Java 对象转换为字节数组，以便在 Redis 中进行存储，也可以将字节数组转换回 Java 对象。</p>
+<p>RedisSerializer 接口有两个方法需要实现：</p>
 <ul>
-<li>微服务面向不同前端时，需要展示的数据可能不同，此时由于需要保持领域核心业务逻辑的稳定，不可能去定制开发各种领域服务和应用服务编排。因此，为避免暴露服务端业务逻辑，防止非必需的字段数据外泄<br>，同时保证领域逻辑的干净，用户接口层的facade接口和Assembler转换器就发挥作用了。</li>
-<li>facade接口用于封装应用服务，适配不同前端需要的字段，提供不同要求的服务接口适配。Assembler根据不同前端的数据请求，完成DTO和领域DO对象的组装，转换，完成数据适配。</li>
+<li><code>serialize(Object object)</code>：将 Java 对象序列化成字节数组。</li>
+<li><code>deserialize(byte[] bytes)</code>：将字节数组反序列化为 Java 对象。<br>以下是一个示例，展示如何使用 RedisSerializer 接口来序列化和反序列化一个 Java 对象：</li>
 </ul>
-<p><strong>应用层：</strong></p>
-<ul>
-<li><p>应用层连接用户接口层和领域层，主要协调领域层，面向用例和业务流程，协调多个聚合完成服务的组合和编排，在这一层不实现任何业务逻辑，只是很薄的一层</p>
-</li>
-<li><p>如何判定一个东西是否属于业务逻辑？</p>
-<p>很简单，只需设想你和产品聊这个事情时，需不需要把这部分信息输入给它？比如接口调用的处理，数据的转换，是否加了缓存等等都不属于产品关心的东西，所以不算是业务逻辑</p>
-</li>
-<li><p>应用层编排成应用服务后，被接口层facade封装，完成接口和数据适配后，以粗粒度向API网关发布服务</p>
-</li>
-<li><p>应用层还负责事件的订阅和发布，以及与其他外部服务的交互，事件的具体实现则在领域层</p>
-</li>
-</ul>
-<p><strong>领域层：</strong></p>
-<ul>
-<li>领域层位于应用层之下，是领域模型的核心，主要实现领域模型的核心业务逻辑，体现领域模型的业务能力</li>
-<li>领域层关注实现领域对象的充血模型和聚合本身的原子业务逻辑，至于用户操作和业务流程，则交给应用层去编排。这样设计可以保证领域模型不容易受外部需求变化的影响，保证领域模型的稳定</li>
-<li>跨多个聚合的领域逻辑在领域层实现，由领域服务组织和协调多聚合的多实体，实现原子业务逻辑</li>
-</ul>
-<p><strong>基础层：</strong></p>
-<ul>
-<li>基础层贯穿了DDD所有层，包括第三方工具，API网关，消息中间件，分布式事务，消息最终一致性能力，数据库，缓存能能力的提供。</li>
-<li>基础层有仓储模式的代码逻辑，通过仓储接口和仓储实现，解耦领域层和基础层，保证领域核心业务逻辑的干净，降低DB资源变化给领域层带来的影响，这部分内容，请见下回分解。</li>
-</ul>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li>《基于DDD和微服务的中台架构与实现》欧创新、邓頔</li>
-<li>《领域驱动设计》Eric Evans</li>
-<li>《架构真经》Martin L. Abbott</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiyukai/p/14830869.html">DDD—分层架构、洋葱架构、六边形架构</a></li>
-</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> age;<br>    <span class="hljs-comment">// getters and setters</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonSerializer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">RedisSerializer</span>&lt;Person&gt; &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">byte</span>[] serialize(Person person) <span class="hljs-keyword">throws</span> SerializationException &#123;<br>        <span class="hljs-keyword">if</span> (person == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-type">ObjectMapper</span> <span class="hljs-variable">mapper</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectMapper</span>();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">return</span> mapper.writeValueAsBytes(person);<br>        &#125; <span class="hljs-keyword">catch</span> (JsonProcessingException e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SerializationException</span>(<span class="hljs-string">&quot;Error serializing object to JSON&quot;</span>, e);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Person <span class="hljs-title function_">deserialize</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] bytes)</span> <span class="hljs-keyword">throws</span> SerializationException &#123;<br>        <span class="hljs-keyword">if</span> (bytes == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-type">ObjectMapper</span> <span class="hljs-variable">mapper</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectMapper</span>();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">return</span> mapper.readValue(bytes, Person.class);<br>        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SerializationException</span>(<span class="hljs-string">&quot;Error deserializing object from JSON&quot;</span>, e);<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>在这个示例中，我们定义了一个 <code>Person</code> 类和一个实现了 <code>RedisSerializer&lt;Person&gt;</code> 接口的 <code>PersonSerializer</code> 类。在 <code>PersonSerializer</code> 类中，我们使用了 Jackson 库中的 <code>ObjectMapper</code> 来将 <code>Person</code> 对象转换为 JSON 字节数组并反之。当我们将 <code>Person</code> 对象存储到 Redis 中时，我们可以使用 <code>PersonSerializer</code> 将其序列化为字节数组，并使用 Redis 客户端将其存储到 Redis 中。当我们从 Redis 中获取 <code>Person</code> 对象时，我们可以使用 <code>PersonSerializer</code> 将其从字节数组反序列化为 <code>Person</code> 对象。</p>
 
               
             </div>
@@ -370,9 +330,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/architecture/">#architecture</a>
-      
-        <a href="/tags/DDD/">#DDD</a>
+        <a href="/tags/redis/">#redis</a>
       
     </div>
   
@@ -384,8 +342,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>DDD分层架构、洋葱架构、六边形架构</div>
-      <div>https://baymax55.github.io/2022/09/13/java/DDD分层架构、洋葱架构、六边形架构/</div>
+      <div>RedisSerializer接口的作用及其使用示例</div>
+      <div>https://baymax55.github.io/2023/02/22/redis/RedisSerializer接口的作用及其使用示例/</div>
     </div>
     <div class="license-meta">
       
@@ -397,7 +355,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月13日</div>
+          <div>2023年2月22日</div>
         </div>
       
       
@@ -427,18 +385,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/09/13/java/GenericConstructors/" title="Generic Constructors">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Generic Constructors</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/09/13/java/COLA%204.0%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="COLA 4.0:应用架构的最佳实践">
-                        <span class="hidden-mobile">COLA 4.0:应用架构的最佳实践</span>
+                      <a href="/2023/02/20/java/Class%E7%B1%BB%E8%AF%A6%E8%A7%A3/" title="Class类详解">
+                        <span class="hidden-mobile">Class类详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
