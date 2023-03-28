@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/interview.png">
 <meta property="article:published_time" content="2023-03-24T08:30:52.491Z">
-<meta property="article:modified_time" content="2023-03-24T08:31:18.123Z">
+<meta property="article:modified_time" content="2023-03-24T08:42:46.756Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary_large_image">
@@ -332,21 +332,21 @@
 <td>short</td>
 <td>短整数型</td>
 <td>(short)0</td>
-<td>-$2^{15}$ 到 $2^{15}$</td>
+<td>-2^15 到 2^15</td>
 <td>Short</td>
 </tr>
 <tr>
 <td>int</td>
 <td>整数型</td>
 <td>0</td>
-<td>﹣$2^{31}$ 到 $2^{31}$﹣1</td>
+<td>﹣2^31 到 2^31﹣1</td>
 <td>Integer</td>
 </tr>
 <tr>
 <td>long</td>
 <td>长整数型</td>
 <td>0L</td>
-<td>﹣$2^{63}$ 到 $2^{63}$﹣1</td>
+<td>﹣2^63 到 2^63﹣1</td>
 <td>Long</td>
 </tr>
 <tr>
@@ -366,8 +366,7 @@
 </tbody></table>
 <p>除 char 的包装类 Character 和 int 的包装类 Integer之外，其他基本数据类型的包装类只需要首字母大写即可。包装类的作用和特点，本文下半部分详细讲解。</p>
 <p>我们可以在代码中，查看某种类型的取值范围，代码如下：</p>
-<p>​    </p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) &#123;<br>    // Byte 取值：<span class="hljs-number">-128</span> ~ <span class="hljs-number">127</span><br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(String.format(&quot;Byte 取值：%d ~ %d&quot;, Byte.MIN_VALUE, Byte.MAX_VALUE));<br>    // <span class="hljs-type">Int</span> 取值：<span class="hljs-number">-2147483648</span> ~ <span class="hljs-number">2147483647</span><br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(String.format(&quot;Int 取值：%d ~ %d&quot;, <span class="hljs-type">Integer</span>.MIN_VALUE, <span class="hljs-type">Integer</span>.MAX_VALUE));<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) <br>    // Byte 取值：<span class="hljs-number">-128</span> ~ <span class="hljs-number">127</span><br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(String.format(&quot;Byte 取值：%d ~ %d&quot;, Byte.MIN_VALUE, Byte.MAX_VALUE));<br>    // <span class="hljs-type">Int</span> 取值：<span class="hljs-number">-2147483648</span> ~ <span class="hljs-number">2147483647</span><br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(String.format(&quot;Int 取值：%d ~ %d&quot;, <span class="hljs-type">Integer</span>.MIN_VALUE, <span class="hljs-type">Integer</span>.MAX_VALUE));<br><br></code></pre></td></tr></table></figure>
 
 
 <h3 id="包装类型"><a href="#包装类型" class="headerlink" title="包装类型"></a>包装类型</h3><p>我们知道 8 种基本数据类型都有其对应的包装类，因为 Java的设计思想是万物皆对象，有很多时候我们需要以对象的形式操作某项功能，比如说获取哈希值（hashCode）或获取类（getClass）等。</p>
@@ -377,22 +376,43 @@
 <p><strong>2. 可定义泛型类型参数</strong></p>
 <p>包装类可以定义泛型，而基本类型不行。</p>
 <p>比如使用 Integer 定义泛型，代码：</p>
-<p>​<br>​    List<Integer> list = new ArrayList&lt;&gt;();</p>
+<pre><code class="hljs">List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+</code></pre>
 <p>如果使用 int 定义就会报错，代码：</p>
-<p>​<br>​    List<int> list = new ArrayList&lt;&gt;();  // 编译器代码报错</p>
+<pre><code class="hljs">List&lt;int&gt; list = new ArrayList&lt;&gt;();  // 编译器代码报错
+</code></pre>
 <p><strong>3. 序列化</strong></p>
 <p>因为包装类都实现了 Serializable 接口，所以包装类天然支持序列化和反序列化。比如 Integer 的类图如下：</p>
 <p><img src="https://images.gitbook.cn/cb8c6a80-baa8-11e9-8bd3-43e1fddff917" srcset="/img/loading.gif" lazyload alt="Integer 类图"></p>
 <p><strong>4. 类型转换</strong></p>
 <p>包装类提供了类型转换的方法，可以很方便的实现类型之间的转换，比如 Integer 类型转换代码：</p>
-<p>​<br>​    String age = “18”;<br>​    int ageInt = Integer.parseInt(age) + 2;<br>​    // 输出结果：20<br>​    System.out.println(ageInt);</p>
+<pre><code class="hljs">String age = &quot;18&quot;;
+int ageInt = Integer.parseInt(age) + 2;
+// 输出结果：20
+System.out.println(ageInt);
+</code></pre>
 <p><strong>5. 高频区间的数据缓存</strong></p>
 <p>此特性为包装类很重要的用途之一，用于高频区间的数据缓存，以 Integer 为例来说，在数值区间为 -128~127<br>时，会直接复用已有对象，在这区间之外的数字才会在堆上产生。</p>
 <p>我们使用 == 对 Integer 进行验证，代码如下：</p>
-<p>​<br>​    public static void main(String[] args) {<br>​            // Integer 高频区缓存范围 -128~127<br>​            Integer num1 = 127;<br>​            Integer num2 = 127;<br>​            // Integer 取值 127 == 结果为 true（值127 num1==num2 =&gt; true）<br>​            System.out.println(“值127 num1==num2 =&gt; “ + (num1 == num2));<br>​            Integer num3 = 128;<br>​            Integer num4 = 128;<br>​            // Integer 取值 128 == 结果为 false（值128 num3==num4 =&gt; false）<br>​            System.out.println(“值128 num3==num4 =&gt; “ + (num3 == num4));<br>​        }</p>
+<pre><code class="hljs">public static void main(String[] args) 
+        // Integer 高频区缓存范围 -128~127
+        Integer num1 = 127;
+        Integer num2 = 127;
+        // Integer 取值 127 == 结果为 true（值127 num1==num2 =&gt; true）
+        System.out.println(&quot;值127 num1==num2 =&gt; &quot; + (num1 == num2));
+        Integer num3 = 128;
+        Integer num4 = 128;
+        // Integer 取值 128 == 结果为 false（值128 num3==num4 =&gt; false）
+        System.out.println(&quot;值128 num3==num4 =&gt; &quot; + (num3 == num4));
+    
+</code></pre>
 <p>从上面的代码很明显可以看出，Integer 为 127 时复用了已有对象，当值为 128 时，重新在堆上生成了新对象。</p>
 <p>为什么会产生高频区域数据缓存？我们查看源码就能发现“线索”，源码版本 JDK8，源码如下：</p>
-<p>​<br>​    public static Integer valueOf(int i) {<br>​      if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>​        return IntegerCache.cache[i + (-IntegerCache.low)];<br>​      return new Integer(i);<br>​    }</p>
+<pre><code class="hljs">public static Integer valueOf(int i) 
+  if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)
+    return IntegerCache.cache[i + (-IntegerCache.low)];
+  return new Integer(i);
+</code></pre>
 <p>由此可见，高频区域的数值会直接使用已有对象，非高频区域的数值会重新 new 一个新的对象。</p>
 <p>各包装类高频区域的取值范围：</p>
 <ul>
@@ -409,7 +429,7 @@
 <li><p>推荐所有包装类对象之间的值比较使用 <code>equals()</code> 方法，因为包装类的非高频区数据会在堆上产生，而高频区又会复用已有对象，这样会导致同样的代码，因为取值的不同，而产生两种截然不同的结果。代码示例：</p>
 </li>
 </ul>
- <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) &#123;<br>    // <span class="hljs-type">Integer</span> 高频区缓存范围 <span class="hljs-number">-128</span>~<span class="hljs-number">127</span><br>    <span class="hljs-type">Integer</span> num1 = <span class="hljs-number">127</span>;<br>    <span class="hljs-type">Integer</span> num2 = <span class="hljs-number">127</span>;<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">127</span> == 结果为 <span class="hljs-keyword">true</span>（值<span class="hljs-number">127</span> num1==num2 =&gt; <span class="hljs-keyword">true</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值127 num1==num2 =&gt; &quot; + (num1 == num2));<br>    <span class="hljs-type">Integer</span> num3 = <span class="hljs-number">128</span>;<br>    <span class="hljs-type">Integer</span> num4 = <span class="hljs-number">128</span>;<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">128</span> == 结果为 <span class="hljs-keyword">false</span>（值<span class="hljs-number">128</span> num3==num4 =&gt; <span class="hljs-keyword">false</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值128 num3==num4 =&gt; &quot; + (num3 == num4));<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">128</span> equals 结果为 <span class="hljs-keyword">true</span>（值<span class="hljs-number">128</span> num3.equals(num4) =&gt; <span class="hljs-keyword">true</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值128 num3.equals(num4) =&gt; &quot; + num3.equals(num4));<br>&#125;<br></code></pre></td></tr></table></figure>
+ <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) <br>    // <span class="hljs-type">Integer</span> 高频区缓存范围 <span class="hljs-number">-128</span>~<span class="hljs-number">127</span><br>    <span class="hljs-type">Integer</span> num1 = <span class="hljs-number">127</span>;<br>    <span class="hljs-type">Integer</span> num2 = <span class="hljs-number">127</span>;<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">127</span> == 结果为 <span class="hljs-keyword">true</span>（值<span class="hljs-number">127</span> num1==num2 =&gt; <span class="hljs-keyword">true</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值127 num1==num2 =&gt; &quot; + (num1 == num2));<br>    <span class="hljs-type">Integer</span> num3 = <span class="hljs-number">128</span>;<br>    <span class="hljs-type">Integer</span> num4 = <span class="hljs-number">128</span>;<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">128</span> == 结果为 <span class="hljs-keyword">false</span>（值<span class="hljs-number">128</span> num3==num4 =&gt; <span class="hljs-keyword">false</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值128 num3==num4 =&gt; &quot; + (num3 == num4));<br>    // <span class="hljs-type">Integer</span> 取值 <span class="hljs-number">128</span> equals 结果为 <span class="hljs-keyword">true</span>（值<span class="hljs-number">128</span> num3.equals(num4) =&gt; <span class="hljs-keyword">true</span>）<br>    <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(&quot;值128 num3.equals(num4) =&gt; &quot; + num3.equals(num4));<br><br></code></pre></td></tr></table></figure>
 
 <ul>
 <li><p>Float 和 Double 不会有缓存，其他包装类都有缓存。</p>
@@ -421,23 +441,58 @@
 <p>-XX:AutoBoxCacheMax=666 即修改缓存最大值为 <code>666</code> 。</p>
 </blockquote>
 <p>示例代码如下：</p>
-<p>​<br>​    public static void main(String[] args) {<br>​        Integer num1 = -128;<br>​        Integer num2 = -128;<br>​        System.out.println(“值为-128 =&gt; “ + (num1 == num2));<br>​        Integer num3 = 666;<br>​        Integer num4 = 666;<br>​        System.out.println(“值为666 =&gt; “ + (num3 == num4));<br>​        Integer num5 = 667;<br>​        Integer num6 = 667;<br>​        System.out.println(“值为667 =&gt; “ + (num5 == num6));<br>​    }</p>
+<pre><code class="hljs">public static void main(String[] args) 
+    Integer num1 = -128;
+    Integer num2 = -128;
+    System.out.println(&quot;值为-128 =&gt; &quot; + (num1 == num2));
+    Integer num3 = 666;
+    Integer num4 = 666;
+    System.out.println(&quot;值为666 =&gt; &quot; + (num3 == num4));
+    Integer num5 = 667;
+    Integer num6 = 667;
+    System.out.println(&quot;值为667 =&gt; &quot; + (num5 == num6));
+</code></pre>
 <p>执行结果如下：</p>
-<p>​<br>​    值为-128 =&gt; true<br>​    值为666 =&gt; true<br>​    值为667 =&gt; false</p>
+<pre><code class="hljs">值为-128 =&gt; true
+值为666 =&gt; true
+值为667 =&gt; false
+</code></pre>
 <p>由此可见将 Integer 最大缓存修改为 666 之后，667 不会被缓存，而 -128~666 之间的数都被缓存了。</p>
-<h3 id="相关面试题"><a href="#相关面试题" class="headerlink" title="相关面试题"></a>相关面试题</h3><h4 id="1-以下-Integer-代码输出的结果是？"><a href="#1-以下-Integer-代码输出的结果是？" class="headerlink" title="1. 以下 Integer 代码输出的结果是？"></a>1. 以下 Integer 代码输出的结果是？</h4><p>​    Integer age = 10;<br>​    Integer age2 = 10;<br>​    Integer age3 = 133;<br>​    Integer age4 = 133;<br>​    System.out.println((age == age2) + “,” + (age3 == age4));</p>
+<h3 id="相关面试题"><a href="#相关面试题" class="headerlink" title="相关面试题"></a>相关面试题</h3><h4 id="1-以下-Integer-代码输出的结果是？"><a href="#1-以下-Integer-代码输出的结果是？" class="headerlink" title="1. 以下 Integer 代码输出的结果是？"></a>1. 以下 Integer 代码输出的结果是？</h4><pre><code class="hljs">Integer age = 10;
+Integer age2 = 10;
+Integer age3 = 133;
+Integer age4 = 133;
+System.out.println((age == age2) + &quot;,&quot; + (age3 == age4));
+</code></pre>
 <p>答：<code>true,false</code></p>
-<h4 id="2-以下-Double-代码输出的结果是？"><a href="#2-以下-Double-代码输出的结果是？" class="headerlink" title="2. 以下 Double 代码输出的结果是？"></a>2. 以下 Double 代码输出的结果是？</h4><p>​    Double num = 10d;<br>​    Double num2 = 10d;<br>​    Double num3 = 133d;<br>​    Double num4 = 133d;<br>​    System.out.println((num == num2) + “,” + (num3 == num4));</p>
+<h4 id="2-以下-Double-代码输出的结果是？"><a href="#2-以下-Double-代码输出的结果是？" class="headerlink" title="2. 以下 Double 代码输出的结果是？"></a>2. 以下 Double 代码输出的结果是？</h4><pre><code class="hljs">Double num = 10d;
+Double num2 = 10d;
+Double num3 = 133d;
+Double num4 = 133d;
+System.out.println((num == num2) + &quot;,&quot; + (num3 == num4));
+</code></pre>
 <p>答：<code>false,false</code></p>
-<h4 id="3-以下程序输出结果是？"><a href="#3-以下程序输出结果是？" class="headerlink" title="3. 以下程序输出结果是？"></a>3. 以下程序输出结果是？</h4><p>​    int i = 100;<br>​    Integer j = new Integer(100);<br>​    System.out.println(i == j);<br>​    System.out.println(j.equals(i));</p>
+<h4 id="3-以下程序输出结果是？"><a href="#3-以下程序输出结果是？" class="headerlink" title="3. 以下程序输出结果是？"></a>3. 以下程序输出结果是？</h4><pre><code class="hljs">int i = 100;
+Integer j = new Integer(100);
+System.out.println(i == j);
+System.out.println(j.equals(i));
+</code></pre>
 <p>A：true,true<br>B：true,false<br>C：false,true<br>D：false,false  </p>
 <p>答：A</p>
 <p>题目分析：有人认为这和 Integer 高速缓存有关系，但你发现把值改为 10000 结果也是 <code>true,true</code>，这是因为 Integer 和 int<br>比较时，会自动拆箱为 int 相当于两个 int 比较，值一定是 <code>true,true</code>。</p>
-<h4 id="4-以下程序执行的结果是？"><a href="#4-以下程序执行的结果是？" class="headerlink" title="4. 以下程序执行的结果是？"></a>4. 以下程序执行的结果是？</h4><p>​<br>​    final int iMax = Integer.MAX_VALUE;<br>​    System.out.println(iMax + 1);</p>
+<h4 id="4-以下程序执行的结果是？"><a href="#4-以下程序执行的结果是？" class="headerlink" title="4. 以下程序执行的结果是？"></a>4. 以下程序执行的结果是？</h4><pre><code class="hljs">final int iMax = Integer.MAX_VALUE;
+System.out.println(iMax + 1);
+</code></pre>
 <p>A：2147483648<br>B：-2147483648<br>C：程序报错<br>D：以上都不是</p>
 <p>答：B</p>
 <p>题目解析：这是因为整数在内存中使用的是补码的形式表示，最高位是符号位 0 表示正数，1 表示负数，当执行 +1 时，最高位就变成了 1，结果就成了-2147483648。</p>
-<h4 id="5-以下程序执行的结果是？"><a href="#5-以下程序执行的结果是？" class="headerlink" title="5. 以下程序执行的结果是？"></a>5. 以下程序执行的结果是？</h4><p>​    Set<Short> set = new HashSet&lt;&gt;();<br>​    for (short i = 0; i &lt; 5; i++) {<br>​        set.add(i);<br>​        set.remove(i - 1);<br>​    }<br>​    System.out.println(set.size());</p>
+<h4 id="5-以下程序执行的结果是？"><a href="#5-以下程序执行的结果是？" class="headerlink" title="5. 以下程序执行的结果是？"></a>5. 以下程序执行的结果是？</h4><pre><code class="hljs">Set&lt;Short&gt; set = new HashSet&lt;&gt;();
+for (short i = 0; i &lt; 5; i++) 
+    set.add(i);
+    set.remove(i - 1);
+
+System.out.println(set.size());
+</code></pre>
 <p>A：1<br>B：0<br>C：5<br>D：以上都不是  </p>
 <p>答：5</p>
 <p>题目解析：Short 类型 -1 之后转换成了 Int 类型，remove() 的时候在集合中找不到 Int<br>类型的数据，所以就没有删除任何元素，执行的结果就是 5。</p>
@@ -466,7 +521,14 @@
 <li>当基本数据类型为局部变量的时候，比如在方法中声明的变量，则存放在方法栈中的，当方法结束系统会释放方法栈，在该方法中的变量也会随着栈的销毁而结束，这也是局部变量只能在方法中使用的原因；</li>
 <li>当基本数据类型为全局变量的时候，比如类中的声明的变量，则存储在堆上，因为全局变量不会随着某个方法的执行结束而销毁。</li>
 </ul>
-<h4 id="16-以下程序执行的结果是？"><a href="#16-以下程序执行的结果是？" class="headerlink" title="16. 以下程序执行的结果是？"></a>16. 以下程序执行的结果是？</h4><p>​    Integer i1 = new Integer(10);<br>​    Integer i2 = new Integer(10);<br>​    Integer i3 = Integer.valueOf(10);<br>​    Integer i4 = Integer.valueOf(10);<br>​    System.out.println(i1 == i2);<br>​    System.out.println(i2 == i3);<br>​    System.out.println(i3 == i4);</p>
+<h4 id="16-以下程序执行的结果是？"><a href="#16-以下程序执行的结果是？" class="headerlink" title="16. 以下程序执行的结果是？"></a>16. 以下程序执行的结果是？</h4><pre><code class="hljs">Integer i1 = new Integer(10);
+Integer i2 = new Integer(10);
+Integer i3 = Integer.valueOf(10);
+Integer i4 = Integer.valueOf(10);
+System.out.println(i1 == i2);
+System.out.println(i2 == i3);
+System.out.println(i3 == i4);
+</code></pre>
 <p>A：false,false,false<br>B：false,false,true<br>C：false,true,true<br>D：true,false,false</p>
 <p>答：B</p>
 <p>题目解析：new Integer(10) 每次都会创建一个新对象，Integer.valueOf(10) 则会使用缓存池中的对象。</p>
@@ -562,6 +624,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/03/28/%E6%9E%81%E7%AE%80%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/preface/" title="极简项目管理:前言">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">极简项目管理:前言</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
