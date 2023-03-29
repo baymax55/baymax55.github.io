@@ -1,0 +1,32 @@
+1. 删除定时任务
+    /etc/crontab
+
+2. 关闭服务并删除服务
+systemctl disable xmrig.service
+rm -rf /etc/systemd/system/xmrig.service
+
+3. 删除 /root/authorized_keys 目录中的未知密钥
+
+4. 修改 /etc/ssh/sshd_config中最后几行添加的文件,同时修改sshd端口为自定义端口
+
+5. 使用 防火墙关闭 所有端口的对外访问,放开sshd的端口
+
+6. 可选,开启firewall-cmd防火墙
+
+firewall-cmd --state
+systemctl start  firewalld.service
+开启firewall防火墙后,默认所有端口都会关闭,放开sshd端口
+firewall-cmd --add-port=22222/tcp --permanent
+
+备注 :出现即使root用户也无法修改的权限是,使用 lsattr authorized_keys 查看是否出现 ia
+使用 chattr -ia  /etc/crontab解锁文件即可修改
+
+
+启动systemctl start firewalld
+关闭systemctl stop firewalld
+查看状态systemctl status firewalld
+查看状态firewall-cmd --state
+开机启用systemctl enable firewalld
+开机禁用systemctl disable firewalld
+
+
