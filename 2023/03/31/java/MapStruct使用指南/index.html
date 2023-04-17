@@ -1,0 +1,1750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MapStruct使用指南">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapStruct使用指南">
+<meta property="og:url" content="https://baymax55.github.io/2023/03/31/java/MapStruct%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="MapStruct使用指南">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/java.png">
+<meta property="article:published_time" content="2023-03-31T03:23:40.540Z">
+<meta property="article:modified_time" content="2023-03-31T03:29:10.967Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="MapStruct">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/java.png">
+  
+  
+  
+  <title>MapStruct使用指南 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MapStruct使用指南"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-31 11:23" pubdate>
+          2023年3月31日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          30k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          249 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">MapStruct使用指南</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年3月31日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h1 id="MapStruct使用指南"><a href="#MapStruct使用指南" class="headerlink" title="MapStruct使用指南"></a>MapStruct使用指南</h1><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>随着微服务和分布式应用程序迅速占领开发领域，数据完整性和安全性比以往任何时候都更加重要。在这些松散耦合的系统之间，安全的通信渠道和有限的数据传输是最重要的。大多数时候，终端用户或服务不需要访问模型中的全部数据，而只需要访问某些特定的部分。</p>
+<p>数据传输对象(Data Transfer Objects, DTO)经常被用于这些应用中。DTO只是持有另一个对象中被请求的信息的对象。通常情况下，这些信息是有限的一部分。例如，在持久化层定义的实体和发往客户端的DTO之间经常会出现相互之间的转换。由于DTO是原始对象的反映，因此这些类之间的映射器在转换过程中扮演着关键角色。</p>
+<p>这就是MapStruct解决的问题：手动创建bean映射器非常耗时。 但是该库可以自动生成Bean映射器类。</p>
+<p>在本文中，我们将深入研究<a href="https://link.juejin.cn/?target=https://mapstruct.org/" title="https://mapstruct.org/">MapStruct</a>。</p>
+<h2 id="MapStruct"><a href="#MapStruct" class="headerlink" title="MapStruct"></a>MapStruct</h2><p>MapStruct是一个开源的基于Java的代码生成器，用于创建实现Java Bean之间转换的扩展映射器。使用MapStruct，我们只需要创建接口，而该库会通过注解在编译过程中自动创建具体的映射实现，大大减少了通常需要手工编写的样板代码的数量。</p>
+<h3 id="MapStruct-依赖"><a href="#MapStruct-依赖" class="headerlink" title="MapStruct 依赖"></a>MapStruct 依赖</h3><p>如果你使用Maven的话，可以通过引入依赖安装MapStruct：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mapstruct<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mapstruct<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;org.mapstruct.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>这个依赖项会导入MapStruct的核心注释。由于MapStruct在编译时工作，并且会集成到像Maven和Gradle这样的构建工具上，我们还必须在&lt;build中/&gt;标签中添加一个插件<code>maven-compiler-plugin</code>，并在其配置中添加<code>annotationProcessorPaths</code>，该插件会在构建时生成对应的代码。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.5.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">source</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">source</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">target</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">annotationProcessorPaths</span>&gt;</span><br>                    <span class="hljs-tag">&lt;<span class="hljs-name">path</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mapstruct<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mapstruct-processor<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>                        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;org.mapstruct.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>                    <span class="hljs-tag">&lt;/<span class="hljs-name">path</span>&gt;</span><br>                <span class="hljs-tag">&lt;/<span class="hljs-name">annotationProcessorPaths</span>&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>如果你使用Gradle的话，安装MapStruct会更简单：</p>
+<pre><code class="hljs">plugins &#123;
+    id &#39;net.ltgt.apt&#39; version &#39;0.20&#39;
+&#125;
+
+apply plugin: &#39;net.ltgt.apt-idea&#39;
+apply plugin: &#39;net.ltgt.apt-eclipse&#39;
+
+dependencies &#123;
+    compile &quot;org.mapstruct:mapstruct:$&#123;mapstructVersion&#125;&quot;
+    annotationProcessor &quot;org.mapstruct:mapstruct-processor:$&#123;mapstructVersion&#125;&quot;
+&#125;
+</code></pre>
+<p><code>net.ltgt.apt</code>插件会负责处理注释。你可以根据你使用的IDE启用插件<code>apt-idea</code>或<code>apt-eclipse</code>插件。</p>
+<p><a href="https://link.juejin.cn/?target=https://search.maven.org/classic/%23search%257Cga%257C1%257Cg%253A%2522org.mapstruct%2522%2520AND%2520a%253A%2522mapstruct%2522" title="https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.mapstruct%22%20AND%20a%3A%22mapstruct%22">MapStruct</a>及其<a href="https://link.juejin.cn/?target=https://search.maven.org/classic/%23search%257Cga%257C1%257Cg%253A%2522org.mapstruct%2522%2520AND%2520a%253A%2522mapstruct-processor%2522" title="https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.mapstruct%22%20AND%20a%3A%22mapstruct-processor%22">处理器</a>的最新稳定版本都可以从<a href="https://link.juejin.cn/?target=https://search.maven.org/search?q=g:org.mapstruct" title="https://search.maven.org/search?q=g:org.mapstruct">Maven中央仓库</a>中获得。</p>
+<h1 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h1><h2 id="基本映射"><a href="#基本映射" class="headerlink" title="基本映射"></a>基本映射</h2><p>我们先从一些基本的映射开始。我们会创建一个Doctor对象和一个DoctorDto。为了方便起见，它们的属性字段都使用相同的名称：</p>
+<pre><code class="hljs">public class Doctor &#123;
+    private int id;
+    private String name;
+    // getters and setters or builder
+&#125;
+
+
+public class DoctorDto &#123;
+    private int id;
+    private String name;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>现在，为了在这两者之间进行映射，我们要创建一个<code>DoctorMapper</code>接口。对该接口使用<code>@Mapper</code>注解，MapStruct就会知道这是两个类之间的映射器。</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+    DoctorDto toDto(Doctor doctor);
+&#125;
+</code></pre>
+<p>这段代码中创建了一个<code>DoctorMapper</code>类型的实例<code>INSTANCE</code>，在生成对应的实现代码后，这就是我们调用的“入口”。</p>
+<p>我们在接口中定义了<code>toDto()</code>方法，该方法接收一个<code>Doctor</code>实例为参数，并返回一个<code>DoctorDto</code>实例。这足以让MapStruct知道我们想把一个<code>Doctor</code>实例映射到一个<code>DoctorDto</code>实例。</p>
+<p>当我们构建/编译应用程序时，MapStruct注解处理器插件会识别出DoctorMapper接口并为其生成一个实现类。</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+    @Override
+    public DoctorDto toDto(Doctor doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+        DoctorDtoBuilder doctorDto = DoctorDto.builder();
+
+        doctorDto.id(doctor.getId());
+        doctorDto.name(doctor.getName());
+
+        return doctorDto.build();
+    &#125;
+&#125;
+</code></pre>
+<p><code>DoctorMapperImpl</code>类中包含一个<code>toDto()</code>方法，将我们的<code>Doctor</code>属性值映射到<code>DoctorDto</code>的属性字段中。如果要将<code>Doctor</code>实例映射到一个<code>DoctorDto</code>实例，可以这样写：</p>
+<pre><code class="hljs">DoctorDto doctorDto = DoctorMapper.INSTANCE.toDto(doctor);
+</code></pre>
+<p><strong>注意</strong>：你可能也注意到了上面实现代码中的<code>DoctorDtoBuilder</code>。因为builder代码往往比较长，为了简洁起见，这里省略了builder模式的实现代码。如果你的类中包含Builder，MapStruct会尝试使用它来创建实例；如果没有的话，MapStruct将通过<code>new</code>关键字进行实例化。</p>
+<h2 id="不同字段间映射"><a href="#不同字段间映射" class="headerlink" title="不同字段间映射"></a>不同字段间映射</h2><p>通常，模型和DTO的字段名不会完全相同。由于团队成员各自指定命名，以及针对不同的调用服务，开发者对返回信息的打包方式选择不同，名称可能会有轻微的变化。</p>
+<p>MapStruct通过<code>@Mapping</code>注解对这类情况提供了支持。</p>
+<h3 id="不同属性名称"><a href="#不同属性名称" class="headerlink" title="不同属性名称"></a>不同属性名称</h3><p>我们先更新<code>Doctor</code>类，添加一个属性<code>specialty</code>：</p>
+<pre><code class="hljs">public class Doctor &#123;
+    private int id;
+    private String name;
+    private String specialty;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>在<code>DoctorDto</code>类中添加一个<code>specialization</code>属性：</p>
+<pre><code class="hljs">public class DoctorDto &#123;
+    private int id;
+    private String name;
+    private String specialization;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>现在，我们需要让 <code>DoctorMapper</code> 知道这里的不一致。我们可以使用 <code>@Mapping</code> 注解，并设置其内部的 <code>source</code> 和 <code>target</code> 标记分别指向不一致的两个字段。</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    DoctorDto toDto(Doctor doctor);
+&#125;
+</code></pre>
+<p>这个注解代码的含义是：<code>Doctor</code>中的<code>specialty</code>字段对应于<code>DoctorDto</code>类的 <code>specialization</code> 。</p>
+<p>编译之后，会生成如下实现代码：</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+@Override
+    public DoctorDto toDto(Doctor doctor) &#123;
+        if (doctor == null) &#123;
+            return null;
+        &#125;
+
+        DoctorDtoBuilder doctorDto = DoctorDto.builder();
+
+        doctorDto.specialization(doctor.getSpecialty());
+        doctorDto.id(doctor.getId());
+        doctorDto.name(doctor.getName());
+
+        return doctorDto.build();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="多个源类"><a href="#多个源类" class="headerlink" title="多个源类"></a>多个源类</h3><p>有时，单个类不足以构建DTO，我们可能希望将多个类中的值聚合为一个DTO，供终端用户使用。这也可以通过在<code>@Mapping</code>注解中设置适当的标志来完成。</p>
+<p>我们先新建另一个对象 <code>Education</code>:</p>
+<pre><code class="hljs">public class Education &#123;
+    private String degreeName;
+    private String institute;
+    private Integer yearOfPassing;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>然后向 <code>DoctorDto</code>中添加一个新的字段：</p>
+<pre><code class="hljs">public class DoctorDto &#123;
+    private int id;
+    private String name;
+    private String degree;
+    private String specialization;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>接下来，将 <code>DoctorMapper</code> 接口更新为如下代码：</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    @Mapping(source = &quot;education.degreeName&quot;, target = &quot;degree&quot;)
+    DoctorDto toDto(Doctor doctor, Education education);
+&#125;
+</code></pre>
+<p>我们添加了另一个<code>@Mapping</code>注解，并将其<code>source</code>设置为<code>Education</code>类的<code>degreeName</code>，将<code>target</code>设置为<code>DoctorDto</code>类的<code>degree</code>字段。</p>
+<p>如果 <code>Education</code> 类和 <code>Doctor</code> 类包含同名的字段，我们必须让映射器知道使用哪一个，否则它会抛出一个异常。举例来说，如果两个模型都包含一个<code>id</code>字段，我们就要选择将哪个类中的<code>id</code>映射到DTO属性中。</p>
+<h2 id="子对象映射"><a href="#子对象映射" class="headerlink" title="子对象映射"></a>子对象映射</h2><p>多数情况下，POJO中不会_只_包含基本数据类型，其中往往会包含其它类。比如说，一个<code>Doctor</code>类中会有多个患者类：</p>
+<pre><code class="hljs">public class Patient &#123;
+    private int id;
+    private String name;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>在Doctor中添加一个患者列表<code>List</code>：</p>
+<pre><code class="hljs">public class Doctor &#123;
+    private int id;
+    private String name;
+    private String specialty;
+    private List&lt;Patient&gt; patientList;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>因为<code>Patient</code>需要转换，为其创建一个对应的DTO：</p>
+<pre><code class="hljs">public class PatientDto &#123;
+    private int id;
+    private String name;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>最后，在 <code>DoctorDto</code> 中新增一个存储 <code>PatientDto</code>的列表：</p>
+<pre><code class="hljs">public class DoctorDto &#123;
+    private int id;
+    private String name;
+    private String degree;
+    private String specialization;
+    private List&lt;PatientDto&gt; patientDtoList;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>在修改 <code>DoctorMapper</code>之前，我们先创建一个支持 <code>Patient</code> 和 <code>PatientDto</code> 转换的映射器接口：</p>
+<pre><code class="hljs">@Mapper
+public interface PatientMapper &#123;
+    PatientMapper INSTANCE = Mappers.getMapper(PatientMapper.class);
+    PatientDto toDto(Patient patient);
+&#125;
+</code></pre>
+<p>这是一个基本映射器，只会处理几个基本数据类型。</p>
+<p>然后，我们再来修改 <code>DoctorMapper</code> 处理一下患者列表：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;)
+public interface DoctorMapper &#123;
+
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+
+    @Mapping(source = &quot;doctor.patientList&quot;, target = &quot;patientDtoList&quot;)
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    DoctorDto toDto(Doctor doctor);
+&#125;
+</code></pre>
+<p>因为我们要处理另一个需要映射的类，所以这里设置了<code>@Mapper</code>注解的<code>uses</code>标志，这样现在的 <code>@Mapper</code> 就可以使用另一个 <code>@Mapper</code>映射器。我们这里只加了一个，但你想在这里添加多少class/mapper都可以。</p>
+<p>我们已经添加了<code>uses</code>标志，所以在为<code>DoctorMapper</code>接口生成映射器实现时，MapStruct 也会把 <code>Patient</code> 模型转换成 <code>PatientDto</code> ——因为我们已经为这个任务注册了 <code>PatientMapper</code>。</p>
+<p>编译查看最新想实现代码：</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+    private final PatientMapper patientMapper = Mappers.getMapper( PatientMapper.class );
+
+    @Override
+    public DoctorDto toDto(Doctor doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        DoctorDtoBuilder doctorDto = DoctorDto.builder();
+
+        doctorDto.patientDtoList( patientListToPatientDtoList(doctor.getPatientList()));
+        doctorDto.specialization( doctor.getSpecialty() );
+        doctorDto.id( doctor.getId() );
+        doctorDto.name( doctor.getName() );
+
+        return doctorDto.build();
+    &#125;
+    
+    protected List&lt;PatientDto&gt; patientListToPatientDtoList(List&lt;Patient&gt; list) &#123;
+        if ( list == null ) &#123;
+            return null;
+        &#125;
+
+        List&lt;PatientDto&gt; list1 = new ArrayList&lt;PatientDto&gt;( list.size() );
+        for ( Patient patient : list ) &#123;
+            list1.add( patientMapper.toDto( patient ) );
+        &#125;
+
+        return list1;
+    &#125;
+&#125;
+</code></pre>
+<p>显然，除了<code>toDto()</code>映射方法外，最终实现中还添加了一个新的映射方法—— <code>patientListToPatientDtoList()</code>。这个方法是在没有显式定义的情况下添加的，只是因为我们把<code>PatientMapper</code>添加到了<code>DoctorMapper</code>中。</p>
+<p>该方法会遍历一个<code>Patient</code>列表，将每个元素转换为<code>PatientDto</code>，并将转换后的对象添加到<code>DoctorDto</code>对象内中的列表中。</p>
+<h2 id="更新现有实例"><a href="#更新现有实例" class="headerlink" title="更新现有实例"></a>更新现有实例</h2><p>有时，我们希望用DTO的最新值更新一个模型中的属性，对目标对象(我们的例子中是<code>DoctorDto</code>)使用<code>@MappingTarget</code>注解，就可以更新现有的实例.</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;)
+public interface DoctorMapper &#123;
+
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+
+    @Mapping(source = &quot;doctorDto.patientDtoList&quot;, target = &quot;patientList&quot;)
+    @Mapping(source = &quot;doctorDto.specialization&quot;, target = &quot;specialty&quot;)
+    void updateModel(DoctorDto doctorDto, @MappingTarget Doctor doctor);
+&#125;
+</code></pre>
+<p>重新生成实现代码，就可以得到<code>updateModel()</code>方法：</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+
+    @Override
+    public void updateModel(DoctorDto doctorDto, Doctor doctor) &#123;
+        if (doctorDto == null) &#123;
+            return;
+        &#125;
+
+        if (doctor.getPatientList() != null) &#123;
+            List&lt;Patient&gt; list = patientDtoListToPatientList(doctorDto.getPatientDtoList());
+            if (list != null) &#123;
+                doctor.getPatientList().clear();
+                doctor.getPatientList().addAll(list);
+            &#125;
+            else &#123;
+                doctor.setPatientList(null);
+            &#125;
+        &#125;
+        else &#123;
+            List&lt;Patient&gt; list = patientDtoListToPatientList(doctorDto.getPatientDtoList());
+            if (list != null) &#123;
+                doctor.setPatientList(list);
+            &#125;
+        &#125;
+        doctor.setSpecialty(doctorDto.getSpecialization());
+        doctor.setId(doctorDto.getId());
+        doctor.setName(doctorDto.getName());
+    &#125;
+&#125;
+</code></pre>
+<p>值得注意的是，由于患者列表是该模型中的子实体，因此患者列表也会进行更新。</p>
+<h1 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h1><h2 id="数据类型映射"><a href="#数据类型映射" class="headerlink" title="数据类型映射"></a>数据类型映射</h2><p>MapStruct支持<code>source</code>和<code>target</code>属性之间的数据类型转换。它还提供了基本类型及其相应的包装类之间的自动转换。</p>
+<p>自动类型转换适用于：</p>
+<ul>
+<li>  基本类型及其对应的包装类之间。比如， <code>int</code> 和 <code>Integer</code>， <code>float</code> 和 <code>Float</code>， <code>long</code> 和 <code>Long</code>，<code>boolean</code> 和 <code>Boolean</code> 等。</li>
+<li>  任意基本类型与任意包装类之间。如 <code>int</code> 和 <code>long</code>， <code>byte</code> 和 <code>Integer</code> 等。</li>
+<li>  所有基本类型及包装类与<code>String</code>之间。如 <code>boolean</code> 和 <code>String</code>， <code>Integer</code> 和 <code>String</code>， <code>float</code> 和 <code>String</code> 等。</li>
+<li>  枚举和<code>String</code>之间。</li>
+<li>  Java大数类型(<code>java.math.BigInteger</code>， <code>java.math.BigDecimal</code>) 和Java基本类型(包括其包装类)与<code>String</code>之间。</li>
+<li>  其它情况详见<a href="https://link.juejin.cn/?target=https://mapstruct.org/documentation/stable/reference/html/%23implicit-type-conversions" title="https://mapstruct.org/documentation/stable/reference/html/#implicit-type-conversions">MapStruct官方文档</a>。</li>
+</ul>
+<p>因此，在生成映射器代码的过程中，如果源字段和目标字段之间属于上述任何一种情况，则MapStrcut会自行处理类型转换。</p>
+<p>我们修改 <code>PatientDto</code> ，新增一个 <code>dateofBirth</code>字段：</p>
+<pre><code class="hljs">public class PatientDto &#123;
+    private int id;
+    private String name;
+    private LocalDate dateOfBirth;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>另一方面，加入 <code>Patient</code> 对象中有一个<code>String</code> 类型的 <code>dateOfBirth</code> ：</p>
+<pre><code class="hljs">public class Patient &#123;
+    private int id;
+    private String name;
+    private String dateOfBirth;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>在两者之间创建一个映射器：</p>
+<pre><code class="hljs">@Mapper
+public interface PatientMapper &#123;
+
+    @Mapping(source = &quot;dateOfBirth&quot;, target = &quot;dateOfBirth&quot;, dateFormat = &quot;dd/MMM/yyyy&quot;)
+    Patient toModel(PatientDto patientDto);
+&#125;
+</code></pre>
+<p>当对日期进行转换时，我们也可以使用 <code>dateFormat</code> 设置格式声明。生成的实现代码形式大致如下：</p>
+<pre><code class="hljs">public class PatientMapperImpl implements PatientMapper &#123;
+
+    @Override
+    public Patient toModel(PatientDto patientDto) &#123;
+        if (patientDto == null) &#123;
+            return null;
+        &#125;
+
+        PatientBuilder patient = Patient.builder();
+
+        if (patientDto.getDateOfBirth() != null) &#123;
+            patient.dateOfBirth(DateTimeFormatter.ofPattern(&quot;dd/MMM/yyyy&quot;)
+                                .format(patientDto.getDateOfBirth()));
+        &#125;
+        patient.id(patientDto.getId());
+        patient.name(patientDto.getName());
+
+        return patient.build();
+    &#125;
+&#125;
+</code></pre>
+<p>可以看到，这里使用了 <code>dateFormat</code> 声明的日期格式。如果我们没有声明格式的话，MapStruct会使用 <code>LocalDate</code>的默认格式，大致如下：</p>
+<pre><code class="hljs">if (patientDto.getDateOfBirth() != null) &#123;
+    patient.dateOfBirth(DateTimeFormatter.ISO_LOCAL_DATE
+                        .format(patientDto.getDateOfBirth()));
+&#125;
+</code></pre>
+<h3 id="数字格式转换"><a href="#数字格式转换" class="headerlink" title="数字格式转换"></a>数字格式转换</h3><p>上面的例子中可以看到，在进行日期转换的时候，可以通过<code>dateFormat</code>标志指定日期的格式。</p>
+<p>除此之外，对于数字的转换，也可以使用<code>numberFormat</code>指定显示格式：</p>
+<pre><code class="hljs">   // 数字格式转换示例
+   @Mapping(source = &quot;price&quot;, target = &quot;price&quot;, numberFormat = &quot;$#.00&quot;)
+</code></pre>
+<h2 id="枚举映射"><a href="#枚举映射" class="headerlink" title="枚举映射"></a>枚举映射</h2><p>枚举映射的工作方式与字段映射相同。MapStruct会对具有相同名称的枚举进行映射，这一点没有问题。但是，对于具有不同名称的枚举项，我们需要使用<code>@ValueMapping</code>注解。同样，这与普通类型的<code>@Mapping</code>注解也相似。</p>
+<p>我们先创建两个枚举。第一个是 <code>PaymentType</code>:</p>
+<pre><code class="hljs">public enum PaymentType &#123;
+    CASH,
+    CHEQUE,
+    CARD_VISA,
+    CARD_MASTER,
+    CARD_CREDIT
+&#125;
+</code></pre>
+<p>比如说，这是一个应用内可用的支付方式，现在我们要根据这些选项创建一个更一般、有限的识图：</p>
+<pre><code class="hljs">public enum PaymentTypeView &#123;
+    CASH,
+    CHEQUE,
+    CARD
+&#125;
+</code></pre>
+<p>现在，我们创建这两个<code>enum</code>之间的映射器接口：</p>
+<pre><code class="hljs">@Mapper
+public interface PaymentTypeMapper &#123;
+
+    PaymentTypeMapper INSTANCE = Mappers.getMapper(PaymentTypeMapper.class);
+
+    @ValueMappings(&#123;
+            @ValueMapping(source = &quot;CARD_VISA&quot;, target = &quot;CARD&quot;),
+            @ValueMapping(source = &quot;CARD_MASTER&quot;, target = &quot;CARD&quot;),
+            @ValueMapping(source = &quot;CARD_CREDIT&quot;, target = &quot;CARD&quot;)
+    &#125;)
+    PaymentTypeView paymentTypeToPaymentTypeView(PaymentType paymentType);
+&#125;
+</code></pre>
+<p>这个例子中，我们设置了一般性的<code>CARD</code>值，和更具体的 <code>CARD_VISA</code>, <code>CARD_MASTER</code> 和 <code>CARD_CREDIT</code> 。两个枚举间的枚举项数量不匹配—— <code>PaymentType</code> 有5个值，而 <code>PaymentTypeView</code> 只有3个。</p>
+<p>为了在这些枚举项之间建立桥梁，我们可以使用<code>@ValueMappings</code>注解，该注解中可以包含多个<code>@ValueMapping</code>注解。这里，我们将<code>source</code>设置为三个具体枚举项之一，并将<code>target</code>设置为<code>CARD</code>。</p>
+<p>MapStruct自然会处理这些情况：</p>
+<pre><code class="hljs">public class PaymentTypeMapperImpl implements PaymentTypeMapper &#123;
+
+    @Override
+    public PaymentTypeView paymentTypeToPaymentTypeView(PaymentType paymentType) &#123;
+        if (paymentType == null) &#123;
+            return null;
+        &#125;
+
+        PaymentTypeView paymentTypeView;
+
+        switch (paymentType) &#123;
+            case CARD_VISA: paymentTypeView = PaymentTypeView.CARD;
+            break;
+            case CARD_MASTER: paymentTypeView = PaymentTypeView.CARD;
+            break;
+            case CARD_CREDIT: paymentTypeView = PaymentTypeView.CARD;
+            break;
+            case CASH: paymentTypeView = PaymentTypeView.CASH;
+            break;
+            case CHEQUE: paymentTypeView = PaymentTypeView.CHEQUE;
+            break;
+            default: throw new IllegalArgumentException( &quot;Unexpected enum constant: &quot; + paymentType );
+        &#125;
+        return paymentTypeView;
+    &#125;
+&#125;
+</code></pre>
+<p><code>CASH</code>和<code>CHEQUE</code>默认转换为对应值，特殊的 <code>CARD</code> 值通过<code>switch</code>循环处理。</p>
+<p>但是，如果你要将很多值转换为一个更一般的值，这种方式就有些不切实际了。其实我们不必手动分配每一个值，只需要让MapStruct将所有剩余的可用枚举项（在目标枚举中找不到相同名称的枚举项），直接转换为对应的另一个枚举项。</p>
+<p>可以通过 <code>MappingConstants</code>实现这一点：</p>
+<pre><code class="hljs">@ValueMapping(source = MappingConstants.ANY_REMAINING, target = &quot;CARD&quot;)
+PaymentTypeView paymentTypeToPaymentTypeView(PaymentType paymentType);
+</code></pre>
+<p>在这个例子中，完成默认映射之后，所有剩余（未匹配）的枚举项都会映射为<code>CARD</code>：</p>
+<pre><code class="hljs">@Override
+public PaymentTypeView paymentTypeToPaymentTypeView(PaymentType paymentType) &#123;
+    if ( paymentType == null ) &#123;
+        return null;
+    &#125;
+
+    PaymentTypeView paymentTypeView;
+
+    switch ( paymentType ) &#123;
+        case CASH: paymentTypeView = PaymentTypeView.CASH;
+        break;
+        case CHEQUE: paymentTypeView = PaymentTypeView.CHEQUE;
+        break;
+        default: paymentTypeView = PaymentTypeView.CARD;
+    &#125;
+    return paymentTypeView;
+&#125;
+</code></pre>
+<p>还有一种选择是使用<code>ANY UNMAPPED</code>：</p>
+<pre><code class="hljs">@ValueMapping(source = MappingConstants.ANY_UNMAPPED, target = &quot;CARD&quot;)
+PaymentTypeView paymentTypeToPaymentTypeView(PaymentType paymentType);
+</code></pre>
+<p>采用这种方式时，MapStruct不会像前面那样先处理默认映射，再将剩余的枚举项映射到<code>target</code>值。而是，直接将_所有_未通过<code>@ValueMapping</code>注解做显式映射的值都转换为<code>target</code>值。</p>
+<h2 id="集合映射"><a href="#集合映射" class="headerlink" title="集合映射"></a>集合映射</h2><p>简单来说，使用MapStruct处理集合映射的方式与处理简单类型相同。</p>
+<p>我们创建一个简单的接口或抽象类并声明映射方法。 MapStruct将根据我们的声明自动生成映射代码。 通常，生成的代码会遍历源集合，将每个元素转换为目标类型，并将每个转换后元素添加到目标集合中。</p>
+<h3 id="List映射"><a href="#List映射" class="headerlink" title="List映射"></a>List映射</h3><p>我们先定义一个新的映射方法：</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+    List&lt;DoctorDto&gt; map(List&lt;Doctor&gt; doctor);
+&#125;
+</code></pre>
+<p>生成的代码大致如下：</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+
+    @Override
+    public List&lt;DoctorDto&gt; map(List&lt;Doctor&gt; doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        List&lt;DoctorDto&gt; list = new ArrayList&lt;DoctorDto&gt;( doctor.size() );
+        for ( Doctor doctor1 : doctor ) &#123;
+            list.add( doctorToDoctorDto( doctor1 ) );
+        &#125;
+
+        return list;
+    &#125;
+
+    protected DoctorDto doctorToDoctorDto(Doctor doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        DoctorDto doctorDto = new DoctorDto();
+
+        doctorDto.setId( doctor.getId() );
+        doctorDto.setName( doctor.getName() );
+        doctorDto.setSpecialization( doctor.getSpecialization() );
+
+        return doctorDto;
+    &#125;
+&#125;
+</code></pre>
+<p>可以看到，MapStruct为我们自动生成了从<code>Doctor</code>到<code>DoctorDto</code>的映射方法。</p>
+<p>但是需要注意，如果我们在DTO中新增一个字段<code>fullName</code>，生成代码时会出现错误：</p>
+<pre><code class="hljs">警告: Unmapped target property: &quot;fullName&quot;.
+</code></pre>
+<p>基本上，这意味着MapStruct在当前情况下无法为我们自动生成映射方法。因此，我们需要手动定义<code>Doctor</code>和<code>DoctorDto</code>之间的映射方法。具体参考之前的小节。</p>
+<h3 id="Set和Map映射"><a href="#Set和Map映射" class="headerlink" title="Set和Map映射"></a>Set和Map映射</h3><p>Set与Map型数据的处理方式与List相似。按照以下方式修改<code>DoctorMapper</code>：</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+
+    Set&lt;DoctorDto&gt; setConvert(Set&lt;Doctor&gt; doctor);
+
+    Map&lt;String, DoctorDto&gt; mapConvert(Map&lt;String, Doctor&gt; doctor);
+&#125;
+</code></pre>
+<p>生成的最终实现代码如下：</p>
+<pre><code class="hljs">public class DoctorMapperImpl implements DoctorMapper &#123;
+
+    @Override
+    public Set&lt;DoctorDto&gt; setConvert(Set&lt;Doctor&gt; doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        Set&lt;DoctorDto&gt; set = new HashSet&lt;DoctorDto&gt;( Math.max( (int) ( doctor.size() / .75f ) + 1, 16 ) );
+        for ( Doctor doctor1 : doctor ) &#123;
+            set.add( doctorToDoctorDto( doctor1 ) );
+        &#125;
+
+        return set;
+    &#125;
+
+    @Override
+    public Map&lt;String, DoctorDto&gt; mapConvert(Map&lt;String, Doctor&gt; doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        Map&lt;String, DoctorDto&gt; map = new HashMap&lt;String, DoctorDto&gt;( Math.max( (int) ( doctor.size() / .75f ) + 1, 16 ) );
+
+        for ( java.util.Map.Entry&lt;String, Doctor&gt; entry : doctor.entrySet() ) &#123;
+            String key = entry.getKey();
+            DoctorDto value = doctorToDoctorDto( entry.getValue() );
+            map.put( key, value );
+        &#125;
+
+        return map;
+    &#125;
+
+    protected DoctorDto doctorToDoctorDto(Doctor doctor) &#123;
+        if ( doctor == null ) &#123;
+            return null;
+        &#125;
+
+        DoctorDto doctorDto = new DoctorDto();
+
+        doctorDto.setId( doctor.getId() );
+        doctorDto.setName( doctor.getName() );
+        doctorDto.setSpecialization( doctor.getSpecialization() );
+
+        return doctorDto;
+    &#125;
+&#125;
+</code></pre>
+<p>与List映射类似，MapStruct自动生成了<code>Doctor</code>转换为<code>DoctorDto</code>的映射方法。</p>
+<h3 id="集合映射策略"><a href="#集合映射策略" class="headerlink" title="集合映射策略"></a>集合映射策略</h3><p>很多场景中，我们需要对具有父子关系的数据类型进行转换。通常来说，会有一个数据类型（父），其字段是另一个数据类型（子）的集合。</p>
+<p>对于这种情况，MapStruct提供了一种方法来选择如何将子类型设置或添加到父类型中。具体来说，就是<code>@Mapper</code> 注解中的<code>collectionMappingStrategy</code>属性，该属性可以取值为<code>ACCESSOR_ONLY</code>， <code>SETTER_PREFERRED</code>， <code>ADDER_PREFERRED</code> 或<code>TARGET_IMMUTABLE</code>。</p>
+<p>这些值分别表示不同的为子类型集合赋值的方式。默认值是<code>ACCESSOR_ONLY</code>，这意味着只能使用访问器来设置子集合。</p>
+<p>当父类型中的_Collection_字段<code>setter</code>方法不可用，但我们有一个子类型<code>add</code>方法时，这个选项就派上用场了；另一种有用的情况是父类型中的_Collection_字段是不可变的。</p>
+<p>我们新建一个类：</p>
+<pre><code class="hljs">public class Hospital &#123;
+    private List&lt;Doctor&gt; doctors;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>同时定义一个映射目标DTO类，同时定义子类型集合字段的getter、setter和adder：</p>
+<pre><code class="hljs">public class HospitalDto &#123;
+
+    private List&lt;DoctorDto&gt; doctors;
+
+        // 子类型集合字段getter
+    public List&lt;DoctorDto&gt; getDoctors() &#123;
+        return doctors;
+    &#125;
+        // 子类型集合字段setter
+    public void setDoctors(List&lt;DoctorDto&gt; doctors) &#123;
+        this.doctors = doctors;
+    &#125;
+        // 子类型数据adder
+    public void addDoctor(DoctorDto doctorDTO) &#123;
+        if (doctors == null) &#123;
+            doctors = new ArrayList&lt;&gt;();
+        &#125;
+
+        doctors.add(doctorDTO);
+    &#125;
+&#125;
+</code></pre>
+<p>创建对应的映射器：</p>
+<pre><code class="hljs">@Mapper(uses = DoctorMapper.class)
+public interface HospitalMapper &#123;
+    HospitalMapper INSTANCE = Mappers.getMapper(HospitalMapper.class);
+
+    HospitalDto toDto(Hospital hospital);
+&#125;
+</code></pre>
+<p>生成的最终实现代码为：</p>
+<pre><code class="hljs">public class HospitalMapperImpl implements HospitalMapper &#123;
+
+    @Override
+    public HospitalDto toDto(Hospital hospital) &#123;
+        if ( hospital == null ) &#123;
+            return null;
+        &#125;
+
+        HospitalDto hospitalDto = new HospitalDto();
+
+        hospitalDto.setDoctors( doctorListToDoctorDtoList( hospital.getDoctors() ) );
+
+        return hospitalDto;
+    &#125;
+&#125;
+</code></pre>
+<p>可以看到，在默认情况下采用的策略是<code>ACCESSOR_ONLY</code>，使用setter方法<code>setDoctors()</code>向<code>HospitalDto</code>对象中写入列表数据。</p>
+<p>相对的，如果使用 <code>ADDER_PREFERRED</code> 作为映射策略：</p>
+<pre><code class="hljs">@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
+        uses = DoctorMapper.class)
+public interface HospitalMapper &#123;
+    HospitalMapper INSTANCE = Mappers.getMapper(HospitalMapper.class);
+
+    HospitalDto toDto(Hospital hospital);
+&#125;
+</code></pre>
+<p>此时，会使用adder方法逐个将转换后的子类型DTO对象加入父类型的集合字段中。</p>
+<pre><code class="hljs">public class CompanyMapperAdderPreferredImpl implements CompanyMapperAdderPreferred &#123;
+
+    private final EmployeeMapper employeeMapper = Mappers.getMapper( EmployeeMapper.class );
+
+    @Override
+    public CompanyDTO map(Company company) &#123;
+        if ( company == null ) &#123;
+            return null;
+        &#125;
+
+        CompanyDTO companyDTO = new CompanyDTO();
+
+        if ( company.getEmployees() != null ) &#123;
+            for ( Employee employee : company.getEmployees() ) &#123;
+                companyDTO.addEmployee( employeeMapper.map( employee ) );
+            &#125;
+        &#125;
+
+        return companyDTO;
+    &#125;
+&#125;
+</code></pre>
+<p>如果目标DTO中既没有<code>setter</code>方法也没有<code>adder</code>方法，会先通过<code>getter</code>方法获取子类型集合，再调用集合的对应接口添加子类型对象。</p>
+<p>可以在<a href="https://link.juejin.cn/?target=https://mapstruct.org/documentation/stable/reference/html/%23collection-mapping-strategies" title="https://mapstruct.org/documentation/stable/reference/html/#collection-mapping-strategies">参考文档</a>中看到不同类型的DTO定义（是否包含setter方法或adder方法），采用不同的映射策略时，所使用的添加子类型到集合中的方式。</p>
+<h3 id="目标集合实现类型"><a href="#目标集合实现类型" class="headerlink" title="目标集合实现类型"></a>目标集合实现类型</h3><p>MapStruct支持将集合接口作为映射方法的目标类型。</p>
+<p>在这种情况下，在生成的代码中会使用一些集合接口默认实现。 例如，上面的示例中，<code>List</code>的默认实现是<code>ArrayList</code>。</p>
+<p>常见接口及其对应的默认实现如下：</p>
+<p>Interface type</p>
+<p>Implementation type</p>
+<p><code>Collection</code></p>
+<p><code>ArrayList</code></p>
+<p><code>List</code></p>
+<p><code>ArrayList</code></p>
+<p><code>Map</code></p>
+<p><code>HashMap</code></p>
+<p><code>SortedMap</code></p>
+<p><code>TreeMap</code></p>
+<p><code>ConcurrentMap</code></p>
+<p><code>ConcurrentHashMap</code></p>
+<p>你可以在<a href="https://link.juejin.cn/?target=https://mapstruct.org/documentation/stable/reference/html/%23implementation-types-for-collection-mappings" title="https://mapstruct.org/documentation/stable/reference/html/#implementation-types-for-collection-mappings">参考文档</a>中找到MapStruct支持的所有接口列表，以及每个接口对应的默认实现类型。</p>
+<h1 id="进阶操作"><a href="#进阶操作" class="headerlink" title="进阶操作"></a>进阶操作</h1><h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>到目前为止，我们一直在通过<code>getMapper()</code>方法访问生成的映射器：</p>
+<pre><code class="hljs">DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+</code></pre>
+<p>但是，如果你使用的是Spring，只需要简单修改映射器配置，就可以像常规依赖项一样注入映射器。</p>
+<p>修改 <code>DoctorMapper</code> 以支持Spring框架：</p>
+<pre><code class="hljs">@Mapper(componentModel = &quot;spring&quot;)
+public interface DoctorMapper &#123;&#125;
+</code></pre>
+<p>在<code>@Mapper</code>注解中添加<code>（componentModel = &quot;spring&quot;）</code>，是为了告诉MapStruct，在生成映射器实现类时，我们希望它能支持通过Spring的依赖注入来创建。现在，就不需要在接口中添加 <code>INSTANCE</code> 字段了。</p>
+<p>这次生成的 <code>DoctorMapperImpl</code> 会带有 <code>@Component</code> 注解：</p>
+<pre><code class="hljs">@Component
+public class DoctorMapperImpl implements DoctorMapper &#123;&#125;
+</code></pre>
+<p>只要被标记为<code>@Component</code>，Spring就可以把它作为一个bean来处理，你就可以在其它类（如控制器）中通过<code>@Autowire</code>注解来使用它：</p>
+<pre><code class="hljs">@Controller
+public class DoctorController() &#123;
+    @Autowired
+    private DoctorMapper doctorMapper;
+&#125;
+</code></pre>
+<p>如果你不使用Spring, MapStruct也支持<a href="https://link.juejin.cn/?target=https://docs.oracle.com/javaee/6/tutorial/doc/giwhl.html" title="https://docs.oracle.com/javaee/6/tutorial/doc/giwhl.html">Java CDI</a>：</p>
+<pre><code class="hljs">@Mapper(componentModel = &quot;cdi&quot;)
+public interface DoctorMapper &#123;&#125;
+</code></pre>
+<h2 id="添加默认值"><a href="#添加默认值" class="headerlink" title="添加默认值"></a>添加默认值</h2><p><code>@Mapping</code> 注解有两个很实用的标志就是常量 <code>constant</code> 和默认值 <code>defaultValue</code> 。无论<code>source</code>如何取值，都将始终使用常量值； 如果<code>source</code>取值为<code>null</code>，则会使用默认值。</p>
+<p>修改一下 <code>DoctorMapper</code> ，添加一个 <code>constant</code> 和一个 <code>defaultValue</code> ：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;, componentModel = &quot;spring&quot;)
+public interface DoctorMapper &#123;
+    @Mapping(target = &quot;id&quot;, constant = &quot;-1&quot;)
+    @Mapping(source = &quot;doctor.patientList&quot;, target = &quot;patientDtoList&quot;)
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;, defaultValue = &quot;Information Not Available&quot;)
+    DoctorDto toDto(Doctor doctor);
+&#125;
+</code></pre>
+<p>如果<code>specialty</code>不可用，我们会替换为<code>&quot;Information Not Available&quot;</code>字符串，此外，我们将<code>id</code>硬编码为<code>-1</code>。</p>
+<p>生成代码如下：</p>
+<pre><code class="hljs">@Component
+public class DoctorMapperImpl implements DoctorMapper &#123;
+
+    @Autowired
+    private PatientMapper patientMapper;
+    
+    @Override
+    public DoctorDto toDto(Doctor doctor) &#123;
+        if (doctor == null) &#123;
+            return null;
+        &#125;
+
+        DoctorDto doctorDto = new DoctorDto();
+
+        if (doctor.getSpecialty() != null) &#123;
+            doctorDto.setSpecialization(doctor.getSpecialty());
+        &#125;
+        else &#123;
+            doctorDto.setSpecialization(&quot;Information Not Available&quot;);
+        &#125;
+        doctorDto.setPatientDtoList(patientListToPatientDtoList(doctor.getPatientList()));
+        doctorDto.setName(doctor.getName());
+
+        doctorDto.setId(-1);
+
+        return doctorDto;
+    &#125;
+&#125;
+</code></pre>
+<p>可以看到，如果 <code>doctor.getSpecialty()</code> 返回值为<code>null</code>，则将<code>specialization</code>设置为我们的默认信息。无论任何情况，都会对 <code>id</code>赋值，因为这是一个<code>constant</code>。</p>
+<h2 id="添加表达式"><a href="#添加表达式" class="headerlink" title="添加表达式"></a>添加表达式</h2><p>MapStruct甚至允许在<code>@Mapping</code>注解中输入Java表达式。你可以设置 <code>defaultExpression</code> （ <code>source</code> 取值为 <code>null</code>时生效），或者一个<code>expression</code>（类似常量，永久生效）。</p>
+<p>在 <code>Doctor</code> 和 <code>DoctorDto</code>两个类中都加了两个新属性，一个是 <code>String</code> 类型的 <code>externalId</code> ，另一个是<code>LocalDateTime</code>类型的 <code>appointment</code> ，两个类大致如下：</p>
+<pre><code class="hljs">public class Doctor &#123;
+
+    private int id;
+    private String name;
+    private String externalId;
+    private String specialty;
+    private LocalDateTime availability;
+    private List&lt;Patient&gt; patientList;
+    // getters and setters or builder
+&#125;
+
+
+public class DoctorDto &#123;
+
+    private int id;
+    private String name;
+    private String externalId;
+    private String specialization;
+    private LocalDateTime availability;
+    private List&lt;PatientDto&gt; patientDtoList;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>修改 <code>DoctorMapper</code>：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;, componentModel = &quot;spring&quot;, imports = &#123;LocalDateTime.class, UUID.class&#125;)
+public interface DoctorMapper &#123;
+
+    @Mapping(target = &quot;externalId&quot;, expression = &quot;java(UUID.randomUUID().toString())&quot;)
+    @Mapping(source = &quot;doctor.availability&quot;, target = &quot;availability&quot;, defaultExpression = &quot;java(LocalDateTime.now())&quot;)
+    @Mapping(source = &quot;doctor.patientList&quot;, target = &quot;patientDtoList&quot;)
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    DoctorDto toDtoWithExpression(Doctor doctor);
+&#125;
+</code></pre>
+<p>可以看到，这里将 <code>externalId</code>的值设置为 <code>java(UUID.randomUUID().toString())</code> ，如果源对象中没有 <code>availability</code> 属性，则会把目标对象中的 <code>availability</code> 设置为一个新的 <code>LocalDateTime</code>对象。</p>
+<p>由于表达式只是字符串，我们必须在表达式中指定使用的类。但是这里的表达式并不是最终执行的代码，只是一个字母的文本值。因此，我们要在 <code>@Mapper</code> 中添加 <code>imports = &#123;LocalDateTime.class, UUID.class&#125;</code> 。</p>
+<h2 id="添加自定义方法"><a href="#添加自定义方法" class="headerlink" title="添加自定义方法"></a>添加自定义方法</h2><p>到目前为止，我们一直使用的策略是添加一个“占位符”方法，并期望MapStruct能为我们实现它。其实我们还可以向接口中添加自定义的<code>default</code>方法，也可以通过<code>default</code>方法直接实现一个映射。然后我们可以通过实例直接调用该方法，没有任何问题。</p>
+<p>为此，我们创建一个 <code>DoctorPatientSummary</code>类，其中包含一个 <code>Doctor</code> 及其 <code>Patient</code>列表的汇总信息：</p>
+<pre><code class="hljs">public class DoctorPatientSummary &#123;
+    private int doctorId;
+    private int patientCount;
+    private String doctorName;
+    private String specialization;
+    private String institute;
+    private List&lt;Integer&gt; patientIds;
+    // getters and setters or builder
+&#125;
+</code></pre>
+<p>接下来，我们在 <code>DoctorMapper</code>中添加一个<code>default</code>方法，该方法会将 <code>Doctor</code> 和 <code>Education</code> 对象转换为一个 <code>DoctorPatientSummary</code>:</p>
+<pre><code class="hljs">@Mapper
+public interface DoctorMapper &#123;
+
+    default DoctorPatientSummary toDoctorPatientSummary(Doctor doctor, Education education) &#123;
+
+        return DoctorPatientSummary.builder()
+                .doctorId(doctor.getId())
+                .doctorName(doctor.getName())
+                .patientCount(doctor.getPatientList().size())
+                                .patientIds(doctor.getPatientList()
+                        .stream()
+                      .map(Patient::getId)
+                        .collect(Collectors.toList()))
+                    .institute(education.getInstitute())
+                .specialization(education.getDegreeName())
+                .build();
+    &#125;
+&#125;
+</code></pre>
+<p>这里使用了Builder模式创建<code>DoctorPatientSummary</code>对象。</p>
+<p>在MapStruct生成映射器实现类之后，你就可以使用这个实现方法，就像访问任何其它映射器方法一样：</p>
+<pre><code class="hljs">DoctorPatientSummary summary = doctorMapper.toDoctorPatientSummary(dotor, education);
+</code></pre>
+<h2 id="创建自定义映射器"><a href="#创建自定义映射器" class="headerlink" title="创建自定义映射器"></a>创建自定义映射器</h2><p>前面我们一直是通过接口来设计映射器功能，其实我们也可以通过一个带 <code>@Mapper</code> 的 <code>abstract</code> 类来实现一个映射器。MapStruct也会为这个类创建一个实现，类似于创建一个接口实现。</p>
+<p>我们重写一下前面的示例，这一次，我们将它修改为一个抽象类：</p>
+<pre><code class="hljs">@Mapper
+public abstract class DoctorCustomMapper &#123;
+    public DoctorPatientSummary toDoctorPatientSummary(Doctor doctor, Education education) &#123;
+
+        return DoctorPatientSummary.builder()
+                .doctorId(doctor.getId())
+                .doctorName(doctor.getName())
+                .patientCount(doctor.getPatientList().size())
+                .patientIds(doctor.getPatientList()
+                        .stream()
+                        .map(Patient::getId)
+                        .collect(Collectors.toList()))
+                .institute(education.getInstitute())
+                .specialization(education.getDegreeName())
+                .build();
+    &#125;
+&#125;
+</code></pre>
+<p>你可以用同样的方式使用这个映射器。由于限制较少，使用抽象类可以在创建自定义实现时给我们更多的控制和选择。另一个好处是可以添加<code>@BeforeMapping</code>和<code>@AfterMapping</code>方法。</p>
+<h3 id="BeforeMapping-和-AfterMapping"><a href="#BeforeMapping-和-AfterMapping" class="headerlink" title="@BeforeMapping 和 @AfterMapping"></a>@BeforeMapping 和 @AfterMapping</h3><p>为了进一步控制和定制化，我们可以定义 <code>@BeforeMapping</code> 和 <code>@AfterMapping</code>方法。显然，这两个方法是在每次映射之前和之后执行的。也就是说，在最终的实现代码中，会在两个对象真正映射之前和之后添加并执行这两个方法。</p>
+<p>可以在 <code>DoctorCustomMapper</code>中添加两个方法：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;, componentModel = &quot;spring&quot;)
+public abstract class DoctorCustomMapper &#123;
+
+    @BeforeMapping
+    protected void validate(Doctor doctor) &#123;
+        if(doctor.getPatientList() == null)&#123;
+            doctor.setPatientList(new ArrayList&lt;&gt;());
+        &#125;
+    &#125;
+
+    @AfterMapping
+    protected void updateResult(@MappingTarget DoctorDto doctorDto) &#123;
+        doctorDto.setName(doctorDto.getName().toUpperCase());
+        doctorDto.setDegree(doctorDto.getDegree().toUpperCase());
+        doctorDto.setSpecialization(doctorDto.getSpecialization().toUpperCase());
+    &#125;
+
+    @Mapping(source = &quot;doctor.patientList&quot;, target = &quot;patientDtoList&quot;)
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    public abstract DoctorDto toDoctorDto(Doctor doctor);
+&#125;
+</code></pre>
+<p>基于该抽象类生成一个映射器实现类：</p>
+<pre><code class="hljs">@Component
+public class DoctorCustomMapperImpl extends DoctorCustomMapper &#123;
+    
+    @Autowired
+    private PatientMapper patientMapper;
+    
+    @Override
+    public DoctorDto toDoctorDto(Doctor doctor) &#123;
+        validate(doctor);
+
+        if (doctor == null) &#123;
+            return null;
+        &#125;
+
+        DoctorDto doctorDto = new DoctorDto();
+
+        doctorDto.setPatientDtoList(patientListToPatientDtoList(doctor
+            .getPatientList()));
+        doctorDto.setSpecialization(doctor.getSpecialty());
+        doctorDto.setId(doctor.getId());
+        doctorDto.setName(doctor.getName());
+
+        updateResult(doctorDto);
+
+        return doctorDto;
+    &#125;
+&#125;
+</code></pre>
+<p>可以看到， <code>validate()</code> 方法会在 <code>DoctorDto</code> 对象实例化之前执行，而<code>updateResult()</code>方法会在映射结束之后执行。</p>
+<h2 id="映射异常处理"><a href="#映射异常处理" class="headerlink" title="映射异常处理"></a>映射异常处理</h2><p>异常处理是不可避免的，应用程序随时会产生异常状态。MapStruct提供了对异常处理的支持，可以简化开发者的工作。</p>
+<p>考虑这样一个场景，我们想在 <code>Doctor</code> 映射为<code>DoctorDto</code>之前校验一下 <code>Doctor</code> 的数据。我们新建一个独立的 <code>Validator</code> 类进行校验：</p>
+<pre><code class="hljs">public class Validator &#123;
+    public int validateId(int id) throws ValidationException &#123;
+        if(id == -1)&#123;
+            throw new ValidationException(&quot;Invalid value in ID&quot;);
+        &#125;
+        return id;
+    &#125;
+&#125;
+</code></pre>
+<p>我们修改一下 <code>DoctorMapper</code> 以使用 <code>Validator</code> 类，无需指定实现。跟之前一样， 在<code>@Mapper</code>使用的类列表中添加该类。我们还需要做的就是告诉MapStruct我们的 <code>toDto()</code> 会抛出 <code>throws ValidationException</code>：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class, Validator.class&#125;, componentModel = &quot;spring&quot;)
+public interface DoctorMapper &#123;
+
+    @Mapping(source = &quot;doctor.patientList&quot;, target = &quot;patientDtoList&quot;)
+    @Mapping(source = &quot;doctor.specialty&quot;, target = &quot;specialization&quot;)
+    DoctorDto toDto(Doctor doctor) throws ValidationException;
+&#125;
+</code></pre>
+<p>最终生成的映射器代码如下：</p>
+<pre><code class="hljs">@Component
+public class DoctorMapperImpl implements DoctorMapper &#123;
+
+    @Autowired
+    private PatientMapper patientMapper;
+    @Autowired
+    private Validator validator;
+
+    @Override
+    public DoctorDto toDto(Doctor doctor) throws ValidationException &#123;
+        if (doctor == null) &#123;
+            return null;
+        &#125;
+
+        DoctorDto doctorDto = new DoctorDto();
+
+        doctorDto.setPatientDtoList(patientListToPatientDtoList(doctor
+            .getPatientList()));
+        doctorDto.setSpecialization(doctor.getSpecialty());
+        doctorDto.setId(validator.validateId(doctor.getId()));
+        doctorDto.setName(doctor.getName());
+        doctorDto.setExternalId(doctor.getExternalId());
+        doctorDto.setAvailability(doctor.getAvailability());
+
+        return doctorDto;
+    &#125;
+&#125;
+</code></pre>
+<p>MapStruct自动将<code>doctorDto</code>的<code>id</code>设置为<code>Validator</code>实例的方法返回值。它还在该方法签名中添加了一个throws子句。</p>
+<p>注意，如果映射前后的一对属性的类型与<code>Validator</code>中的方法出入参类型一致，那该字段映射时就会调用<code>Validator</code>中的方法，所以该方式请谨慎使用。</p>
+<h2 id="映射配置"><a href="#映射配置" class="headerlink" title="映射配置"></a>映射配置</h2><p>MapStruct为编写映射器方法提供了一些非常有用的配置。多数情况下，如果我们已经定义了两个类型之间的映射方法，当我们要添加相同类型之间的另一个映射方法时，我们往往会直接复制已有方法的映射配置。</p>
+<p>其实我们不必手动复制这些注解，只需要简单的配置就可以创建一个相同/相似的映射方法。</p>
+<h3 id="继承配置"><a href="#继承配置" class="headerlink" title="继承配置"></a>继承配置</h3><p>我们回顾一下“<a href="#%E6%9B%B4%E6%96%B0%E7%8E%B0%E6%9C%89%E5%AE%9E%E4%BE%8B" title="#%E6%9B%B4%E6%96%B0%E7%8E%B0%E6%9C%89%E5%AE%9E%E4%BE%8B">更新现有实例</a>”，在该场景中，我们创建了一个映射器，根据DoctorDto对象的属性更新现有的Doctor对象的属性值：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class&#125;)
+public interface DoctorMapper &#123;
+
+    DoctorMapper INSTANCE = Mappers.getMapper(DoctorMapper.class);
+
+    @Mapping(source = &quot;doctorDto.patientDtoList&quot;, target = &quot;patientList&quot;)
+    @Mapping(source = &quot;doctorDto.specialization&quot;, target = &quot;specialty&quot;)
+    void updateModel(DoctorDto doctorDto, @MappingTarget Doctor doctor);
+&#125;
+</code></pre>
+<p>假设我们还有另一个映射器，将 <code>DoctorDto</code>转换为 <code>Doctor</code> ：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class, Validator.class&#125;)
+public interface DoctorMapper &#123;
+
+    @Mapping(source = &quot;doctorDto.patientDtoList&quot;, target = &quot;patientList&quot;)
+    @Mapping(source = &quot;doctorDto.specialization&quot;, target = &quot;specialty&quot;)
+    Doctor toModel(DoctorDto doctorDto);
+&#125;
+</code></pre>
+<p>这两个映射方法使用了相同的注解配置， <code>source</code>和 <code>target</code>都是相同的。其实我们可以使用<code>@InheritConfiguration</code>注释，从而避免这两个映射器方法的重复配置。</p>
+<p>如果对一个方法添加 <code>@InheritConfiguration</code> 注解，MapStruct会检索其它的已配置方法，寻找可用于当前方法的注解配置。一般来说，这个注解都用于<code>mapping</code>方法后面的<code>update</code>方法，如下所示：</p>
+<pre><code class="hljs">@Mapper(uses = &#123;PatientMapper.class, Validator.class&#125;, componentModel = &quot;spring&quot;)
+public interface DoctorMapper &#123;
+
+    @Mapping(source = &quot;doctorDto.specialization&quot;, target = &quot;specialty&quot;)
+    @Mapping(source = &quot;doctorDto.patientDtoList&quot;, target = &quot;patientList&quot;)
+    Doctor toModel(DoctorDto doctorDto);
+
+    @InheritConfiguration
+    void updateModel(DoctorDto doctorDto, @MappingTarget Doctor doctor);
+&#125;
+</code></pre>
+<h3 id="继承逆向配置"><a href="#继承逆向配置" class="headerlink" title="继承逆向配置"></a>继承逆向配置</h3><p>还有另外一个类似的场景，就是编写映射函数将_<strong>Model</strong>_ 转为 _<strong>DTO</strong>_，以及将 <em><strong>DTO</strong></em> 转为 _<strong>Model</strong>_。如下面的代码所示，我们必须在两个函数上添加相同的注释。</p>
+<pre><code class="hljs">@Mapper(componentModel = &quot;spring&quot;)
+public interface PatientMapper &#123;
+
+    @Mapping(source = &quot;dateOfBirth&quot;, target = &quot;dateOfBirth&quot;, dateFormat = &quot;dd/MMM/yyyy&quot;)
+    Patient toModel(PatientDto patientDto);
+
+    @Mapping(source = &quot;dateOfBirth&quot;, target = &quot;dateOfBirth&quot;, dateFormat = &quot;dd/MMM/yyyy&quot;)
+    PatientDto toDto(Patient patient);
+&#125;
+</code></pre>
+<p>两个方法的配置不会是完全相同的，实际上，它们应该是相反的。将_<strong>Model</strong>_ 转为 _<strong>DTO</strong>_，以及将 <em><strong>DTO</strong></em> 转为 _<strong>Model</strong>_——映射前后的字段相同，但是源属性字段与目标属性字段是相反的。</p>
+<p>我们可以在第二个方法上使用<code>@InheritInverseConfiguration</code>注解，避免写两遍映射配置：</p>
+<pre><code class="hljs">@Mapper(componentModel = &quot;spring&quot;)
+public interface PatientMapper &#123;
+
+    @Mapping(source = &quot;dateOfBirth&quot;, target = &quot;dateOfBirth&quot;, dateFormat = &quot;dd/MMM/yyyy&quot;)
+    Patient toModel(PatientDto patientDto);
+
+    @InheritInverseConfiguration
+    PatientDto toDto(Patient patient);
+&#125;
+</code></pre>
+<p>这两个Mapper生成的代码是相同的。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本文中，我们探讨了MapStruct——一个用于创建映射器类的库。从基本映射到自定义方法和自定义映射器，此外， 我们还介绍了MapStruct提供的一些高级操作选项，包括依赖注入，数据类型映射、枚举映射和表达式使用。</p>
+<p>MapStruct提供了一个功能强大的集成插件，可减少开发人员编写模板代码的工作量，使创建映射器的过程变得简单快捷。</p>
+<p>如果要探索更多、更详细的使用方式，可以参考MapStruct官方提供的<a href="https://link.juejin.cn/?target=https://mapstruct.org/documentation/stable/reference/html/" title="https://mapstruct.org/documentation/stable/reference/html/">参考指南</a>。</p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6956190395319451679">MapStruct使用指南</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+        <a href="/tags/MapStruct/">#MapStruct</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MapStruct使用指南</div>
+      <div>https://baymax55.github.io/2023/03/31/java/MapStruct使用指南/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月31日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/14/python/%E7%94%A8python-dotenv%E8%A7%A3%E5%86%B3%E4%BB%A3%E7%A0%81%E4%B8%8E%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E7%9A%84%E5%88%86%E7%A6%BB/" title="用python-dotenv解决代码与敏感信息的分离">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">用python-dotenv解决代码与敏感信息的分离</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/29/linux/%E8%A7%A3%E5%86%B3xmrig%E6%8C%96%E7%9F%BF%E6%9C%A8%E9%A9%AC%E5%AF%BC%E8%87%B4%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8cpu%E5%8D%A0%E6%BB%A1%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" title="解决xmrig挖矿木马问题">
+                        <span class="hidden-mobile">解决xmrig挖矿木马问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
