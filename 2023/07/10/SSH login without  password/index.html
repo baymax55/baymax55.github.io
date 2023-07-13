@@ -16,25 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="类与对象的比较">
+    <meta name="description" content="SSH login without password">
 <meta property="og:type" content="article">
-<meta property="og:title" content="类与对象的比较">
-<meta property="og:url" content="https://baymax55.github.io/2022/11/14/excerpt/%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:title" content="SSH login without password">
+<meta property="og:url" content="https://baymax55.github.io/2023/07/10/SSH%20login%20without%20%20password/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="类与对象的比较">
+<meta property="og:description" content="SSH login without password">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/excerpt.png">
-<meta property="article:published_time" content="2022-11-14T02:36:32.494Z">
-<meta property="article:modified_time" content="2022-11-14T02:49:22.960Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/img_4.png">
+<meta property="article:published_time" content="2023-07-10T01:55:44.866Z">
+<meta property="article:modified_time" content="2023-07-10T02:03:00.336Z">
 <meta property="article:author" content="baymax55">
-<meta property="article:tag" content="class">
-<meta property="article:tag" content="object">
+<meta property="article:tag" content="ssh">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/excerpt.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/img_4.png">
   
   
   
-  <title>类与对象的比较 - Baymax55&#39;s Blog</title>
+  <title>SSH login without password - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="类与对象的比较"></span>
+            <span id="subtitle" data-typed-text="SSH login without password"></span>
           
         </div>
 
@@ -209,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-14 10:36" pubdate>
-          2022年11月14日 上午
+        <time datetime="2023-07-10 09:55" pubdate>
+          2023年7月10日 上午
         </time>
       </span>
     
@@ -221,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          346 字
+          1.3k 字
         
       </span>
     
@@ -232,7 +231,7 @@
         
         
         
-          3 分钟
+          11 分钟
         
       </span>
     
@@ -278,21 +277,43 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">类与对象的比较</h1>
+            <h1 style="display: none">SSH login without password</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年11月14日 上午
+                    本文最后更新于：2023年7月10日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <h1 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h1><p><strong>面向对象设计的一个核心概念就是对象 (obiect) 与类(class)的区分。对象是指运行期间在程序中实际存在的具体实体(enity)，而类是指在程序源码中存在的静态事物。对象是动态的，它拥有你在程序运行期间所能得到的具体的值和属性。例如，你可以定义一个名为 Person 的类，它具有姓名年龄、性别等属性。在程序运行期间，你可以有 nancy、hank、diane、tony 等对象一一它们是类的具体实例。如果你熟悉数据库术语的话，类与对象的关系就如同“模式(schema)”与“实例(instance)”一样。你可以把类看做是蛋糕模具而把对象看做是蛋糕。在本书中，对这两个术语的使用并非十分正规，一般情况也会或多或少互换地使用类和对象这两个术语。</strong></p>
+              <h2 id="Your-aim"><a href="#Your-aim" class="headerlink" title="Your aim"></a>Your aim</h2><p>You want to use Linux and OpenSSH to automate your tasks. Therefore you need an <strong>automatic</strong> login from host A / user a to Host B / user b. You don’t want to enter any passwords, because you want to call ssh from a within a shell script.</p>
+<h2 id="How-to-do-it"><a href="#How-to-do-it" class="headerlink" title="How to do it"></a>How to do it</h2><p>First log in on A as user a and generate a pair of authentication keys. Do not enter a passphrase:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">a@A:~&gt; ssh-keygen -t rsa<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/a/.ssh/id_rsa): <br>Created directory &#x27;/home/a/.ssh&#x27;.<br>Enter passphrase (empty for no passphrase): <br>Enter same passphrase again: <br>Your identification has been saved in /home/a/.ssh/id_rsa.<br>Your public key has been saved in /home/a/.ssh/id_rsa.pub.<br>The key fingerprint is:<br>3e:4f:05:79:3a:9f:96:7c:3b:ad:e9:58:37:bc:37:e4 a@A<br></code></pre></td></tr></table></figure>
+
+<p>Now use ssh to create a directory ~/.ssh as user b on B. (The directory may already exist, which is fine):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">a@A:~&gt; ssh b@B mkdir -p .ssh<br>b@B&#x27;s password: <br></code></pre></td></tr></table></figure>
+
+
+<p>Finally append a’s new public key to :.ssh/authorized_keys and enter b’s password one last time:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">a@A:~&gt; cat .ssh/id_rsa.pub | ssh b@B &#x27;cat &gt;&gt; .ssh/authorized_keys&#x27;<br>b@B&#x27;s password: <br></code></pre></td></tr></table></figure>
+
+
+<p>From now on you can log into B as b from A as a without password:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">a@A:~&gt; ssh b@B <br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>A note</strong> from one of our readers: Depending on your version of SSH you might also have to do the following changes:</p>
+<ul>
+<li>  Put the public key in .ssh/authorized_keys2</li>
+<li>  Change the permissions of .ssh to 700</li>
+<li>  Change the permissions of .ssh/authorized_keys2 to 640</li>
+</ul>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li>代码大全（第2版）</li>
+<li><a target="_blank" rel="noopener" href="http://linuxproblem.org/art_9.html">SSH login without password</a></li>
 </ul>
 
               
@@ -311,7 +332,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/excerpt/" class="category-chain-item">excerpt</a>
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
   
   
 
@@ -326,9 +347,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/class/">#class</a>
-      
-        <a href="/tags/object/">#object</a>
+        <a href="/tags/ssh/">#ssh</a>
       
     </div>
   
@@ -340,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>类与对象的比较</div>
-      <div>https://baymax55.github.io/2022/11/14/excerpt/类与对象的比较/</div>
+      <div>SSH login without password</div>
+      <div>https://baymax55.github.io/2023/07/10/SSH login without  password/</div>
     </div>
     <div class="license-meta">
       
@@ -353,7 +372,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年11月14日</div>
+          <div>2023年7月10日</div>
         </div>
       
       
@@ -383,9 +402,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/16/docker/%E5%8E%9F%E7%94%9Flinux%E5%AE%89%E8%A3%85docker%E6%96%B9%E5%BC%8F(WSL)/" title="原生linux安装docker方式(WSL)">
+                      <a href="/2023/07/10/other/trojan/" title="trojan使用记录">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">原生linux安装docker方式(WSL)</span>
+                        <span class="hidden-mobile">trojan使用记录</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -393,8 +412,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/09/maven/%E4%BD%BF%E7%94%A8spotless-maven-plugin%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81/" title="spotless-maven-plugin">
-                        <span class="hidden-mobile">spotless-maven-plugin</span>
+                      <a href="/2023/07/09/other/cm311/" title="记录cm311-la刷机">
+                        <span class="hidden-mobile">记录cm311-la刷机</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

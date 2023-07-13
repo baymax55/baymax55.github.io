@@ -16,23 +16,24 @@
   <meta name="author" content="baymax55">
   <meta name="keywords" content="">
   
-    <meta name="description" content="子数组,子序列,子集的区别">
+    <meta name="description" content="使用2022.4.1版本的jrebel即可">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Difference between Subarray, Subsequence, and Subset">
-<meta property="og:url" content="https://baymax55.github.io/2022/09/26/algorithm/Difference%20between%20Subarray,%20Subsequence,%20and%20Subset/index.html">
+<meta property="og:title" content="【jrebel and xrebel问题记录】激活时出现LS client not configued">
+<meta property="og:url" content="https://baymax55.github.io/2023/07/09/other/jrebel/index.html">
 <meta property="og:site_name" content="Baymax55&#39;s Blog">
-<meta property="og:description" content="子数组,子序列,子集的区别">
+<meta property="og:description" content="使用2022.4.1版本的jrebel即可">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://baymax55.github.io/img/index_img/algorithm.png">
-<meta property="article:published_time" content="2022-09-26T00:45:14.414Z">
-<meta property="article:modified_time" content="2022-09-26T01:42:43.087Z">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/img_2.png">
+<meta property="article:published_time" content="2023-07-09T01:57:59.345Z">
+<meta property="article:modified_time" content="2023-07-10T02:13:41.522Z">
 <meta property="article:author" content="baymax55">
+<meta property="article:tag" content="jrebel">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/algorithm.png">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/img_2.png">
   
   
   
-  <title>Difference between Subarray, Subsequence, and Subset - Baymax55&#39;s Blog</title>
+  <title>【jrebel and xrebel问题记录】激活时出现LS client not configued - Baymax55&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Difference between Subarray, Subsequence, and Subset"></span>
+            <span id="subtitle" data-typed-text="【jrebel and xrebel问题记录】激活时出现LS client not configued"></span>
           
         </div>
 
@@ -207,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-26 08:45" pubdate>
-          2022年9月26日 早上
+        <time datetime="2023-07-09 09:57" pubdate>
+          2023年7月9日 上午
         </time>
       </span>
     
@@ -219,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.6k 字
+          1.4k 字
         
       </span>
     
@@ -230,7 +231,7 @@
         
         
         
-          39 分钟
+          12 分钟
         
       </span>
     
@@ -276,40 +277,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Difference between Subarray, Subsequence, and Subset</h1>
+            <h1 style="display: none">【jrebel and xrebel问题记录】激活时出现LS client not configued</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年9月26日 上午
+                    本文最后更新于：2023年7月10日 上午
                   
                 
               </p>
             
             <div class="markdown-body">
               
-              <p>This post will discuss the difference between a subarray, a substring, a subsequence, and a subset.</p>
-<h1 id="1-Subarray"><a href="#1-Subarray" class="headerlink" title="1. Subarray"></a>1. Subarray</h1><p>A subarray is a slice from a contiguous array (i.e., occupy consecutive positions) and inherently maintains the order of elements. For example, the subarrays of array {1, 2, 3} are {1}, {1, 2}, {1, 2, 3}, {2}, {2, 3}, and {3}.</p>
-<p>Please note that there are precisely n×(n+1)/2 subarrays in an array of size n. Also, there is no such thing as a contiguous subarray. The prefix contiguous is sometimes applied to make the context more clear. So, a contiguous subarray is just another name for a subarray.</p>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Arrays;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span><br>&#123;<br>    <span class="hljs-comment">// Function to print all subarrays of the specified array</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printAllSubarrays</span><span class="hljs-params">(List&lt;Integer&gt; input)</span><br>    &#123;<br>        <span class="hljs-comment">// consider all subarrays starting from `i`</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; input.size(); i++)<br>        &#123;<br>            <span class="hljs-comment">// consider all subarrays ending at `j`</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &lt; input.size(); j++)<br>            &#123;<br>                <span class="hljs-comment">// Function to print a subarray formed by [i, j]</span><br>                System.out.println(input.subList(i, j + <span class="hljs-number">1</span>));<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        List&lt;Integer&gt; input = Arrays.asList(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>);<br>        printAllSubarrays(input);<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
-<p>Output:</p>
-<p>[1]<br>[1, 2]<br>[1, 2, 3]<br>[1, 2, 3, 4]<br>[1, 2, 3, 4, 5]<br>[2]<br>[2, 3]<br>[2, 3, 4]<br>[2, 3, 4, 5]<br>[3]<br>[3, 4]<br>[3, 4, 5]<br>[4]<br>[4, 5]<br>[5]</p>
-<h1 id="2-Substring"><a href="#2-Substring" class="headerlink" title="2. Substring"></a>2. Substring</h1><p>A substring of a string s is a string s’ that occurs in s. A substring is almost similar to a subarray, but it is in the context of strings.</p>
-<p>For example, the substrings of string ‘apple’ are ‘apple’, ‘appl’, ‘pple’, ‘app’, ‘ppl’, ‘ple’, ‘ap’, ‘pp’, ‘pl’, ‘le’, ‘a’, ‘p’, ‘l’, ‘e’, ‘’.</p>
-<h2 id="code-1"><a href="#code-1" class="headerlink" title="code"></a>code</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span><br>&#123;<br>    <span class="hljs-comment">// Function to print all non-empty substrings of the specified string</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printAllSubstrings</span><span class="hljs-params">(String str)</span><br>    &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> str.length();<br> <br>        <span class="hljs-comment">// consider all substrings starting from `i`</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++)<br>        &#123;<br>            <span class="hljs-comment">// consider all substrings ending at j</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &lt; n; j++) &#123;<br>                System.out.print(<span class="hljs-string">&quot;&#x27;&quot;</span> + str.substring(i, j + <span class="hljs-number">1</span>) + <span class="hljs-string">&quot;&#x27;, &quot;</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">str</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;techie&quot;</span>;<br>        printAllSubstrings(str);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>Output:</p>
-<p>‘t’, ‘te’, ‘tec’, ‘tech’, ‘techi’, ‘techie’, ‘e’, ‘ec’, ‘ech’, ‘echi’, ‘echie’, ‘c’, ‘ch’, ‘chi’, ‘chie’, ‘h’, ‘hi’, ‘hie’, ‘i’, ‘ie’, ‘e’</p>
-<h1 id="3-Subsequence"><a href="#3-Subsequence" class="headerlink" title="3. Subsequence"></a>3. Subsequence</h1><p>A subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements. For example, {nums, B, D} is a subsequence of sequence {nums, B, C, D, E} obtained after removing {C} and {E}.</p>
-<p>People are often confused between a subarray/substring and a subsequence. A subarray or substring will always be contiguous, but a subsequence need not be contiguous. That is, subsequences are not required to occupy consecutive positions within the original sequences. But we can say that both contiguous subsequence and subarray are the same.</p>
-<p>In other words, the subsequence is a generalization of a substring, or substring is a refinement of the subsequence. For example, {nums, C, E} is a subsequence of {nums, B, C, D, E}, but not a substring, and {nums, B, C} is both a subarray and a subsequence.</p>
-<p>Please note that a subsequence can be in the context of both arrays and strings. Generating all subsequences of an array/string is equivalent to generating a power set of an array/string. For a given set, S, we can find the power set by generating all binary numbers between 0 and 2n-1, where n is the size of the given set. </p>
-<h2 id="code-2"><a href="#code-2" class="headerlink" title="code"></a>code</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Main</span><br>&#123;<br>    <span class="hljs-comment">// Function to print all subsequences of the specified string</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">findPowerSet</span><span class="hljs-params">(String str)</span><br>    &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> str.length();<br> <br>        <span class="hljs-comment">// N stores the total number of subsets</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">N</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>)Math.pow(<span class="hljs-number">2</span>, n);<br> <br>        List&lt;String&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br> <br>        <span class="hljs-comment">// generate each subset one by one</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; N; i++)<br>        &#123;<br>            <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br> <br>            <span class="hljs-comment">// check every bit of `i`</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++)<br>            &#123;<br>                <span class="hljs-comment">// if j&#x27;th bit of `i` is set, print S[j]</span><br>                <span class="hljs-keyword">if</span> ((i &amp; (<span class="hljs-number">1</span> &lt;&lt; j)) != <span class="hljs-number">0</span>) &#123;<br>                    sb.append(str.charAt(j));<br>                &#125;<br>            &#125;<br>            result.add(<span class="hljs-string">&quot;&#x27;&quot;</span> + sb.toString() + <span class="hljs-string">&quot;&#x27;&quot;</span>);<br>        &#125;<br> <br>        System.out.println(result);<br>    &#125;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span><br>    &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">str</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;apple&quot;</span>;<br>        findPowerSet(str);<br>    &#125;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
-<p>Output:</p>
-<p>[‘’, ‘a’, ‘p’, ‘ap’, ‘p’, ‘ap’, ‘pp’, ‘app’, ‘l’, ‘al’, ‘pl’, ‘apl’, ‘pl’, ‘apl’, ‘ppl’, ‘appl’, ‘e’, ‘ae’, ‘pe’, ‘ape’, ‘pe’, ‘ape’, ‘ppe’, ‘appe’, ‘le’, ‘ale’, ‘ple’, ‘aple’, ‘ple’, ‘aple’, ‘pple’, ‘apple’]</p>
-<h1 id="4-Subset"><a href="#4-Subset" class="headerlink" title="4. Subset"></a>4. Subset</h1><p>A subset is any possible combination of the original set. The term subset is often used for subsequence, but that’s not right. A subsequence always maintains the relative order of the array elements (i.e., increasing index), but there is no such restriction on a subset. For example, {3, 1} is a valid subset of {1, 2, 3, 4, 5}, but it is neither a subsequence nor a subarray.</p>
-<p>It is worth noting that all subarrays are subsequences and all subsequences are a subset, but the reverse is not valid. For instance, a subarray {1, 2} of array {1, 2, 3, 4, 5} is also a subsequence and a subset.</p>
+              <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>笔者在重装另一台电脑的时候又遇到了这个安装jrebel and xrebel进行激活的问题 但是我在网上找了很多的办法（其实都是相同的办法，只是在尝试别人不同的用于激活的服务器）<br>我找到的网上其他人分享出来的几个服务器地址：<br><a target="_blank" rel="noopener" href="https://jrebel.qekang.com/%7BGUID%7D">https://jrebel.qekang.com/{GUID}</a><br><a target="_blank" rel="noopener" href="http://jrebel-license.jiweichengzhu.com/%7BGUID%7D">http://jrebel-license.jiweichengzhu.com/{GUID}</a></p>
+<p>(你可以直接去掉后面的{GUID}直接访问这两个地址，能访问就说明这两个地址还在工作，还没有挂掉，且直接访问的话，有相应的使用说明，一开始我还以为是这两个服务器挂了导致激活不成功的，后面发现这两个地址能访问)</p>
+<p>然后再配合这个地址（<a target="_blank" rel="noopener" href="https://www.guidgen.com/">https://www.guidgen.com/</a>）生成的guid，和上面的服务器地址拼接起来(替换上面链接里的{GUID})，将拼接起来的内容放入那个激活界面然后任意输入一个邮箱地址就可用于激活</p>
+<p>但是点击激活都是下面这样：<br><img src="img.png" srcset="/img/loading.gif" lazyload alt="img.png"></p>
+<h1 id="所使用的环境和版本"><a href="#所使用的环境和版本" class="headerlink" title="所使用的环境和版本"></a>所使用的环境和版本</h1><p>本次使用的是idea2022.3.1 （我升级到最新版的idea了）<br>然后通过这个idea下载到的Jrebel and Xrebel的版本也是最新版的2022.4.2</p>
+<h1 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h1><p>一开始我是怀疑这个用于激活的地址挂掉了的，但后面发现这两个地址都能够正常访问，说明就不是激活地址的问题，后面在<a target="_blank" rel="noopener" href="https://jrebel.qekang.com/">https://jrebel.qekang.com/</a>的激活介绍里面看到了激活失败的可能的问题原因：  </p>
+<p><img src="img_1.png" srcset="/img/loading.gif" lazyload alt="img_1.png"><br>刚好发现我就属于他描述的其中一种情况，然后我卸载了当前的2022.4.2版本的jrebel，删除了c盘用户下面的.jrebel文件，然后去官网下载了2022.4.1版本的jrebel解压到idea安装目录里面的pulgins的文件夹里，再重启idea后进行激活，发现激活成功</p>
+<p>还是感谢那两位大佬共享出来的服务器！是我浅薄无知了，我一开始还怀疑网上共享出来的所有 的用于激活的链接都挂了呢</p>
+<h2 id="手动下载jrebel"><a href="#手动下载jrebel" class="headerlink" title="手动下载jrebel"></a>手动下载jrebel</h2><p>1、先在idea中卸载之前安装的jrebel，保证idea中没有安装jrebel，然后关闭idea，在c盘的用户目录下去删除相关的.jrebel文件，如果你卸载了jrebel的话应该只会有几个文件在你的用户目录下，比如我的用户目录是这个“C:\Users\18296”</p>
+<p>2、官网去找到过去版本的jrebel，地址：<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/4441-jrebel-and-xrebel/versions">https://plugins.jetbrains.com/plugin/4441-jrebel-and-xrebel/versions</a>  </p>
+<p><img src="img_2.png" srcset="/img/loading.gif" lazyload alt="img_2.png"><br>下载一个过去版本的jrebel，下载下来是一个压缩包，解压到你的一个地方先保存下来</p>
+<p>3、然后将解压出来的这个压缩包放到你的idea的安装目录的pulgin的目录里，比如我的安装目录的插件文件夹是这个：D:\qc_code\IntelliJ IDEA 2022.3.1\plugins</p>
+<p>4、如果你的idea还是打开状态的话，建议重启一下idea，然后在你的idea的file–&gt;settings打开后就会看到Jrebel and Xrebel，找到它之后再按照网上提供的方法（也就是文章一开始的问题描述的那样，将对应的链接放入激活界面的方式进行激活）进行激活</p>
+<p>5、激活成功后<br>最后建议把这个改为离线工作模式<br><img src="img_3.png" srcset="/img/loading.gif" lazyload alt="img_3.png"></p>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://www.techiedelight.com/difference-between-subarray-subsequence-subset/">Difference between Subarray, Subsequence, and Subset</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chirp_CQ/article/details/128483587">【jrebel and xrebel问题记录】激活时出现LS client not configued</a></li>
 </ul>
 
               
@@ -328,7 +323,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/algorithm/" class="category-chain-item">algorithm</a>
+  <a href="/categories/tools/" class="category-chain-item">tools</a>
   
   
 
@@ -340,6 +335,13 @@
     </div>
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/jrebel/">#jrebel</a>
+      
+    </div>
+  
 </div>
 
 
@@ -348,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Difference between Subarray, Subsequence, and Subset</div>
-      <div>https://baymax55.github.io/2022/09/26/algorithm/Difference between Subarray, Subsequence, and Subset/</div>
+      <div>【jrebel and xrebel问题记录】激活时出现LS client not configued</div>
+      <div>https://baymax55.github.io/2023/07/09/other/jrebel/</div>
     </div>
     <div class="license-meta">
       
@@ -361,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月26日</div>
+          <div>2023年7月9日</div>
         </div>
       
       
@@ -391,9 +393,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/09/26/web3/%E5%A4%A7%E7%99%BD%E8%AF%9D%E8%81%8A%20Web3%E2%80%94%E2%80%94%E7%BB%88%E5%B0%86%E5%88%B0%E6%9D%A5%E7%9A%84%E6%97%B6%E4%BB%A3%EF%BC%8C%E4%BC%9A%E5%A6%82%E6%88%91%E4%BB%AC%E6%89%80%E6%83%B3%E5%90%97/" title="大白话聊 Web3——终将到来的时代，会如我们所想吗">
+                      <a href="/2023/07/09/other/cm311/" title="记录cm311-la刷机">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">大白话聊 Web3——终将到来的时代，会如我们所想吗</span>
+                        <span class="hidden-mobile">记录cm311-la刷机</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -401,8 +403,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/09/23/spring/Spring%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%AE%A1%E7%90%86--Environment/" title="Spring配置属性管理--Environment">
-                        <span class="hidden-mobile">Spring配置属性管理--Environment</span>
+                      <a href="/2023/06/12/maven/Maven%20Wrapper/" title="Maven Wrapper">
+                        <span class="hidden-mobile">Maven Wrapper</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
