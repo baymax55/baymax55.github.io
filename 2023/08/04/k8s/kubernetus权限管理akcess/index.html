@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="kubernetus权限管理akcess">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetus权限管理akcess">
+<meta property="og:url" content="https://baymax55.github.io/2023/08/04/k8s/kubernetus%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86akcess/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="kubernetus权限管理akcess">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/k8s.png">
+<meta property="article:published_time" content="2023-08-04T00:33:49.550Z">
+<meta property="article:modified_time" content="2023-08-04T00:40:34.921Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="akcess">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/k8s.png">
+  
+  
+  
+  <title>kubernetus权限管理akcess - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="kubernetus权限管理akcess"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-04 08:33" pubdate>
+          2023年8月4日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kubernetus权限管理akcess</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年8月4日 早上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>akcess是一个命令行实用程序，可用于与其他团队共享对 Kubernetes 集群的细粒度访问。<br>安装 wget <a target="_blank" rel="noopener" href="https://github.com/viveksinghggits/akcess/releases/download/v0.0.4/akcess_0.0.4_Linux_x86_64.tar.gz">https://github.com/viveksinghggits/akcess/releases/download/v0.0.4/akcess_0.0.4_Linux_x86_64.tar.gz</a><br>解压配置<br>tar xf akcess_0.0.1_Linux_x86_64.tar.gz -C  /usr/local/bin<br>参数解释</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">允许访问从default命名空间获取 pod<br>akcess allow --verb list --resource pods<br><br>允许访问以查看命名空间<span class="hljs-built_in">test</span>中名称为nginx的pod 的日志<br>akcess allow --verb get --resource pods,pods/log -n <span class="hljs-built_in">test</span> --resource-name nginx<br><br>允许访问创建namespace:database中的pod及pod日志<br>akcess allow  --verb get,create --resource pods,pods/exec -n database<br><br>允许访问指定标签的的pod<br>akcess allow  --verb get --resource pods,pods/log -l component=database -n backend<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>将上述命令的输出重定向到一个文件，该文件可以在KUBECONFIGenv var 中设置。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">akcess allow --verb get --resource pods,pods/log -n <span class="hljs-built_in">test</span> &gt; logsconfig(生成config文件)<br><br>每当我们创建一个Kubernetes资源时，我们都会用一个keyallow.akcess.id和value对其进行注释，使其成为UUID <br>已经创建的资源集合或者akcess allow已经运行的次数可以通过运行算出<br><br>akcess list<br>- <span class="hljs-built_in">id</span>: ee022ab3-246f-4a6d-bd53-e04ae90cc1d9<br>  createdAt: 2022-03-06T12:03:42.171995731+01:00<br>  namespace: <span class="hljs-built_in">test</span><br>- <span class="hljs-built_in">id</span>: 818e4e6f-4be9-41a2-9f8b-de4247626d16<br>  createdAt: 2022-03-06T12:12:17.884823402+01:00<br>  namespace: default<br>要删除Kubernetes特定运行的资源，我们可以运行<br><br>» akcess delete --<span class="hljs-built_in">id</span> ee022ab3-246f-4a6d-bd53-e04ae90cc1d9<br></code></pre></td></tr></table></figure></li>
+<li>参数补充：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><code class="hljs bash">resources:<br>      - <span class="hljs-string">&quot;configmaps&quot;</span><br>      - <span class="hljs-string">&quot;endpoints&quot;</span><br>      - <span class="hljs-string">&quot;persistentvolumeclaims&quot;</span><br>      - <span class="hljs-string">&quot;pods&quot;</span><br>      - <span class="hljs-string">&quot;pods/log&quot;</span><br>      - <span class="hljs-string">&quot;pods/portforward&quot;</span><br>      - <span class="hljs-string">&quot;podtemplates&quot;</span><br>      - <span class="hljs-string">&quot;replicationcontrollers&quot;</span><br>      - <span class="hljs-string">&quot;resourcequotas&quot;</span><br>      - <span class="hljs-string">&quot;secrets&quot;</span><br>      - <span class="hljs-string">&quot;services&quot;</span><br>      - <span class="hljs-string">&quot;events&quot;</span><br>      - <span class="hljs-string">&quot;daemonsets&quot;</span><br>      - <span class="hljs-string">&quot;deployments&quot;</span><br>      - <span class="hljs-string">&quot;replicasets&quot;</span><br>      - <span class="hljs-string">&quot;ingresses&quot;</span><br>      - <span class="hljs-string">&quot;networkpolicies&quot;</span><br>      - <span class="hljs-string">&quot;poddisruptionbudgets&quot;</span><br><br> verbs:   [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>, <span class="hljs-string">&quot;patch&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>]<br><br>以下三种：<br>---<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRole<br>metadata:<br>  name: template-namespaced-resources___operation<br>rules:<br>  - apiGroups:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    resources:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    verbs:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>---<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRole<br>metadata:<br>  name: template-namespaced-resources___developer<br>rules:<br>  - apiGroups:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    resources:<br>      - <span class="hljs-string">&quot;configmaps&quot;</span><br>      - <span class="hljs-string">&quot;endpoints&quot;</span><br>      - <span class="hljs-string">&quot;persistentvolumeclaims&quot;</span><br>      - <span class="hljs-string">&quot;pods&quot;</span><br>      - <span class="hljs-string">&quot;pods/log&quot;</span><br>      - <span class="hljs-string">&quot;pods/portforward&quot;</span><br>      - <span class="hljs-string">&quot;podtemplates&quot;</span><br>      - <span class="hljs-string">&quot;replicationcontrollers&quot;</span><br>      - <span class="hljs-string">&quot;resourcequotas&quot;</span><br>      - <span class="hljs-string">&quot;services&quot;</span><br>      - <span class="hljs-string">&quot;events&quot;</span><br>      - <span class="hljs-string">&quot;daemonsets&quot;</span><br>      - <span class="hljs-string">&quot;deployments&quot;</span><br>      - <span class="hljs-string">&quot;replicasets&quot;</span><br>      - <span class="hljs-string">&quot;ingresses&quot;</span><br>      - <span class="hljs-string">&quot;networkpolicies&quot;</span><br>      - <span class="hljs-string">&quot;poddisruptionbudgets&quot;</span><br>    verbs:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>---<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRole<br>metadata:<br>  name: template-cluster-resources___read-only<br>rules:<br>  - apiGroups:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    resources:<br>      - <span class="hljs-string">&quot;componentstatuses&quot;</span><br>      - <span class="hljs-string">&quot;namespaces&quot;</span><br>      - <span class="hljs-string">&quot;nodes&quot;</span><br>      - <span class="hljs-string">&quot;persistentvolumes&quot;</span><br>      - <span class="hljs-string">&quot;mutatingwebhookconfigurations&quot;</span><br>      - <span class="hljs-string">&quot;validatingwebhookconfigurations&quot;</span><br>      - <span class="hljs-string">&quot;customresourcedefinitions&quot;</span><br>      - <span class="hljs-string">&quot;apiservices&quot;</span><br>      - <span class="hljs-string">&quot;tokenreviews&quot;</span><br>      - <span class="hljs-string">&quot;selfsubjectaccessreviews&quot;</span><br>      - <span class="hljs-string">&quot;selfsubjectrulesreviews&quot;</span><br>      - <span class="hljs-string">&quot;subjectaccessreviews&quot;</span><br>      - <span class="hljs-string">&quot;certificatesigningrequests&quot;</span><br>      - <span class="hljs-string">&quot;runtimeclasses&quot;</span><br>      - <span class="hljs-string">&quot;podsecuritypolicies&quot;</span><br>      - <span class="hljs-string">&quot;clusterrolebindings&quot;</span><br>      - <span class="hljs-string">&quot;clusterroles&quot;</span><br>      - <span class="hljs-string">&quot;priorityclasses&quot;</span><br>      - <span class="hljs-string">&quot;csidrivers&quot;</span><br>      - <span class="hljs-string">&quot;csinodes&quot;</span><br>      - <span class="hljs-string">&quot;storageclasses&quot;</span><br>      - <span class="hljs-string">&quot;volumeattachment&quot;</span><br>    verbs: [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>]<br>---<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRole<br>metadata:<br>  name: template-cluster-resources___admin<br>rules:<br>  - apiGroups:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    resources:<br>      - <span class="hljs-string">&quot;componentstatuses&quot;</span><br>      - <span class="hljs-string">&quot;namespaces&quot;</span><br>      - <span class="hljs-string">&quot;nodes&quot;</span><br>      - <span class="hljs-string">&quot;persistentvolumes&quot;</span><br>      - <span class="hljs-string">&quot;mutatingwebhookconfigurations&quot;</span><br>      - <span class="hljs-string">&quot;validatingwebhookconfigurations&quot;</span><br>      - <span class="hljs-string">&quot;customresourcedefinitions&quot;</span><br>      - <span class="hljs-string">&quot;apiservices&quot;</span><br>      - <span class="hljs-string">&quot;tokenreviews&quot;</span><br>      - <span class="hljs-string">&quot;selfsubjectaccessreviews&quot;</span><br>      - <span class="hljs-string">&quot;selfsubjectrulesreviews&quot;</span><br>      - <span class="hljs-string">&quot;subjectaccessreviews&quot;</span><br>      - <span class="hljs-string">&quot;certificatesigningrequests&quot;</span><br>      - <span class="hljs-string">&quot;runtimeclasses&quot;</span><br>      - <span class="hljs-string">&quot;podsecuritypolicies&quot;</span><br>      - <span class="hljs-string">&quot;clusterrolebindings&quot;</span><br>      - <span class="hljs-string">&quot;clusterroles&quot;</span><br>      - <span class="hljs-string">&quot;priorityclasses&quot;</span><br>      - <span class="hljs-string">&quot;csidrivers&quot;</span><br>      - <span class="hljs-string">&quot;csinodes&quot;</span><br>      - <span class="hljs-string">&quot;storageclasses&quot;</span><br>      - <span class="hljs-string">&quot;volumeattachment&quot;</span><br>    verbs: [<span class="hljs-string">&quot;*&quot;</span>]<br><br><br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRole<br>metadata:<br>  name: template-namespaced-resources___test<br>rules:<br>  - apiGroups:<br>      - <span class="hljs-string">&quot;*&quot;</span><br>    resources:<br>      - <span class="hljs-string">&quot;pods&quot;</span><br>      - <span class="hljs-string">&quot;pods/log&quot;</span><br>      - <span class="hljs-string">&quot;pods/portforward&quot;</span><br>      - <span class="hljs-string">&quot;podtemplates&quot;</span><br>      - <span class="hljs-string">&quot;deployments&quot;</span><br>    verbs:<br>      - <span class="hljs-string">&quot;*&quot;</span><br></code></pre></td></tr></table></figure>
+<h1 id="用户分类"><a href="#用户分类" class="headerlink" title="用户分类"></a>用户分类</h1>K8s的用户分两种，一种是普通用户，一种是ServiceAccount（服务账户）。</li>
+</ul>
+<h2 id="普通用户"><a href="#普通用户" class="headerlink" title="普通用户"></a>普通用户</h2><p>普通用户是假定被外部或独立服务管理的。管理员分配私钥。平时常用的kubectl命令都是普通用户执行的。<br>如果是用户需求权限，则将Role与User(或Group)绑定(这需要创建User/Group)，是给用户使用的。</p>
+<h2 id="ServiceAccount（服务账户）"><a href="#ServiceAccount（服务账户）" class="headerlink" title="ServiceAccount（服务账户）"></a>ServiceAccount（服务账户）</h2><p>ServiceAccount（服务帐户）是由Kubernetes API管理的用户。它们绑定到特定的命名空间，并由API服务器自动创建或通过API调用手动创建。服务帐户与存储为Secrets的一组证书相关联，这些凭据被挂载到pod中，以便集群进程与Kubernetes API通信。（登录dashboard时我们使用的就是ServiceAccount）<br>如果是程序需求权限，将Role与ServiceAccount指定(这需要创建ServiceAccount并且在deployment中指定ServiceAccount)，是给程序使用的。<br>相当于Role是一个类，用作权限申明，User/Group/ServiceAccount将成为类的实例。</p>
+<p>工作流程图<br><img src="img.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="K8s角色-amp-角色绑定（以ServiceAccount展开讲解）"><a href="#K8s角色-amp-角色绑定（以ServiceAccount展开讲解）" class="headerlink" title="K8s角色&amp;角色绑定（以ServiceAccount展开讲解）"></a>K8s角色&amp;角色绑定（以ServiceAccount展开讲解）</h1><h2 id="授权介绍"><a href="#授权介绍" class="headerlink" title="授权介绍"></a>授权介绍</h2><p>在RABC API中，通过如下的步骤进行授权：</p>
+<p>定义角色：在定义角色时会指定此角色对于资源的访问控制的规则。<br>绑定角色：将主体与角色进行绑定，对用户进行访问授权。<br>角色</p>
+<p>Role：授权特定命名空间的访问权限<br>ClusterRole：授权所有命名空间的访问权限<br>角色绑定</p>
+<p>RoleBinding：将角色绑定到主体（即subject）<br>ClusterRoleBinding：将集群角色绑定到主体<br>主体（subject）</p>
+<p>User：用户<br>Group：用户组<br>ServiceAccount：服务账号<br><img src="img_1.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/viveksinghggits/akcess">akcess</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/k8s/">#k8s</a>
+      
+        <a href="/tags/akcess/">#akcess</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>kubernetus权限管理akcess</div>
+      <div>https://baymax55.github.io/2023/08/04/k8s/kubernetus权限管理akcess/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月4日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/04/k8s/k8s%E4%B9%8B%E7%90%86%E8%A7%A3%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C/" title="理解k8s容器网络">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">理解k8s容器网络</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/02/spring/spring-mvc/" title="spring-mvc">
+                        <span class="hidden-mobile">spring-mvc</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

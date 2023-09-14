@@ -1,0 +1,1005 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="GitOps 介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Argo CD 入门教程">
+<meta property="og:url" content="https://baymax55.github.io/2023/07/26/k8s/Argo%20CD%20%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="GitOps 介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/argo.png">
+<meta property="article:published_time" content="2023-07-26T06:21:36.121Z">
+<meta property="article:modified_time" content="2023-09-07T07:02:37.801Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="GitOps">
+<meta property="article:tag" content="devops">
+<meta property="article:tag" content="Argo CD">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/argo.png">
+  
+  
+  
+  <title>Argo CD 入门教程 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Argo CD 入门教程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-26 14:21" pubdate>
+          2023年7月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Argo CD 入门教程</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年9月7日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="Argo-CD-入门教程"><a href="#Argo-CD-入门教程" class="headerlink" title="Argo CD 入门教程"></a>Argo CD 入门教程</h2><p>Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的持续交付（continuous delivery, CD）工具，支持多种配置管理工具，包括 ksonnet/jsonnet、kustomize 和 Helm 等。它的配置和使用非常简单，并且自带一个简单易用的可视化界面。</p>
+<p>按照官方定义，Argo CD 被实现为一个 Kubernetes 控制器，它会持续监控正在运行的应用，并将当前的实际状态与 Git 仓库中声明的期望状态进行比较，如果实际状态不符合期望状态，就会更新应用的实际状态以匹配期望状态。</p>
+<p>在正式开始解读和使用 Argo CD 之前，我们需要先搞清楚为什么需要 Argo CD？它能给我们带来什么价值？</p>
+<h2 id="传统-CD-工作流"><a href="#传统-CD-工作流" class="headerlink" title="传统 CD 工作流"></a>传统 CD 工作流</h2><p>目前大多数 CI/CD 工具都使用基于 Push 的部署模式，例如 Jenkins、CircleCI 等。这种模式一般都会在 CI 流水线运行完成后执行一个命令（比如 kubectl）将应用部署到目标环境中。</p>
+<p>这种 CD 模式的缺陷很明显：</p>
+<ul>
+<li>  需要安装配置额外工具（比如 kubectl）；</li>
+<li>  需要 Kubernetes 对其进行授权；</li>
+<li>  需要云平台授权；</li>
+<li>  无法感知部署状态。也就无法感知期望状态与实际状态的偏差，需要借助额外的方案来保障一致性。</li>
+</ul>
+<p>下面以 Argo CD 为例，来看看遵循声明式 GitOps 理念的 CD 工具是怎么实现的。</p>
+<h2 id="使用-Argo-CD-的-CD-工作流"><a href="#使用-Argo-CD-的-CD-工作流" class="headerlink" title="使用 Argo CD 的 CD 工作流"></a>使用 Argo CD 的 CD 工作流</h2><p>和传统 CI/CD 工具一样，CI 部分并没有什么区别，无非就是测试、构建镜像、推送镜像、修改部署清单等等。重点在于 CD 部分。</p>
+<p>Argo CD 会被部署在 Kubernetes 集群中，使用的是基于 Pull 的部署模式，它会周期性地监控应用的实际状态，也会周期性地拉取 Git 仓库中的配置清单，并将实际状态与期望状态进行比较，如果实际状态不符合期望状态，就会更新应用的实际状态以匹配期望状态。</p>
+<p>无论是通过 CI 流水线触发更新 K8s 编排文件，还是 DevOps 工程师直接修改 K8s 编排文件，Argo CD 都会自动拉取最新的配置并应用到 K8s 集群中。</p>
+<p>最终会得到一个相互隔离的 CI 与 CD 流水线，CI 流水线通常由研发人员（或者 DevOps 团队）控制，CD 流水线通常由集群管理员（或者 DevOps 团队）控制。</p>
+<h2 id="Argo-CD-的优势"><a href="#Argo-CD-的优势" class="headerlink" title="Argo CD 的优势"></a>Argo CD 的优势</h2><p>下面我们来看看 Argo CD 相较于传统 CD 工具有哪些比较明显的优势。</p>
+<h3 id="Git-作为应用的唯一真实来源"><a href="#Git-作为应用的唯一真实来源" class="headerlink" title="Git 作为应用的唯一真实来源"></a>Git 作为应用的唯一真实来源</h3><p>所有 K8s 的声明式配置都保存在 Git 中，并把 Git 作为应用的唯一事实来源，我们不再需要手动更新应用（比如执行脚本，执行 kubectl apply 或者 helm install 命令），只需要通过统一的接口（Git）来更新应用。</p>
+<p>此外，Argo CD 不仅会监控 Git 仓库中声明的期望状态，还会监控集群中应用的实际状态，并将两种状态进行对比，只要实际状态不符合期望状态，实际状态就会被修正与期望状态一致。所以即使有人修改了集群中应用的状态（比如修改了副本数量），Argo CD 还是会将其恢复到之前的状态。<strong>这就真正确保了 Git 仓库中的编排文件可以作为集群状态的唯一真实来源。</strong></p>
+<p>当然，有时候我们需要快速更新应用并进行调试，通过 Git 来触发更新还是慢了点，这也不是没有办法，我们可以修改 Argo CD 的配置，使其不对手动修改的部分进行覆盖或者回退，而是直接发送告警，提醒管理员不要忘了将更新提交到 Git 仓库中。</p>
+<h3 id="快速回滚"><a href="#快速回滚" class="headerlink" title="快速回滚"></a>快速回滚</h3><p>Argo CD 会定期拉取最新配置并应用到集群中，一旦最新的配置导致应用出现了故障（比如应用启动失败），我们可以通过 Git History 将应用状态快速恢复到上一个可用的状态。</p>
+<p>如果你有多个 Kubernetes 集群使用同一个 Git 仓库，这个优势会更明显，因为你不需要分别在不同的集群中通过 <code>kubectl delete</code> 或者 <code>helm uninstall</code> 等手动方式进行回滚，只需要将 Git 仓库回滚到上一个可用的版本，Argo CD 便会自动同步。</p>
+<h3 id="集群灾备"><a href="#集群灾备" class="headerlink" title="集群灾备"></a>集群灾备</h3><p>如果你在 青云北京3区中的 KubeSphere集群出现故障，且短期内不可恢复，可以直接创建一个新集群，然后将 Argo CD 连接到 Git 仓库，这个仓库包含了整个集群的所有配置声明。最终新集群的状态会与之前旧集群的状态一致，完全不需要人工干预。</p>
+<h3 id="使用-Git-实现访问控制"><a href="#使用-Git-实现访问控制" class="headerlink" title="使用 Git 实现访问控制"></a>使用 Git 实现访问控制</h3><p>通常在生产环境中是不允许所有人访问 Kubernetes 集群的，如果直接在 Kubernetes 集群中控制访问权限，必须要使用复杂的 RBAC 规则。在 Git 仓库中控制权限就比较简单了，例如所有人（DevOps 团队，运维团队，研发团队，等等）都可以向仓库中提交 Pull Request，但只有高级工程师可以合并 Pull Request。</p>
+<p>这样做的好处是，除了集群管理员和少数人员之外，其他人不再需要直接访问 Kubernetes 集群，只需访问 Git 仓库即可。对于程序而言也是如此，类似于 Jenkins 这样的 CI 工具也不再需要访问 Kubernetes 的权限，因为只有 Argo CD 才可以 apply 配置清单，而且 Argo CD 已经部署在 Kubernetes 集群中，必要的访问权限已经配置妥当，这样就不需要给集群外的任意人或工具提供访问的证书，可以提供更强大的安全保障。</p>
+<h3 id="扩展-Kubernetes"><a href="#扩展-Kubernetes" class="headerlink" title="扩展 Kubernetes"></a>扩展 Kubernetes</h3><p>虽然 Argo CD 可以部署在 Kubernetes 集群中，享受 Kubernetes 带来的好处，但这不是 Argo CD 专属的呀！Jenkins 不是也可以部署在 Kubernetes 中吗？Argo CD 有啥特殊的吗？</p>
+<p>那当然有了，没这金刚钻也不敢揽这瓷器活啊，Argo CD 巧妙地利用了 Kubernetes 集群中的很多功能来实现自己的目的，例如所有的资源都存储在 Etcd 集群中，利用 Kubernetes 的控制器来监控应用的实际状态并与期望状态进行对比，等等。</p>
+<p>这样做最直观的好处就是<strong>可以实时感知应用的部署状态</strong>。例如，当你在 Git 仓库中更新配置清单中的镜像版本后，Argo CD 会将集群中的应用更新到最新版本，你可以在 Argo CD 的可视化界面中实时查看更新状态（比如 Pod 创建成功，应用成功运行并且处于健康状态，或者应用运行失败需要进行回滚操作）。</p>
+<h2 id="Argo-CD-架构"><a href="#Argo-CD-架构" class="headerlink" title="Argo CD 架构"></a>Argo CD 架构</h2><p>从功能架构来看，Argo CD 主要有三个组件：API Server、Repository Server 和 Application Controller。从 GitOps 工作流的角度来看，总共分为 3 个阶段：检索、调谐和呈现。</p>
+<h3 id="检索-–-Repository-Server"><a href="#检索-–-Repository-Server" class="headerlink" title="检索 – Repository Server"></a>检索 – Repository Server</h3><p>检索阶段会克隆应用声明式配置清单所在的 Git 仓库，并将其缓存到本地存储。包含 Kubernetes 原生的配置清单、Helm Chart 以及 Kustomize 配置清单。履行这些职责的组件就是 <strong>Repository Server</strong>。</p>
+<h3 id="调谐-–-Application-Controller"><a href="#调谐-–-Application-Controller" class="headerlink" title="调谐 – Application Controller"></a>调谐 – Application Controller</h3><p>调谐（Reconcile）阶段是最复杂的，这个阶段会将 <strong>Repository Server</strong> 获得的配置清单与反映集群当前状态的实时配置清单进行对比，一旦检测到应用处于 <code>OutOfSync</code> 状态，<strong>Application Controller</strong> 就会采取修正措施，使集群的实际状态与期望状态保持一致。</p>
+<h3 id="呈现-–-API-Server"><a href="#呈现-–-API-Server" class="headerlink" title="呈现 – API Server"></a>呈现 – API Server</h3><p>最后一个阶段是呈现阶段，由 Argo CD 的 <strong>API Server</strong> 负责，它本质上是一个 gRPC/REST Server，提供了一个无状态的可视化界面，用于展示调谐阶段的结果。同时还提供了以下这些功能：</p>
+<ul>
+<li>  应用管理和状态报告；</li>
+<li>  调用与应用相关的操作（例如同步、回滚、以及用户自定义的操作）；</li>
+<li>  Git 仓库与集群凭证管理（以 Kubernetes Secret 的形式存储）；</li>
+<li>  为外部身份验证组件提供身份验证和授权委托；</li>
+<li>  RBAC 增强；</li>
+<li>  Git Webhook 事件的监听器/转发器。</li>
+</ul>
+<h2 id="部署-Argo-CD"><a href="#部署-Argo-CD" class="headerlink" title="部署 Argo CD"></a>部署 Argo CD</h2><p>Argo CD 有两种不同的部署模式：</p>
+<h3 id="多租户"><a href="#多租户" class="headerlink" title="多租户"></a>多租户</h3><p>Argo CD 最常用的部署模式是多租户，一般如果组织内部包含多个应用研发团队，就会采用这种部署模式。用户可以使用可视化界面或者 argocd CLI 来访问 Argo CD。argocd CLI 必须先通过 <code>argocd login &lt;server-host&gt;</code> 来获取 Argo CD 的访问授权。</p>
+<pre><code class="hljs">$ argocd login SERVER [flags]
+
+## Login to Argo CD using a username and password
+$ argocd login cd.argoproj.io
+
+## Login to Argo CD using SSO
+$ argocd login cd.argoproj.io --sso
+
+## Configure direct access using Kubernetes API server
+$ argocd login cd.argoproj.io --core
+</code></pre>
+<p>多租户模式提供了两种不同的配置清单：</p>
+<h4 id="非高可用"><a href="#非高可用" class="headerlink" title="非高可用"></a>非高可用</h4><p>推荐用于测试和演示环境，不推荐在生产环境下使用。有两种部署清单可供选择：</p>
+<ul>
+<li>  <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-cd/blob/master/manifests/install.yaml">install.yaml</a> - 标准的 Argo CD 部署清单，拥有集群管理员权限。可以使用 Argo CD 在其运行的集群内部署应用程序，也可以通过接入外部集群的凭证将应用部署到外部集群中。</li>
+<li>  <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-cd/blob/master/manifests/namespace-install.yaml">namespace-install.yaml</a> - 这个部署清单只需要 namespace 级别的权限。如果你不需要在 Argo CD 运行的集群中部署应用，只需通过接入外部集群的凭证将应用部署到外部集群中，推荐使用此部署清单。还有一种花式玩法，你可以为每个团队分别部署单独的 Argo CD 实例，但是每个 Argo CD 实例都可以使用特殊的凭证（例如 <code>argocd cluster add &lt;CONTEXT&gt; --in-cluster --namespace &lt;YOUR NAMESPACE&gt;</code>）将应用部署到同一个集群中（即 <code>kubernetes.svc.default</code>，也就是内部集群）。</li>
+</ul>
+<blockquote>
+<p>⚠️注意：namespace-install.yaml 配置清单中并不包含 Argo CD 的 CRD，需要自己提前单独部署：<code>kubectl apply -k https://github.com/argoproj/argo-cd/manifests/crds\?ref\=stable</code>。</p>
+</blockquote>
+<h4 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h4><p>与非高可用部署清单包含的组件相同，但增强了高可用能力和弹性能力，推荐在生产环境中使用。</p>
+<ul>
+<li>  <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-cd/blob/master/manifests/ha/install.yaml">ha/install.yaml</a> - 与上文提到的 install.yaml 的内容相同，但配置了相关组件的多个副本。</li>
+<li>  <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-cd/blob/master/manifests/ha/namespace-install.yaml">ha/namespace-install.yaml</a> - 与上文提到的 namespace-install.yaml 相同，但配置了相关组件的多个副本。</li>
+</ul>
+<h3 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h3><p>Core 模式也就是最精简的部署模式，不包含 API Server 和可视化界面，只部署了每个组件的轻量级（非高可用）版本。</p>
+<p>用户需要 Kubernetes 访问权限来管理 Argo CD，因此必须使用下面的命令来配置 argocd CLI：</p>
+<pre><code class="hljs">$ kubectl config set-context --current --namespace=argocd # change current kube context to argocd namespace
+$ argocd login --core
+</code></pre>
+<p>也可以使用命令 <code>argocd admin dashboard</code> 手动启用可视化界面。</p>
+<p>具体的配置清单位于 Git 仓库中的 <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-cd/blob/master/manifests/core-install.yaml">core-install.yaml</a>。</p>
+<hr>
+<p>除了直接通过原生的配置清单进行部署，Argo CD 还支持额外的配置清单管理工具。</p>
+<h3 id="Kustomize"><a href="#Kustomize" class="headerlink" title="Kustomize"></a>Kustomize</h3><p>Argo CD 配置清单也可以使用 Kustomize 来部署，建议通过远程的 URL 来调用配置清单，使用 patch 来配置自定义选项。</p>
+<pre><code class="hljs">apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+resources:
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/ha/install.yaml
+</code></pre>
+<h3 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h3><p>Argo CD 的 Helm Chart 目前由社区维护，地址： <a target="_blank" rel="noopener" href="https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd">https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd</a>。</p>
+<hr>
+<p>下面演示一下部署过程。如果没有现成的 Kubernetes 环境，可以通过 <a target="_blank" rel="noopener" href="https://kubesphere.cloud/console/resource/">KubeSphere Cloud 托管集群服务</a>快速创建一个，免费体验时间为 2 小时，到期后集群会自动删除，可不限次重建。</p>
+<p>创建 Kubernetes 集群的过程很简单，首先注册登录 <a target="_blank" rel="noopener" href="https://kubesphere.cloud/">https://kubesphere.cloud</a> 控制台，然后点击 <strong>托管集群服务</strong> 打开 <strong>新建 Kubernetes 集群</strong> 页面，填写集群名称，选择运行环境，点击 <strong>新建</strong> 菜单即可创建集群。</p>
+<p>几秒钟之后便会创建完毕，并显示集群基本信息。下载 kubeconfig，便可使用 kubectl 来访问集群。</p>
+<p>接下来开始部署 Argo CD：</p>
+<pre><code class="hljs">$ kubectl create namespace argocd
+$ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+</code></pre>
+<p>查看部署结果：</p>
+<pre><code class="hljs">$ kubectl -n argocd get pod
+argocd-applicationset-controller-69879c47c-pcbkg   1/1     Running   0          26m
+argocd-notifications-controller-6b4b74d8d8-s7mrz   1/1     Running   0          26m
+argocd-redis-65596bf87-2hzcv                       1/1     Running   0          26m
+argocd-dex-server-78c9764884-6lcww                 1/1     Running   0          26m
+argocd-repo-server-657d46f8b-87rzq                 1/1     Running   0          26m
+argocd-application-controller-0                    1/1     Running   0          26m
+argocd-server-6b48df79dd-b7bkw                     1/1     Running   0          26m
+</code></pre>
+<h2 id="访问-Argo-CD"><a href="#访问-Argo-CD" class="headerlink" title="访问 Argo CD"></a>访问 Argo CD</h2><p>部署完成后，可以通过 Service <code>argocd-server</code> 来访问可视化界面。</p>
+<pre><code class="hljs">$ kubectl -n argocd get svc                                                             
+NAME                                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller          ClusterIP   10.105.250.212   &lt;none&gt;        7000/TCP,8080/TCP            5m10s
+argocd-dex-server                         ClusterIP   10.108.88.97     &lt;none&gt;        5556/TCP,5557/TCP,5558/TCP   5m10s
+argocd-metrics                            ClusterIP   10.103.11.245    &lt;none&gt;        8082/TCP                     5m10s
+argocd-notifications-controller-metrics   ClusterIP   10.98.136.200    &lt;none&gt;        9001/TCP                     5m9s
+argocd-redis                              ClusterIP   10.110.151.108   &lt;none&gt;        6379/TCP                     5m9s
+argocd-repo-server                        ClusterIP   10.109.131.197   &lt;none&gt;        8081/TCP,8084/TCP            5m9s
+argocd-server                             ClusterIP   10.98.23.255     &lt;none&gt;        80/TCP,443/TCP               5m9s
+argocd-server-metrics                     ClusterIP   10.103.184.121   &lt;none&gt;        8083/TCP                     5m8s
+</code></pre>
+<p>如果你的客户端可以直连 Service IP，那就直接可以通过 argocd-server 的 Cluster IP 来访问。或者可以直接通过本地端口转发来访问：</p>
+<pre><code class="hljs">$ kubectl port-forward svc/argocd-server -n argocd 8080:443
+Forwarding from 127.0.0.1:8080 -&gt; 8080
+Forwarding from [::1]:8080 -&gt; 8080
+</code></pre>
+<p>初始密码以明文形式存储在 Secret <code>argocd-initial-admin-secret</code> 中，可以通过以下命令获取：</p>
+<pre><code class="hljs">$ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=&quot;&#123;.data.password&#125;&quot; | base64 -d; echo
+</code></pre>
+<p>也可以通过以下命令来修改登录密码：</p>
+<pre><code class="hljs">$ argocd account update-password --account admin --current-password xxxx --new-password xxxx
+</code></pre>
+<p>登录后的界面：</p>
+<h2 id="Argo-CD-核心概念"><a href="#Argo-CD-核心概念" class="headerlink" title="Argo CD 核心概念"></a>Argo CD 核心概念</h2><p>在正式开始使用 Argo CD 之前，需要先了解两个基本概念。</p>
+<h3 id="Argo-CD-Application"><a href="#Argo-CD-Application" class="headerlink" title="Argo CD Application"></a>Argo CD Application</h3><p>Argo CD 中的 Application 定义了 Kubernetes 资源的<strong>来源</strong>（Source）和<strong>目标</strong>（Destination）。来源指的是 Git 仓库中 Kubernetes 资源配置清单所在的位置，而目标是指资源在 Kubernetes 集群中的部署位置。</p>
+<p>来源可以是原生的 Kubernetes 配置清单，也可以是 Helm Chart 或者 Kustomize 部署清单。</p>
+<p>目标指定了 Kubernetes 集群中 API Server 的 URL 和相关的 namespace，这样 Argo CD 就知道将应用部署到哪个集群的哪个 namespace 中。</p>
+<p>简而言之，<strong>Application 的职责就是将目标 Kubernetes 集群中的 namespace 与 Git 仓库中声明的期望状态连接起来</strong>。</p>
+<p>Application 的配置清单示例：</p>
+<p>如果有多个团队，每个团队都要维护大量的应用，就需要用到 Argo CD 的另一个概念：<strong>项目</strong>（Project）。</p>
+<h3 id="Argo-CD-Project"><a href="#Argo-CD-Project" class="headerlink" title="Argo CD Project"></a>Argo CD Project</h3><p>Argo CD 中的项目（Project）可以用来对 Application 进行分组，不同的团队使用不同的项目，这样就实现了多租户环境。项目还支持更细粒度的访问权限控制：</p>
+<ul>
+<li>  限制部署内容（受信任的 Git 仓库）；</li>
+<li>  限制目标部署环境（目标集群和 namespace）；</li>
+<li>  限制部署的资源类型（例如 RBAC、CRD、DaemonSets、NetworkPolicy 等）；</li>
+<li>  定义项目角色，为 Application 提供 RBAC（例如 OIDC group 或者 JWT 令牌绑定）。</li>
+</ul>
+<h2 id="Demo-演示"><a href="#Demo-演示" class="headerlink" title="Demo 演示"></a>Demo 演示</h2><p>最后通过一个简单的示例来展示 Argo CD 的工作流程。</p>
+<h3 id="准备-Git-仓库"><a href="#准备-Git-仓库" class="headerlink" title="准备 Git 仓库"></a>准备 Git 仓库</h3><p>在 GitHub 上创建一个项目，取名为 <a target="_blank" rel="noopener" href="https://github.com/yangchuansheng/argocd-lab">argocd-lab</a>，为了方便实验将仓库设置为公共仓库。在仓库中新建 dev 目录，在目录中创建两个 YAML 配置清单，分别是 <code>deployment.yaml</code> 和 <code>service.yaml</code>。</p>
+<p>配置清单内容如下：</p>
+<pre><code class="hljs"># deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  selector:
+    app: myapp
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+</code></pre>
+<p>接下来在仓库根目录中创建一个 Application 的配置清单：</p>
+<pre><code class="hljs"># application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/yangchuansheng/argocd-lab.git
+    targetRevision: HEAD
+    path: dev
+  destination: 
+    server: https://kubernetes.default.svc
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true
+</code></pre>
+<p>参数解释：</p>
+<ul>
+<li><strong>syncPolicy</strong> : 指定自动同步策略和频率，不配置时需要手动触发同步。</li>
+<li><strong>syncOptions</strong> : 定义同步方式。<ul>
+<li>  <strong>CreateNamespace=true</strong> : 如果不存在这个 namespace，就会自动创建它。</li>
+</ul>
+</li>
+<li><strong>automated</strong> : 检测到实际状态与期望状态不一致时，采取的同步措施。<ul>
+<li>  <strong>selfHeal</strong> : 当集群世纪状态不符合期望状态时，自动同步。</li>
+<li>  <strong>prune</strong> : 自动同步时，删除 Git 中不存在的资源。</li>
+</ul>
+</li>
+</ul>
+<p>Argo CD 默认情况下<strong>每 3 分钟</strong>会检测 Git 仓库一次，用于判断应用实际状态是否和 Git 中声明的期望状态一致，如果不一致，状态就转换为 <code>OutOfSync</code>。默认情况下并不会触发更新，除非通过 <code>syncPolicy</code> 配置了自动同步。</p>
+<p>如果嫌周期性同步太慢了，也可以通过设置 Webhook 来使 Git 仓库更新时立即触发同步。具体的使用方式会放到后续的教程中，本文不再赘述。</p>
+<h3 id="创建-Application"><a href="#创建-Application" class="headerlink" title="创建 Application"></a>创建 Application</h3><p>现在万事具备，只需要通过 application.yaml 创建 Application 即可。</p>
+<pre><code class="hljs">$ kubectl apply -f application.yaml
+application.argoproj.io/myapp-argo-application created
+</code></pre>
+<p>在 Argo CD 可视化界面中可以看到应用已经创建成功了。</p>
+<p>点进去可以看到应用的同步详情和各个资源的健康状况。</p>
+<p><strong>如果你更新了 deployment.yaml 中的镜像，Argo CD 会自动检测到 Git 仓库中的更新，并且将集群中 Deployment 的镜像更新为 Git 仓库中最新设置的镜像版本。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了 Argo CD 的优势、架构和工作原理，并通过一个简单的示例对其功能进行演示，比如修改 Git 仓库内容后，可以自动触发更新。还可以通过 Event Source 和 Trigger 实现更多自动化部署的需求。</p>
+<h2 id="Refenences"><a href="#Refenences" class="headerlink" title="Refenences"></a>Refenences</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://icloudnative.io/posts/getting-started-with-argocd">Argo CD 入门教程</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/IT/" class="category-chain-item">IT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/k8s/">#k8s</a>
+      
+        <a href="/tags/GitOps/">#GitOps</a>
+      
+        <a href="/tags/devops/">#devops</a>
+      
+        <a href="/tags/Argo-CD/">#Argo CD</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Argo CD 入门教程</div>
+      <div>https://baymax55.github.io/2023/07/26/k8s/Argo CD 入门教程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月26日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/28/spring/spring-boot/" title="spring-boot">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">spring-boot</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/25/k8s/%E4%B8%BAkubernetes-dashboard%E5%88%9B%E5%BB%BAtoken,%E6%96%B9%E4%BE%BF%E9%A1%B5%E9%9D%A2%E8%AE%BF%E9%97%AE/" title="为kubernetes-dashboard创建token,方便页面访问">
+                        <span class="hidden-mobile">为kubernetes-dashboard创建token,方便页面访问</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

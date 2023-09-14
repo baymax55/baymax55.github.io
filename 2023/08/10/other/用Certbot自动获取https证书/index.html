@@ -1,0 +1,889 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用 Certbot 获取 Let’s Encrypt 证书并自动续期，使网站支持 HTTPS。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Certbot自动获取https证书">
+<meta property="og:url" content="https://baymax55.github.io/2023/08/10/other/%E7%94%A8Certbot%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96https%E8%AF%81%E4%B9%A6/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="使用 Certbot 获取 Let’s Encrypt 证书并自动续期，使网站支持 HTTPS。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/ssl.png">
+<meta property="article:published_time" content="2023-08-10T02:20:32.019Z">
+<meta property="article:modified_time" content="2023-09-01T06:29:43.899Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="ssl">
+<meta property="article:tag" content="dns-cloudflare">
+<meta property="article:tag" content="cloudflare">
+<meta property="article:tag" content="certbot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/ssl.png">
+  
+  
+  
+  <title>用Certbot自动获取https证书 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="用Certbot自动获取https证书"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-10 10:20" pubdate>
+          2023年8月10日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          10k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          84 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">用Certbot自动获取https证书</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年9月1日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <hr>
+<h1 id="Let’s-Encrypt"><a href="#Let’s-Encrypt" class="headerlink" title=" Let’s Encrypt"></a> Let’s Encrypt</h1><p>Let’s Encrypt 是一家全球性的证书颁发机构（CA），作为一个非营利性组织，它的任务是通过推广 HTTPS 来创建一个更加安全和尊重隐私的 Web 环境。Let’s Encrypt 提供了<strong>免费</strong>的 SSL 证书供每个人使用。</p>
+<p>Let’s Encrypt 使用自动化证书管理环境（ACME）协议来验证域名控制权以及颁发证书，使用 Certbot 首次连接 Let’s Encrypt 服务器时会要求输入邮箱等信息来自动创建账户，帐户 ID 可以在 <code>/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/&lt;ID&gt;</code> 路径中找到，如果在使用中遇到问题，可以提供账户 ID 信息进行反馈。</p>
+<h1 id="SSL证书类型"><a href="#SSL证书类型" class="headerlink" title="SSL证书类型"></a>SSL证书类型</h1><p>目前主流的 SSL 证书有以下三种：</p>
+<ul>
+<li>  域名验证型（DV）证书：通过验证域名所有权即可签发证书，只验证网站域名所有权，适合个人和小微企业申请，能起到加密传输的作用，但是证书中无法显示企业信息。</li>
+<li>  组织验证型（OV）证书：通过验证域名所有权和申请企业的真实身份信息才能签发证书，适合中型企业和互联网业务申请，能通过证书查看到企业相关信息。</li>
+<li>  扩展验证型（EV）证书：在 OV 证书的基础上额外验证企业的其他相关信息，比如 GoDaddy 会在在授予企业 EV 证书前验证企业是否符合以下条件：已合法注册、目前正常运营、位于所列地址、所列电话号码有效、拥有网站域名。多使用于银行、金融、证券、支付等高安全标准行业。</li>
+</ul>
+<p>Let’s Encrypt 提供的是域名验证型（DV）证书，不提供组织验证型（OV）或扩展验证型（EV）证书。</p>
+<h1 id="Certbot安装流程"><a href="#Certbot安装流程" class="headerlink" title="Certbot安装流程"></a>Certbot安装流程</h1><p>Let’s Encrypt 官方推荐使用 Cerbot 来自动执行证书的颁发和安装，Cerbot 团队建议大多数用户通过 snap 这个包管理工具来安装 Certbot，以避免其他包管理系统上发行的 Cerbot 因为未及时更新而存在问题。因此 Certbot 的安装分为两步：</p>
+<ol>
+<li> 安装 snap；</li>
+<li> 通过 snap 安装 Certbot。</li>
+</ol>
+<p>如果使用的是其他 Linux 发行版可以查阅 <a target="_blank" rel="noopener" href="https://certbot.eff.org/instructions">certbot instructions</a> 。</p>
+<p>下面简单介绍下 Certbot 在 CentOS 7 和 Denian 系统下的安装流程。</p>
+<h2 id="安装snap"><a href="#安装snap" class="headerlink" title="安装snap"></a>安装snap</h2><h3 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h3><p>CentOS 7 下 snap 的安装过程参考自官方教程：<a target="_blank" rel="noopener" href="https://snapcraft.io/docs/installing-snap-on-centos">Installing snap on CentOS</a> 。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">将EPEL扩展库添加到CentOS 7</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">yum install epel-release</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">安装snapd</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">yum install snapd</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">启用snapd.socket</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">systemctl <span class="hljs-built_in">enable</span> --now snapd.socket</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">创建软链接，用来启用classic snap支持</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">ln</span> -s /var/lib/snapd/snap /snap</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">确保snapd版本是最新的</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">snap install core</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">snap refresh core</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">移除yum上的certbot，进一步确保certbot是通过snap安装的</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">yum remove certbot</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h3><p>Debian 下可以直接通过 <code>apt</code> 安装 <code>snap</code>：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$ </span>apt update<br><span class="hljs-variable">$ </span>apt install snapd<br><span class="hljs-variable">$ </span>snap install core<br><span class="hljs-variable">$ </span>snap refresh core<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="安装Certbot"><a href="#安装Certbot" class="headerlink" title="安装Certbot"></a><a href="#%E5%AE%89%E8%A3%85Certbot" title="安装Certbot"></a>安装Certbot</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 安装Certbot</span><br>$ snap install --classic certbot<br><br><span class="hljs-comment"># 创建软链接，使certbot命令可以正常使用</span><br>$ ln -s <span class="hljs-regexp">/snap/</span>bin<span class="hljs-regexp">/certbot /u</span>sr<span class="hljs-regexp">/bin/</span>certbot<br></code></pre></td></tr></table></figure>
+
+
+
+<ol start="5">
+<li> 访问网站，验证是否启用 HTTPS：</li>
+</ol>
+<h1 id="使用Certbot"><a href="#使用Certbot" class="headerlink" title="使用Certbot"></a>使用Certbot</h1><p>Certbot 提供了两个功能：</p>
+<ol>
+<li> 获取证书：自动验证对域名的控制，将证书保存到 <code>/etc/letsencrypt/live/</code> 并定期更新。</li>
+<li> 安装证书：通过自动修改服务器的配置，将该证书安装到受支持的 Web 服务器（如 Apache 或 Nginx）和其他类型的服务器。</li>
+</ol>
+<p>申请证书时常见的两种场景：</p>
+<ol>
+<li> 为每个域名申请独立的证书：Nginx 中配置了一个或多个域名，为每个域名（包括子域名）申请独立的证书并启用 HTTPS；</li>
+<li> 主域名和多个子域名共用同一个通配符证书：Nginx 中除了主域名还配置了多个子域名，比如 <code>sannaha.moe</code>、<code>watermelonrank.sannaha.moe</code>、<code>bigwatermelon.sannaha.moe</code>，申请一个通配符证书可以用于所有子域名。</li>
+</ol>
+<h2 id="独立证书"><a href="#独立证书" class="headerlink" title="独立证书"></a>独立证书</h2><h3 id="申请独立证书"><a href="#申请独立证书" class="headerlink" title="申请独立证书"></a>申请独立证书</h3><p>Certbot 可以读取 Nginx 配置，列出这些域名并让用户选择为哪些域名申请证书。这里为 <code>sannaha.moe</code> 和 <code>thinklong.me</code> 两个域名分别申请证书：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-meta"># 为运行在Nginx上的网站配置HTTPS</span><br><span class="hljs-meta"># 申请后Certbot会自动修改Nginx配置，建议在使用该命令前备份Nginx配置文件</span><br>$ certbot --nginx<br><span class="hljs-meta"># 首次访问Let’s Encrypt服务器时需要根据提示创建账户</span><br>Saving <span class="hljs-keyword">debug</span> <span class="hljs-built_in">log</span> to /var/<span class="hljs-built_in">log</span>/letsencrypt/letsencrypt.log<br>Enter email <span class="hljs-built_in">address</span> (used <span class="hljs-keyword">for</span> urgent renewal and security notices)<br> (Enter &#x27;c&#x27; to cancel): &lt;email<span class="hljs-comment">@sannaha.moe&gt;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">Please read the Terms of Service at</span><br><span class="hljs-comment">https://letsencrypt.org/documents/LE-SA-v1.3-September-21-2022.pdf. You must</span><br><span class="hljs-comment">agree in order to register with the ACME server. Do you agree?</span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">(Y)es/(N)o: Y</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">Would you be willing, once your first certificate is successfully issued, to</span><br><span class="hljs-comment">share your email address with the Electronic Frontier Foundation, a founding</span><br><span class="hljs-comment">partner of the Let&#x27;s Encrypt project and the non-profit organization that</span><br><span class="hljs-comment">develops Certbot? We&#x27;d like to send you email about our work encrypting the web,</span><br><span class="hljs-comment">EFF news, campaigns, and ways to support digital freedom.</span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">(Y)es/(N)o: N</span><br><span class="hljs-comment">Account registered.</span><br><span class="hljs-comment"></span><br><span class="hljs-comment"># 选择要申请证书的域名</span><br><span class="hljs-comment">Which names would you like to activate HTTPS for?</span><br><span class="hljs-comment">We recommend selecting either all domains, or all domains in a VirtualHost/server block.</span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">1: sannaha.moe</span><br><span class="hljs-comment">2: thinklong.me</span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">Select the appropriate numbers separated by commas and/or spaces, or leave input</span><br><span class="hljs-comment">blank to select all options shown (Enter &#x27;c&#x27; to cancel): 1,2</span><br><span class="hljs-comment">Requesting a certificate for sannaha.moe and thinklong.me</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">Successfully received certificate.</span><br><span class="hljs-comment">Certificate is saved at: /etc/letsencrypt/live/sannaha.moe/fullchain.pem</span><br><span class="hljs-comment">Key is saved at:         /etc/letsencrypt/live/sannaha.moe/privkey.pem</span><br><span class="hljs-comment">This certificate expires on 2023-02-15.</span><br><span class="hljs-comment">These files will be updated when the certificate renews.</span><br><span class="hljs-comment">Certbot has set up a scheduled task to automatically renew this certificate in the background.</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">Deploying certificate</span><br><span class="hljs-comment">Successfully deployed certificate for sannaha.moe to /etc/nginx/conf.d/sannaha.conf</span><br><span class="hljs-comment">Successfully deployed certificate for thinklong.me to /etc/nginx/conf.d/thinklong.conf</span><br><span class="hljs-comment">Congratulations! You have successfully enabled HTTPS on https://sannaha.moe and https://thinklong.me</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br><span class="hljs-comment">If you like Certbot, please consider supporting our work by:</span><br><span class="hljs-comment"> * Donating to ISRG / Let&#x27;s Encrypt:   https://letsencrypt.org/donate</span><br><span class="hljs-comment"> * Donating to EFF:                    https://eff.org/donate-le</span><br><span class="hljs-comment">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Nginx配置改动"><a href="#Nginx配置改动" class="headerlink" title="Nginx配置改动"></a>Nginx配置改动</h3><p>申请后 Certbot 会自动对 Nginx 配置进行修改：配置 SSL 证书路径、添加对 443 端口的监听、将 80 端口的访问请求 301 重定向到 HTTPS：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs awk">server &#123;<br>    server_name  sannaha.moe;<br>    root <span class="hljs-regexp">/home/gi</span>t<span class="hljs-regexp">/www/</span>hexo/;<br>    index index.html;<br>    error_page <span class="hljs-number">404</span> =<span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>sannaha.moe;<br><br>-   listen <span class="hljs-number">80</span> default_server;<br>-   listen [::]:<span class="hljs-number">80</span> default_server;<br>+   listen [::]:<span class="hljs-number">443</span> ssl; <span class="hljs-comment"># managed by Certbot</span><br>+   listen <span class="hljs-number">443</span> ssl; <span class="hljs-comment"># managed by Certbot</span><br>+   ssl_certificate <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem; <span class="hljs-comment"># managed by Certbot</span><br>+   ssl_certificate_key <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem; <span class="hljs-comment"># managed by Certbot</span><br>+   include <span class="hljs-regexp">/etc/</span>letsencrypt/options-ssl-nginx.conf; <span class="hljs-comment"># managed by Certbot</span><br>+   ssl_dhparam <span class="hljs-regexp">/etc/</span>letsencrypt/ssl-dhparams.pem; <span class="hljs-comment"># managed by Certbot</span><br>&#125;<br><br>+ server &#123;<br>+    <span class="hljs-keyword">if</span> (<span class="hljs-variable">$host</span> = sannaha.moe) &#123;<br>+        return <span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span><span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;<br>+    &#125; <span class="hljs-comment"># managed by Certbot</span><br>+    server_name  sannaha.moe;<br>+    listen <span class="hljs-number">80</span> default_server;<br>+    listen [::]:<span class="hljs-number">80</span> default_server;<br>+    return <span class="hljs-number">404</span>; <span class="hljs-comment"># managed by Certbot</span><br>+ &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="通配符证书"><a href="#通配符证书" class="headerlink" title="通配符证书"></a>通配符证书</h2><p>通配符证书的使用过程要麻烦一些，需要根据域名选用的 DNS 提供商安装对应的 DNS 插件，授权 Certbot 访问 DNS 提供商，验证对域名的控制权。</p>
+<h3 id="安装DNS插件"><a href="#安装DNS插件" class="headerlink" title="安装DNS插件"></a>安装DNS插件</h3><p>Certbot 支持的 DNS 插件列表可以查阅 <a target="_blank" rel="noopener" href="https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins">dns-plugins</a> 。比如 DNS 提供商是 cloudflare，需要安装 <a target="_blank" rel="noopener" href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">certbot-dns-cloudflare</a> ：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">$ snap <span class="hljs-keyword">install</span> certbot-dns-cloudflare<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取token"><a href="#获取token" class="headerlink" title="获取token"></a>获取token</h3><p>访问 <a target="_blank" rel="noopener" href="https://dash.cloudflare.com/profile/api-tokens">cloudflare 控制台</a> 获取 token。出于安全考虑，建议不要使用秘钥，而是为 Certbot 创建单独的 API 令牌。</p>
+<ol>
+<li><p> 创建 API 令牌</p>
+</li>
+<li><p> 选择 API 令牌模板为“编辑区域 DNS”</p>
+</li>
+<li><p> 填写令牌信息，选择要管理的域名</p>
+</li>
+<li><p> 确认摘要信息</p>
+</li>
+<li><p> 创建成功</p>
+</li>
+</ol>
+<h3 id="创建凭据文件"><a href="#创建凭据文件" class="headerlink" title="创建凭据文件"></a>创建凭据文件</h3><p>Certbot 是通过 <code>ini</code> 凭据文件读取 token 的，因此需要编写一个下面这样的文件：</p>
+<p>/root/cf.ini</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment"># Cloudflare API token used by Certbot</span><br><span class="hljs-attr">dns_cloudflare_api_token</span> = <span class="hljs-number">0123456789</span>abcdef0123456789abcdef01234567<br></code></pre></td></tr></table></figure>
+
+
+
+<p>修改凭据文件的权限，限制其他用户的访问：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">限制其他用户对凭据文件的访问</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">如果Certbot检测到凭据文件可以被其他用户访问，它会显示警告信息</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">chmod</span> 600 /root/cf.ini</span> <br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="申请通配符证书"><a href="#申请通配符证书" class="headerlink" title="申请通配符证书"></a>申请通配符证书</h3><p>申请通配符证书但不安装（不修改 Nginx 配置），填写 cloudflare 凭据文件路径，指定申请的域名：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">  certbot certonly \<br>  --dns-cloudflare \<br>  --dns-cloudflare-credentials <span class="hljs-regexp">/root/</span>cf.ini \<br>  -d sannaha.moe \<br>  -d *.sannaha.moe<br>  <br>  <br>Successfully received certificate.<br>Certificate is saved at: <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem<br>Key is saved at:         <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">certbot certonly \<br>  <span class="hljs-attr">--dns-cloudflare</span> \<br>  <span class="hljs-attr">--dns-cloudflare-credentials</span> /root/<span class="hljs-number">21535</span><span class="hljs-selector-class">.xyz</span><span class="hljs-selector-class">.cf</span><span class="hljs-selector-class">.ini</span> \<br>  -d <span class="hljs-number">215315</span><span class="hljs-selector-class">.xyz</span> \<br>  -d *.<span class="hljs-number">215315</span><span class="hljs-selector-class">.xyz</span><br><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="修改Nginx配置"><a href="#修改Nginx配置" class="headerlink" title="修改Nginx配置"></a>修改Nginx配置</h3><p>申请到证书后需要手动修改 Nginx 配置，修改内容可以参考上面的 <a href="#Nginx%E9%85%8D%E7%BD%AE%E6%94%B9%E5%8A%A8">Nginx配置改动</a> ，多个子域名共用刚才申请到的同一个证书。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># Game</span><br>server &#123;<br>    server_name  bigwatermelon.sannaha.moe;<br>    root <span class="hljs-regexp">/data/</span>website<span class="hljs-regexp">/bigwatermelon/</span>;<br>    index index.html;<br>    <br>    listen [::]:<span class="hljs-number">443</span> ssl;<br>    listen <span class="hljs-number">443</span> ssl;<br>    ssl_certificate <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem;<br>    ssl_certificate_key <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem;<br>    include <span class="hljs-regexp">/etc/</span>letsencrypt/options-ssl-nginx.conf;<br>    ssl_dhparam <span class="hljs-regexp">/etc/</span>letsencrypt/ssl-dhparams.pem;<br>    error_page <span class="hljs-number">404</span> =<span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>bigwatermelon.sannaha.moe;<br>&#125;<br><br>server &#123;<br>    server_name  bigwaterlemon.sannaha.moe prpr.sannaha.moe;<br>    listen [::]:<span class="hljs-number">443</span> ssl;<br>    listen <span class="hljs-number">443</span> ssl;<br>    ssl_certificate <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem;<br>    ssl_certificate_key <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem;<br>    include <span class="hljs-regexp">/etc/</span>letsencrypt/options-ssl-nginx.conf;<br>    ssl_dhparam <span class="hljs-regexp">/etc/</span>letsencrypt/ssl-dhparams.pem;<br>    return <span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>bigwatermelon.sannaha.moe<span class="hljs-variable">$request_uri</span>;<br>&#125;<br><br>server &#123;<br>    server_name  bigwatermelon.sannaha.moe bigwaterlemon.sannaha.moe prpr.sannaha.moe;<br>    listen       <span class="hljs-number">80</span>;<br>    listen       [::]:<span class="hljs-number">80</span>;<br>    return <span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>bigwatermelon.sannaha.moe<span class="hljs-variable">$request_uri</span>;<br>&#125;<br><br><span class="hljs-comment"># Rank</span><br>server &#123;<br>    server_name  watermelonrank.sannaha.moe;<br>    root <span class="hljs-regexp">/data/</span>website<span class="hljs-regexp">/watermelonrank/</span>;<br>    index index.html;<br>    <br>    listen [::]:<span class="hljs-number">443</span> ssl;<br>    listen <span class="hljs-number">443</span> ssl;<br>    ssl_certificate <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem;<br>    ssl_certificate_key <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem;<br>    include <span class="hljs-regexp">/etc/</span>letsencrypt/options-ssl-nginx.conf;<br>    ssl_dhparam <span class="hljs-regexp">/etc/</span>letsencrypt/ssl-dhparams.pem;<br>    error_page <span class="hljs-number">404</span> =<span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>watermelonrank.sannaha.moe;<br>&#125;<br><br>server &#123;<br>    server_name  watermelon.sannaha.moe;<br>    listen [::]:<span class="hljs-number">443</span> ssl;<br>    listen <span class="hljs-number">443</span> ssl;<br>    ssl_certificate <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem;<br>    ssl_certificate_key <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem;<br>    include <span class="hljs-regexp">/etc/</span>letsencrypt/options-ssl-nginx.conf;<br>    ssl_dhparam <span class="hljs-regexp">/etc/</span>letsencrypt/ssl-dhparams.pem;<br>    return <span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>watermelonrank.sannaha.moe<span class="hljs-variable">$request_uri</span>;<br>&#125;<br><br>server &#123;<br>    server_name  watermelonrank.sannaha.moe watermelon.sannaha.moe;<br>    listen       <span class="hljs-number">80</span>;<br>    listen       [::]:<span class="hljs-number">80</span>;<br>    return <span class="hljs-number">301</span> https:<span class="hljs-regexp">//</span>watermelonrank.sannaha.moe<span class="hljs-variable">$request_uri</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="管理证书"><a href="#管理证书" class="headerlink" title="管理证书"></a>管理证书</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 显示从Certbot获得的证书的信息</span><br>$ certbot certificates<br><br><span class="hljs-comment"># 撤销证书</span><br>$ certbot revoke --cert-name sannaha.moe<br><br><span class="hljs-comment"># 在不保存任何证书的情况下测试证书续订功能</span><br>$ certbot renew --dry-run<br>Saving debug log to <span class="hljs-regexp">/var/</span>log<span class="hljs-regexp">/letsencrypt/</span>letsencrypt.log<br><br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br>Processing <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/renewal/</span>sannaha.moe.conf<br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br>Account registered.<br>Simulating renewal of an existing certificate <span class="hljs-keyword">for</span> sannaha.moe and *.sannaha.moe<br>Waiting <span class="hljs-number">10</span> seconds <span class="hljs-keyword">for</span> DNS changes to propagate<br><br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br>Processing <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/renewal/</span>thinklong.me.conf<br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br>Simulating renewal of an existing certificate <span class="hljs-keyword">for</span> thinklong.me<br><br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br>Congratulations, all simulated renewals succeeded: <br>  <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem (success)<br>  <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>thinklong.me/fullchain.pem (success)<br>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用参数说明"><a href="#常用参数说明" class="headerlink" title="常用参数说明"></a>常用参数说明</h2><p><code>certbot</code> 命令详见：<a target="_blank" rel="noopener" href="https://eff-certbot.readthedocs.io/en/stable/using.html#certbot-commands">certbot-commands</a> 。</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-comment"># 获取证书，并安装</span><br><span class="hljs-variable">$ </span>certbot<br><br><span class="hljs-comment"># certonly:只申请证书，不安装</span><br><span class="hljs-variable">$ </span>certbot certonly<br><br><span class="hljs-comment"># -d:指定域名</span><br><span class="hljs-variable">$ </span>certbot --nginx -d sannaha.moe -d thinklong.me<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h2 id="启用HTTPS后无法打开网站"><a href="#启用HTTPS后无法打开网站" class="headerlink" title="启用HTTPS后无法打开网站"></a>启用HTTPS后无法打开网站</h2><ol>
+<li>检查服务器防火墙 443 端口是否打开。</li>
+<li>查看服务器端口能否被外部访问 <a target="_blank" rel="noopener" href="https://www.yougetsignal.com/tools/open-ports/">open-ports</a> 。</li>
+</ol>
+<h2 id="无法安装DNS插件"><a href="#无法安装DNS插件" class="headerlink" title="无法安装DNS插件"></a>无法安装DNS插件</h2><p>在 Debian 11 上安装 DNS 插件时报错，按照提示操作即可：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs applescript">$ snap install certbot-dns-cloudflare<br><span class="hljs-keyword">error</span>: cannot perform <span class="hljs-keyword">the</span> following tasks:<br>- Run hook prepare-plug-plugin <span class="hljs-keyword">of</span> snap <span class="hljs-string">&quot;certbot&quot;</span> (<span class="hljs-built_in">run</span> hook <span class="hljs-string">&quot;prepare-plug-plugin&quot;</span>: <br><span class="hljs-comment">-----</span><br>Only connect this interface <span class="hljs-keyword">if</span> you trust <span class="hljs-keyword">the</span> plugin author <span class="hljs-keyword">to</span> have root <span class="hljs-keyword">on</span> <span class="hljs-keyword">the</span> system.<br>Run `snap <span class="hljs-keyword">set</span> certbot trust-plugin-<span class="hljs-keyword">with</span>-root=ok` <span class="hljs-keyword">to</span> acknowledge this <span class="hljs-keyword">and</span> <span class="hljs-keyword">then</span> <span class="hljs-built_in">run</span> this command again <span class="hljs-keyword">to</span> perform <span class="hljs-keyword">the</span> connection.<br>If <span class="hljs-keyword">that</span> doesn&#x27;t work, you may need <span class="hljs-keyword">to</span> remove all certbot-dns-* plugins <span class="hljs-keyword">from</span> <span class="hljs-keyword">the</span> system, <span class="hljs-keyword">then</span> <span class="hljs-keyword">try</span> installing <span class="hljs-keyword">the</span> certbot snap again.<br><span class="hljs-comment">-----)</span><br>$ snap <span class="hljs-keyword">set</span> certbot trust-plugin-<span class="hljs-keyword">with</span>-root=ok<br>$ snap install certbot-dns-cloudflare<br>certbot-dns-cloudflare <span class="hljs-number">1.32</span><span class="hljs-number">.2</span> <span class="hljs-keyword">from</span> Certbot Project (certbot-eff✓) installed<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://sannaha.moe/Certbot/">用Certbot自动获取Let’s Encrypt证书</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%8A%98%E8%85%BE/" class="category-chain-item">折腾</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ssl/">#ssl</a>
+      
+        <a href="/tags/dns-cloudflare/">#dns-cloudflare</a>
+      
+        <a href="/tags/cloudflare/">#cloudflare</a>
+      
+        <a href="/tags/certbot/">#certbot</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>用Certbot自动获取https证书</div>
+      <div>https://baymax55.github.io/2023/08/10/other/用Certbot自动获取https证书/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/16/linux/iftop/" title="iftop">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">iftop</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/08/spring/Spring/" title="spring">
+                        <span class="hidden-mobile">spring</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
