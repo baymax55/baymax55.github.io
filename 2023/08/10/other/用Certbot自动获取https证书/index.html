@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://baymax55.github.io/img/index_img/ssl.png">
 <meta property="article:published_time" content="2023-08-10T02:20:32.019Z">
-<meta property="article:modified_time" content="2023-09-01T06:29:43.899Z">
+<meta property="article:modified_time" content="2023-10-16T08:43:34.238Z">
 <meta property="article:author" content="baymax55">
 <meta property="article:tag" content="ssl">
 <meta property="article:tag" content="dns-cloudflare">
@@ -285,7 +285,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2023年9月1日 下午
+                    本文最后更新于：2023年10月16日 下午
                   
                 
               </p>
@@ -377,7 +377,7 @@
 <h3 id="申请通配符证书"><a href="#申请通配符证书" class="headerlink" title="申请通配符证书"></a>申请通配符证书</h3><p>申请通配符证书但不安装（不修改 Nginx 配置），填写 cloudflare 凭据文件路径，指定申请的域名：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">  certbot certonly \<br>  --dns-cloudflare \<br>  --dns-cloudflare-credentials <span class="hljs-regexp">/root/</span>cf.ini \<br>  -d sannaha.moe \<br>  -d *.sannaha.moe<br>  <br>  <br>Successfully received certificate.<br>Certificate is saved at: <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/fullchain.pem<br>Key is saved at:         <span class="hljs-regexp">/etc/</span>letsencrypt<span class="hljs-regexp">/live/</span>sannaha.moe/privkey.pem<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">certbot certonly \<br>  <span class="hljs-attr">--dns-cloudflare</span> \<br>  <span class="hljs-attr">--dns-cloudflare-credentials</span> /root/<span class="hljs-number">21535</span><span class="hljs-selector-class">.xyz</span><span class="hljs-selector-class">.cf</span><span class="hljs-selector-class">.ini</span> \<br>  -d <span class="hljs-number">215315</span><span class="hljs-selector-class">.xyz</span> \<br>  -d *.<span class="hljs-number">215315</span><span class="hljs-selector-class">.xyz</span><br><br></code></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">certbot certonly \<br>  <span class="hljs-attr">--dns-cloudflare</span> \<br>  <span class="hljs-attr">--dns-cloudflare-credentials</span> /root/<span class="hljs-number">21535</span><span class="hljs-selector-class">.xyz</span><span class="hljs-selector-class">.cf</span><span class="hljs-selector-class">.ini</span> \<br>  -d *.<span class="hljs-number">215315</span><span class="hljs-selector-class">.xyz</span><br><br></code></pre></td></tr></table></figure>
 
 
 <h3 id="修改Nginx配置"><a href="#修改Nginx配置" class="headerlink" title="修改Nginx配置"></a>修改Nginx配置</h3><p>申请到证书后需要手动修改 Nginx 配置，修改内容可以参考上面的 <a href="#Nginx%E9%85%8D%E7%BD%AE%E6%94%B9%E5%8A%A8">Nginx配置改动</a> ，多个子域名共用刚才申请到的同一个证书。</p>
