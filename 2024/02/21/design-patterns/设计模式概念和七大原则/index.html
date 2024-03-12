@@ -1,0 +1,1190 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="baymax55">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="设计模式概念和七大原则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式概念和七大原则">
+<meta property="og:url" content="https://baymax55.github.io/2024/02/21/design-patterns/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%A6%82%E5%BF%B5%E5%92%8C%E4%B8%83%E5%A4%A7%E5%8E%9F%E5%88%99/index.html">
+<meta property="og:site_name" content="Baymax55&#39;s Blog">
+<meta property="og:description" content="设计模式概念和七大原则">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://baymax55.github.io/img/index_img/design_patterns.png">
+<meta property="article:published_time" content="2024-02-21T03:35:38.849Z">
+<meta property="article:modified_time" content="2024-02-21T03:40:25.096Z">
+<meta property="article:author" content="baymax55">
+<meta property="article:tag" content="设计模式">
+<meta property="article:tag" content="设计模式原则">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://baymax55.github.io/img/index_img/design_patterns.png">
+  
+  
+  
+  <title>设计模式概念和七大原则 - Baymax55&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"baymax55.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","app_key":"ldBS29kjWy4gjD9MCWKAWxyi","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Baymax55's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>baymax55</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="设计模式概念和七大原则"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-21 11:35" pubdate>
+          2024年2月21日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          103 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">设计模式概念和七大原则</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2024年2月21日 中午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h3 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h3><p>在GoF(Gang of Four)的书籍《Design Patterns - Elements of Reusable Object-Oriented Software(设计模式-可复用面向对象软件的基础)》中是这样定义设计模式的：Christopher Alexander说过：“每一个模式描述了一个在我们周围不断重复发生的问题以及该问题的解决方案的核心。这样，你就能一次又一次地使用该方案而不必做重复劳动” [AIS+77，第10页]。尽管Alexander所指的是城市和建筑模式，但他的思想也同样适用于面向对象设计模式，只是在面向对象的解决方案里， 我们用对象和接口代替了墙壁和门窗。两类模式的核心都在于提供了相关问题的解决方案。一般而言，设计模式有四个基本要素：</p>
+<ol>
+<li> 模式名称(pattern name)：一个助记名，它用一两个词来描述模式的问题、解决方案和效果。</li>
+<li> 问题(problem)：描述了应该在何时使用模式。</li>
+<li> 解决方案(solution)：描述了设计的组成成分，它们之间的相关关系以及各自的职责和协作方案。</li>
+<li> 效果(consequences)：描述了模式应用的效果以及使用模式应该权衡的问题。</li>
+</ol>
+<p>设计模式的创始人很明确地指出了设计模式的基本要素，但是由于现实中浮躁、偏向过度设计等因素的干扰，开发者很多时候会重点关注第1和第3点要素(过度关注设计模式和设计模式的实现)，忽略第2和第4点要素(忽视使用设计模式的场景和目标)，导致设计出来的编码逻辑可能过于复杂或者达不到预期的效果。</p>
+<p>总的来说，设计模式(Design Pattern)是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结。也就是本来并不存在所谓设计模式，用的人多了，也便成了设计模式。</p>
+<h3 id="设计模式的七大原则"><a href="#设计模式的七大原则" class="headerlink" title="设计模式的七大原则"></a>设计模式的七大原则</h3><p>面向对象的设计模式有七大基本原则：</p>
+<ul>
+<li>  开闭原则（Open Closed Principle，OCP）</li>
+<li>  单一职责原则（Single Responsibility Principle, SRP）</li>
+<li>  里氏代换原则（Liskov Substitution Principle，LSP）</li>
+<li>  依赖倒转原则（Dependency Inversion Principle，DIP）</li>
+<li>  接口隔离原则（Interface Segregation Principle，ISP）</li>
+<li>  合成/聚合复用原则（Composite/Aggregate Reuse Principle，CARP）</li>
+<li>  最少知识原则（Least Knowledge Principle，LKP）或者迪米特法则（Law of Demeter，LOD）</li>
+</ul>
+<hr>
+<table>
+<thead>
+<tr>
+<th>标记</th>
+<th>设计模式原则名称</th>
+<th>简单定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OCP</td>
+<td>开闭原则</td>
+<td>对扩展开放，对修改关闭</td>
+</tr>
+<tr>
+<td>SRP</td>
+<td>单一职责原则</td>
+<td>一个类只负责一个功能领域中的相应职责</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>里氏代换原则</td>
+<td>所有引用基类的地方必须能透明地使用其子类的对象</td>
+</tr>
+<tr>
+<td>DIP</td>
+<td>依赖倒转原则</td>
+<td>依赖于抽象，不能依赖于具体实现</td>
+</tr>
+<tr>
+<td>ISP</td>
+<td>接口隔离原则</td>
+<td>类之间的依赖关系应该建立在最小的接口上</td>
+</tr>
+<tr>
+<td>CARP</td>
+<td>合成/聚合复用原则</td>
+<td>尽量使用合成/聚合，而不是通过继承达到复用的目的</td>
+</tr>
+<tr>
+<td>LOD</td>
+<td>迪米特法则</td>
+<td>一个软件实体应当尽可能少的与其他实体发生相互作用</td>
+</tr>
+</tbody></table>
+<p>其中，单一职责原则、开闭原则、迪米特法则、里氏代换原则和接口隔离原则就是我们平常熟知的<strong>SOLID</strong>。</p>
+<p>这个表格看起来有点抽象，下面逐条分析。</p>
+<h3 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h3><p>开闭原则（Open Closed Principle，OCP）的定义是：一个软件实体如类、模块和函数应该对扩展开放，对修改关闭。模块应尽量在不修改原（是”原”，指原来的代码）代码的情况下进行扩展。</p>
+<h4 id="开闭原则的意义"><a href="#开闭原则的意义" class="headerlink" title="开闭原则的意义"></a>开闭原则的意义</h4><p>在软件的生命周期内，因为变化、升级和维护等原因需要对软件原有代码进行修改时，可能会给旧代码中引入错误，也可能会使我们不得不对整个功能进行重构，并且需要原有代码经过重新测试。当软件需要变化时，尽量通过扩展软件实体的行为来实现变化，而不是通过修改已有的代码来实现变化。</p>
+<h4 id="如何实现对扩展开放，对修改关闭"><a href="#如何实现对扩展开放，对修改关闭" class="headerlink" title="如何实现对扩展开放，对修改关闭"></a>如何实现对扩展开放，对修改关闭</h4><p>要实现对扩展开放，对修改关闭，即遵循开闭原则，需要对系统进行抽象化设计，抽象可以基于抽象类或者接口。一般来说需要做到几点：</p>
+<ol>
+<li> 通过接口或者抽象类约束扩展，对扩展进行边界限定，不允许出现在接口或抽象类中不存在的public方法，也就是扩展必须添加具体实现而不是改变具体的方法。</li>
+<li> 参数类型、引用对象尽量使用接口或者抽象类，而不是实现类，这样就能尽量保证抽象层是稳定的。</li>
+<li> 一般抽象模块设计完成(例如接口的方法已经敲定)，不允许修改接口或者抽象方法的定义。</li>
+</ol>
+<p>下面通过一个例子遵循开闭原则进行设计，场景是这样：某系统的后台需要监测业务数据展示图表，如柱状图、折线图等，在未来需要支持图表的着色操作。在开始设计的时候，代码可能是这样的：</p>
+<pre><code class="hljs">public class BarChart &#123;
+
+    public void draw()&#123;
+        System.out.println(&quot;Draw bar chart...&quot;);
+    &#125;
+&#125;
+
+public class LineChart &#123;
+
+    public void draw()&#123;
+        System.out.println(&quot;Draw line chart...&quot;);
+    &#125;
+&#125;
+
+public class App &#123;
+
+    public void drawChart(String type)&#123;
+        if (type.equalsIgnoreCase(&quot;line&quot;))&#123;
+            new LineChart().draw();
+        &#125;else if (type.equalsIgnoreCase(&quot;bar&quot;))&#123;
+            new BarChart().draw();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>这样做在初期是能满足业务需要的，开发效率也十分高，但是当后面需要新增一个饼状图的时候，既要添加一个饼状图的类，原来的客户端<code>App</code>类的<code>drawChart()</code>方法也要新增一个else if分支，这样做就是修改了原有客户端类库的方法，是十分不合理的。如果这个时候，在图中加入一个颜色属性，复杂性也大大提高。基于此，需要引入一个抽象<code>Chart</code>类<code>AbstractChart</code>，<code>App</code>类在画图的时候总是把相关的操作委托到具体的<code>AbstractChart</code>的派生类实例，这样的话<code>App</code>类的代码就不用修改：</p>
+<pre><code class="hljs">public abstract class AbstractChart &#123;
+
+    public abstract void draw();
+&#125;
+
+public class BarChart extends AbstractChart&#123;
+
+    @Override
+    public void draw() &#123;
+        System.out.println(&quot;Draw bar chart...&quot;);
+    &#125;
+&#125;
+
+public class LineChart extends AbstractChart &#123;
+
+    @Override
+    public void draw() &#123;
+        System.out.println(&quot;Draw line chart...&quot;);
+    &#125;
+&#125;
+
+public class App &#123;
+
+    public void drawChart(AbstractChart chart)&#123;
+        chart.draw();
+    &#125;
+&#125;
+</code></pre>
+<p>如果新加一种图，只需要新增一个<code>AbstractChart</code>的子类即可。客户端类<code>App</code>不需要改变原来的逻辑。修改后的设计符合开闭原则，因为整个系统在扩展时原有的代码没有做任何修改。</p>
+<h3 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h3><p>单一职责原则（Single Responsibility Principle, SRP）的定义是：指一个类或者模块应该有且只有一个改变的原因。如果一个类承担的职责过多，就等于把这些职责耦合在一起了。一个职责的变化可能会削弱或者抑制这个类完成其他职责的能力。这种耦合会导致脆弱的设计，当发生变化时，设计会遭受到意想不到的破坏。而如果想要避免这种现象的发生，就要尽可能的遵守单一职责原则。此原则的核心就是解耦和增强内聚性。</p>
+<h4 id="单一职责原则的意义"><a href="#单一职责原则的意义" class="headerlink" title="单一职责原则的意义"></a>单一职责原则的意义</h4><p>单一职责原则告诉我们：一个类不能做太多的东西。在软件系统中，一个类(一个模块、或者一个方法)承担的职责越多，那么其被复用的可能性就会越低。一个很典型的例子就是万能类。其实可以说一句大实话：任何一个常规的MVC项目，在极端的情况下，可以用一个类(甚至一个方法)完成所有的功能。但是这样做就会严重耦合，甚至牵一发动全身。一个类承(一个模块、或者一个方法)担的职责过多，就相当于将这些职责耦合在一起，当其中一个职责变化时，可能会影响其他职责的运作，因此要将这些职责进行分离，将不同的职责封装在不同的类中，即将不同的变化原因封装在不同的类中，如果多个职责总是同时发生改变则可将它们封装在同一类中。</p>
+<p>不过说实话，其实有的时候很难去衡量一个类的职责，主要是很难确定职责的粒度。这一点不仅仅体现在一个类或者一个模块中，也体现在采用微服务的分布式系统中。这也就是为什么我们在实施微服务拆分的时候经常会撕逼：”这个功能不应该发在A服务中，它不做这个领域的东西，应该放在B服务中”诸如此类的争论。存在争论是合理的，不过最好不要不了了之，而应该按照领域定义好每个服务的职责(职责的粒度最好找业务和架构专家咨询)，得出相对合理的职责分配。</p>
+<p>下面通过一个很简单的实例说明一下单一职责原则：</p>
+<p>在一个项目系统代码编写的时候，由于历史原因和人为的不规范，导致项目没有分层，一个<code>Service</code>类的伪代码是这样的：</p>
+<pre><code class="hljs">public class Service &#123;
+    
+    public UserDTO findUser(String name)&#123;
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(&quot;SELECT * FROM t_user WHERE name = ?&quot;);
+        preparedStatement.setObject(1, name);
+        User user = //处理结果
+        UserDTO dto = new UserDTO();
+        //entity值拷贝到dto
+        return dto;
+    &#125;
+&#125;
+</code></pre>
+<p>这里出现一个问题，<code>Service</code>做了太多东西，包括数据库连接的管理，Sql的执行这些业务层不应该接触到的逻辑，更可怕的是，例如到时候如果数据库换成了<code>Oracle</code>，这个方法将会大改。因此，拆分出新的<code>DataBaseUtils</code>类用于专门管理数据库资源，<code>Dao</code>类用于专门执行查询和查询结果封装，改造后<code>Service</code>类的伪代码如下：</p>
+<pre><code class="hljs">public class Service &#123;
+
+    private Dao dao;
+    
+    public UserDTO findUser(String name)&#123;
+       User user =  dao.findUserByName(name);
+       UserDTO dto = new UserDTO();
+        //entity值拷贝到dto
+       return dto;
+    &#125;
+&#125;
+</code></pre>
+<p>​<br>    public class Dao{</p>
+<pre><code class="hljs">    public User findUserByName(String name)&#123;
+       Connection connection = DataBaseUtils.getConnnection();
+       PreparedStatement preparedStatement = connection.prepareStatement(&quot;SELECT * FROM t_user WHERE name = ?&quot;);
+        preparedStatement.setObject(1, name);
+        User user = //处理结果
+        return user;
+    &#125;
+&#125;
+</code></pre>
+<p>现在，如果有查询封装的变动只需要修改<code>Dao</code>类，数据库相关变动只需要修改<code>DataBaseUtils</code>类，每个类的职责分明。这个时候，如果我们要把底层的存储结构缓成<code>Redis</code>或者<code>MongoDB</code>怎么办，这样显然要重建整个<code>Dao</code>类，这种情况下，需要进行接口隔离，下面分析接口隔离原则的时候再详细分析。</p>
+<h3 id="里氏代换原则"><a href="#里氏代换原则" class="headerlink" title="里氏代换原则"></a>里氏代换原则</h3><p>里氏代换原则（Liskov Substitution Principle，LSP）的定义是：所有引用基类的地方必须能透明地使用其子类的对象，也可以简单理解为任何基类可以出现的地方，子类一定可以出现。</p>
+<h4 id="里氏代换原则的意义"><a href="#里氏代换原则的意义" class="headerlink" title="里氏代换原则的意义"></a>里氏代换原则的意义</h4><p>只有当衍生类可以替换掉基类，软件单位的功能不受到影响时，基类才能真正被复用，而衍生类也能够在基类的基础上增加新的行为。里氏代换原则是对”开-闭”原则的补充。实现”开-闭”原则的关键步骤就是抽象化。而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。当然，如果反过来，软件单位使用的是一个子类对象的话，那么它不一定能够使用基类对象。举个很简单的例子说明这个问题：如果一个方法接收<code>Map</code>类型参数，那么它一定可以接收<code>Map</code>的子类参数例如<code>HashMap</code>、<code>LinkedHashMap</code>、<code>ConcurrentHashMap</code>类型的参数；但是反过来，如果另一个方法只接收<code>HashMap</code>类型的参数，那么它一定不能接收所有<code>Map</code>类型的参数，否则它可以接收<code>LinkedHashMap</code>、<code>ConcurrentHashMap</code>类型的参数。</p>
+<h4 id="子类为什么可以替换基类的位置"><a href="#子类为什么可以替换基类的位置" class="headerlink" title="子类为什么可以替换基类的位置"></a>子类为什么可以替换基类的位置</h4><p>其实原因很简单，只要存在继承关系，基类的所有非私有属性或者方法，子类都可以通过继承获得(白箱复用)，反过来不成立，因为子类很有可能扩充自身的非私有属性或者方法，这个时候不能用基类获取子类新增的这些属性或者方法。</p>
+<p>里氏代换原则是实现开闭原则的基础，它告诉我们在设计程序的时候进可能使用基类进行对象的定义和引用，在运行时再决定基类的具体子类型。</p>
+<p>举个简单的例子，假设一种会呼吸的动物作为父类，子类猪和鸟也有自身的呼吸方式：</p>
+<pre><code class="hljs">public abstract class Animal &#123;
+
+    protected abstract void breathe();
+&#125;
+
+public class Bird extends Animal &#123;
+
+    @Override
+    public void breathe() &#123;
+        System.out.println(&quot;Bird breathes...&quot;);
+    &#125;
+&#125;
+
+public class Pig extends Animal &#123;
+
+    @Override
+    public void breathe() &#123;
+        System.out.println(&quot;Pig breathes...&quot;);
+    &#125;
+&#125;
+
+public class App &#123;
+
+    public static void main(String[] args) throws Exception &#123;
+        Animal bird = new Bird();
+        bird.breathe();
+        Animal pig = new Pig();
+        pig.breathe();
+    &#125;
+&#125;    
+</code></pre>
+<h3 id="依赖倒转原则"><a href="#依赖倒转原则" class="headerlink" title="依赖倒转原则"></a>依赖倒转原则</h3><p>依赖倒转原则（Dependency Inversion Principle，DIP）的定义：程序要依赖于抽象接口，不要依赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这样就降低了客户与实现模块间的耦合。</p>
+<h4 id="依赖倒转原则的意义"><a href="#依赖倒转原则的意义" class="headerlink" title="依赖倒转原则的意义"></a>依赖倒转原则的意义</h4><p>依赖倒转原则要求我们在程序代码中传递参数时或在关联关系中，尽量引用层次高的抽象层类，即使用接口和抽象类进行变量类型声明、参数类型声明、方法返回类型声明，以及数据类型的转换等，而不要用具体类来做这些事情。为了确保该原则的应用，一个具体类应当只实现接口或抽象类中声明过的方法，而不要给出多余的方法，否则将无法调用到在子类中增加的新方法。在引入抽象层后，系统将具有很好的灵活性，在程序中尽量使用抽象层进行编程，而将具体类写在配置文件中，这样一来，如果系统行为发生变化，只需要对抽象层进行扩展，并修改配置文件，而无须修改原有系统的源代码，在不修改的情况下来扩展系统的功能，满足开闭原则的要求。</p>
+<h4 id="依赖倒转原则的注意事项"><a href="#依赖倒转原则的注意事项" class="headerlink" title="依赖倒转原则的注意事项"></a>依赖倒转原则的注意事项</h4><ul>
+<li>  高层模块不应该依赖低层模块，高层模块和低层模块都应该依赖于抽象。</li>
+<li>  抽象不应该依赖于具体，具体应该依赖于抽象。</li>
+</ul>
+<p>在实现依赖倒转原则时，我们需要针对抽象层编程，而将具体类的对象通过依赖注入(DependencyInjection, DI)的方式注入到其他对象中，依赖注入是指当一个对象要与其他对象发生依赖关系时，通过抽象来注入所依赖的对象。常用的注入方式有三种，分别是：构造注入，设值注入（Setter注入）和接口注入。Spring的IOC是此实现的典范。</p>
+<p>从Java角度看待依赖倒转原则的本质就是：面向接口(抽象)编程。</p>
+<ul>
+<li>  每个具体的类都应该有其接口或者基类，或者两者都具备。</li>
+<li>  类中的引用对象应该是接口或者基类。</li>
+<li>  任何具体类都不应该派生出子类。</li>
+<li>  尽量不要覆写基类中的方法。</li>
+<li>  结合里氏代换原则使用。</li>
+</ul>
+<p>遵循依赖倒转原则的一个例子，场景是司机开车：</p>
+<pre><code class="hljs">public interface Driver &#123;
+
+    void drive();
+
+    void setCar(Car car);
+&#125;
+
+public interface Car &#123;
+
+    void run();
+&#125;
+
+public class DefaultDriver implements Driver &#123;
+
+    private Car car;
+
+    @Override
+    public void drive() &#123;
+        car.run();
+    &#125;
+
+    @Override
+    public void setCar(Car car) &#123;
+        this.car = car;
+    &#125;
+&#125;
+
+public class Bmw implements Car &#123;
+
+    @Override
+    public void run() &#123;
+        System.out.println(&quot;Bmw runs...&quot;);
+    &#125;
+&#125;
+
+public class Benz implements Car &#123;
+
+    @Override
+    public void run() &#123;
+        System.out.println(&quot;Benz runs...&quot;);
+    &#125;
+&#125;
+
+public class App &#123;
+
+    public static void main(String[] args) throws Exception &#123;
+        Driver driver = new DefaultDriver();
+        Car car = new Benz();
+        driver.setCar(car);
+        driver.drive();
+        car = new Bmw();
+        driver.setCar(car);
+        driver.drive();
+    &#125;
+&#125;
+</code></pre>
+<p>这样实现了一个司机可以开各种类型的车，如果还有其他类型的车，只需要新加一个<code>Car</code>的实现即可。</p>
+<h3 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h3><p>接口隔离原则（Interface Segregation Principle，ISP）的定义是客户端不应该依赖它不需要的接口，类间的依赖关系应该建立在最小的接口上。简单来说就是建立单一的接口，不要建立臃肿庞大的接口。也就是接口尽量细化，同时接口中的方法尽量少。</p>
+<h4 id="如何看待接口隔离原则和单一职责原则"><a href="#如何看待接口隔离原则和单一职责原则" class="headerlink" title="如何看待接口隔离原则和单一职责原则"></a>如何看待接口隔离原则和单一职责原则</h4><p>单一职责原则注重的是类和接口的职责单一，这里职责是从业务逻辑上划分的，但是在接口隔离原则要求当一个接口太大时，我们需要将它分割成一些更细小的接口，使用该接口的客户端仅需知道与之相关的方法即可。也就是说，我们在设计接口的时候有可能满足单一职责原则但是不满足接口隔离原则。</p>
+<h4 id="接口隔离原则的规范"><a href="#接口隔离原则的规范" class="headerlink" title="接口隔离原则的规范"></a>接口隔离原则的规范</h4><ul>
+<li>  使用接口隔离原则前首先需要满足单一职责原则。</li>
+<li>  接口需要高内聚，也就是提高接口、类、模块的处理能力，少对外发布<code>public</code>的方法。</li>
+<li>  定制服务，只提供访问者需要的方法。</li>
+<li>  接口设计是有限度的，接口的设计粒度越小，系统越灵活，但是值得注意不能过小，否则变成”字节码编程”。</li>
+</ul>
+<p>如果有用过<code>spring-data-redis</code>的人就知道，RedisTemplate中持有一些列的基类，分别是<code>ValueOperations</code>(处理K-V)、<code>ListOperations</code>(处理Hash)、<code>SetOperations</code>(处理集合)等等。</p>
+<pre><code class="hljs">public interface ValueOperations&lt;K, V&gt; &#123;
+
+    void set(K key, V value);
+    void set(K key, V value, long timeout, TimeUnit unit);
+    //....
+&#125;
+</code></pre>
+<h3 id="合成-聚合复用原则"><a href="#合成-聚合复用原则" class="headerlink" title="合成/聚合复用原则"></a>合成/聚合复用原则</h3><p>合成/聚合复用原则（Composite/Aggregate Reuse Principle，CARP）一般也叫合成复用原则(Composite Reuse Principle, CRP)，定义是：<strong>尽量使用合成/聚合，而不是通过继承达到复用的目的</strong>。</p>
+<p>合成/聚合复用原则就是在一个新的对象里面使用一些已有的对象，使之成为新对象的一部分；新的对象通过向内部持有的这些对象的委派达到复用已有功能的目的，而不是通过继承来获得已有的功能。</p>
+<h4 id="聚合-Aggregate-的概念"><a href="#聚合-Aggregate-的概念" class="headerlink" title="聚合(Aggregate)的概念"></a>聚合(Aggregate)的概念</h4><p>聚合表示一种弱的”拥有”关系，一般表现为松散的整体和部分的关系，其实，所谓整体和部分也可以是完全不相关的。例如A对象持有B对象，B对象并不是A对象的一部分，也就是B对象的生命周期是B对象自身管理，和A对象不相关。</p>
+<h4 id="合成-Composite-的概念"><a href="#合成-Composite-的概念" class="headerlink" title="合成(Composite)的概念"></a>合成(Composite)的概念</h4><p>合成表示一种强的”拥有”关系，一般表现为严格的整体和部分的关系，部分和整体的生命周期是一样的。</p>
+<h4 id="聚合和合成的关系"><a href="#聚合和合成的关系" class="headerlink" title="聚合和合成的关系"></a>聚合和合成的关系</h4><p>这里用山羊举例说明聚合和合成的关系：</p>
+<p><img src="img.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="为什么要用合成-聚合来替代继承达到复用的目的"><a href="#为什么要用合成-聚合来替代继承达到复用的目的" class="headerlink" title="为什么要用合成/聚合来替代继承达到复用的目的"></a>为什么要用合成/聚合来替代继承达到复用的目的</h4><p>继承复用破坏包装，因为继承将基类的实现细节暴露给派生类，基类的内部细节通常对子类来说是可见的，这种复用也称为”白箱复用”。这里有一个明显的问题是：派生类继承自基类，如果基类的实现发生改变，将会影响到所有派生类的实现；如果从基类继承而来的实现是静态的，不可能在运行时发生改变，不够灵活。</p>
+<p>由于合成或聚合关系可以将已有的对象，一般叫成员对象，纳入到新对象中，使之成为新对象的一部分，因此新对象可以调用已有对象的功能，这样做可以使得成员对象的内部实现细节对于新对象不可见，所以这种复用又称为”黑箱”复用，相对继承关系而言，其耦合度相对较低，成员对象的变化对新对象的影响不大，可以在新对象中根据实际需要有选择性地调用成员对象的操作；合成/聚合复用可以在运行时动态进行，新对象可以动态地引用与成员对象类型相同的其他对象。</p>
+<p>如果有阅读过《Effective Java 2nd》的同学就知道，此书也建议慎用继承。一般情况下，只有明确知道派生类和基类满<code>IS A</code>的时候才选用继承，当满足<code>HAS A</code>或者不能判断的情况下应该选用合成/聚合。</p>
+<p>下面举个很极端的例子说明一下如果在非<code>IS A</code>的情况下使用继承会出现什么问题：</p>
+<p>先定义一个抽象手，手有一个摇摆的方法，然后定义左右手继承抽象手，实现摇摆方法：</p>
+<pre><code class="hljs">public abstract class AbstractHand &#123;
+
+    protected abstract void swing();
+&#125;
+
+public class LeftHand extends AbstractHand &#123;
+
+    @Override
+    public void swing() &#123;
+        System.out.println(&quot;Left hand swings...&quot;);
+    &#125;
+&#125;
+
+public class RightHand extends AbstractHand &#123;
+
+    @Override
+    public void swing() &#123;
+        System.out.println(&quot;Right hand swings...&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>现在看起来没有任何问题，实现也十分正确，现在出现了人(<code>Person</code>)这个类，具备摇左右手的功能，如果不考虑<code>IS A</code>的关系，很有可能有人会这样做：</p>
+<pre><code class="hljs">public abstract class AbstractSwingHand extends AbstractHand&#123;
+
+    @Override
+    protected void swing() &#123;
+        System.out.println(&quot; hand swings...&quot;);
+    &#125;
+&#125;
+
+public class Person extends AbstractSwingHand &#123;
+
+    public void swingLeftHand()&#123;
+        System.out.print(&quot;Left &quot;);
+        super.swing();
+    &#125;
+
+    public void swingRightHand()&#123;
+        System.out.print(&quot;Right &quot;);
+        super.swing();
+    &#125;
+&#125;
+</code></pre>
+<p>上面<code>Person</code>的实现让人觉得百思不得其解，但是往往这会出现在真实的环境中，因为<code>Hand</code>不是<code>Person</code>，所以<code>Person</code>继承Hand一定会出现曲线实现等奇葩逻辑。<code>Hand</code>和<code>Person</code>是严格的部分和整体的关系，或者说<code>Person</code>和<code>Hand</code>是<code>HAS A</code>的关系，如果使用合成，逻辑将会十分清晰：</p>
+<pre><code class="hljs">public class Person  &#123;
+
+    private AbstractHand leftHand;
+    private AbstractHand rightHand;
+
+    public Person() &#123;
+        leftHand = new LeftHand();
+        rightHand = new RightHand();
+    &#125;
+
+    public void swingLeftHand()&#123;
+        leftHand.swing();
+    &#125;
+
+    public void swingRightHand()&#123;
+        rightHand.swing();
+    &#125;
+&#125;
+</code></pre>
+<p>这里使用了合成，说明了<code>Person</code>和<code>AbstractHand</code>实例的生命周期是一致的。</p>
+<h3 id="迪米特法则"><a href="#迪米特法则" class="headerlink" title="迪米特法则"></a>迪米特法则</h3><p>迪米特法则（Law of Demeter，LOD），有时候也叫做最少知识原则（Least Knowledge Principle，LKP），它的定义是：一个软件实体应当尽可能少地与其他实体发生相互作用。每一个软件单位对其他的单位都只有最少的知识，而且局限于那些与本单位密切相关的软件单位。迪米特法则的初衷在于降低类之间的耦合。由于每个类尽量减少对其他类的依赖，因此，很容易使得系统的功能模块功能独立，相互之间不存在（或很少有）依赖关系。迪米特法则不希望类之间建立直接的联系。如果真的有需要建立联系，也希望能通过它的友元类（中间类或者跳转类）来转达。</p>
+<h4 id="迪米特法则的规则"><a href="#迪米特法则的规则" class="headerlink" title="迪米特法则的规则"></a>迪米特法则的规则</h4><ul>
+<li>  Only talk to your immediate friends(只与直接的朋友通讯)，一个对象的”朋友”包括他本身(this)、它持有的成员对象、入参对象、它所创建的对象。</li>
+<li>  尽量少发布public的变量和方法，一旦公开的属性和方法越多，修改的时候影响的范围越大。</li>
+<li>  “是自己的就是自己的”，如果一个方法放在本类中，既不产生新的类间依赖，也不造成负面的影响，那么次方法就应该放在本类中。</li>
+</ul>
+<h4 id="迪米特法则的意义"><a href="#迪米特法则的意义" class="headerlink" title="迪米特法则的意义"></a>迪米特法则的意义</h4><p>迪米特法则的核心观念就是类间解耦，也就降低类之间的耦合，只有类处于弱耦合状态，类的复用率才会提高。所谓降低类间耦合，实际上就是尽量减少对象之间的交互，如果两个对象之间不必彼此直接通信，那么这两个对象就不应当发生任何直接的相互作用，如果其中的一个对象需要调用另一个对象的某一个方法的话，可以通过第三者转发这个调用。简言之，就是通过引入一个合理的第三者来降低现有对象之间的耦合度。但是这样会引发一个问题，有可能产生大量的中间类或者跳转类，导致系统的复杂性提高，可维护性降低。如果一味追求极度解耦，那么最终有可能变成面向字节码编程甚至是面向二进制的0和1编程。</p>
+<p>举个很简单的例子，体育老师要知道班里面女生的人数，他委托体育课代表点清女生的人数：</p>
+<pre><code class="hljs">public class Girl &#123;
+    
+&#125;
+
+public class GroupLeader &#123;
+
+    private final List&lt;Girl&gt; girls;
+
+    public GroupLeader(List&lt;Girl&gt; girls) &#123;
+        this.girls = girls;
+    &#125;
+
+    public void countGirls() &#123;
+        System.out.println(&quot;The sum of girls is &quot; + girls.size());
+    &#125;
+&#125;
+
+public class Teacher &#123;
+
+    public void command(GroupLeader leader)&#123;
+        leader.countGirls();
+    &#125;
+&#125;
+
+public class App &#123;
+
+    public static void main(String[] args) throws Exception &#123;
+        Teacher teacher = new Teacher();
+        GroupLeader groupLeader = new GroupLeader(Arrays.asList(new Girl(), new Girl()));
+        teacher.command(groupLeader);
+    &#125;
+&#125;
+</code></pre>
+<p>这个例子中，体育课代表就是中间类，体育课代表对于体育老师来说就是”直接的朋友”，如果去掉体育课代表这个中间类，体育老师必须亲自清点女生的人数(实际上就数人数这个功能，体育老师是不必要获取所有女生的对象列表)，这样做会违反迪米特法则。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>说实话，设计模式的七大原则理解是比较困难的，我们在设计模式的学习和应用中经常会听到或者看到”XXX模式符合XXX原则”、”YYY模式不符合YYY原则”这样的语句。因此，为了分析设计模式的合理性和完善我们日常的编码，掌握和理解这七大原则是十分必要的。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>  《Java设计模式》</li>
+<li>  《设计模式之禅-2nd》</li>
+<li>  《设计模式-可复用面向对象软件的基础》</li>
+<li> <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1650116">设计模式概念和七大原则</a></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%A6%82%E5%BF%B5%E5%92%8C%E4%B8%83%E5%A4%A7%E5%8E%9F%E5%88%99/" class="category-chain-item">设计模式概念和七大原则</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>
+      
+        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%8E%9F%E5%88%99/">#设计模式原则</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>设计模式概念和七大原则</div>
+      <div>https://baymax55.github.io/2024/02/21/design-patterns/设计模式概念和七大原则/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>baymax55</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月21日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/23/linux/linux%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%85%B3%E9%97%AD%E5%90%88%E4%B8%8A%E7%9B%96%E5%AD%90%E8%87%AA%E5%8A%A8%E4%BC%91%E7%9C%A0/" title="linux笔记本关闭合上盖子自动休眠">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">linux笔记本关闭合上盖子自动休眠</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/21/git/Git%20Merge%20VS%20Git%20Rebase/" title="Git Merge VS Git Rebase">
+                        <span class="hidden-mobile">Git Merge VS Git Rebase</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"eHrEoB5dKeqkOQe92av9bqEs-MdYXbMMI","appKey":"ldBS29kjWy4gjD9MCWKAWxyi","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://ehreob5d.api.lncldglobal.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访问客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
