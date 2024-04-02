@@ -4,11 +4,223 @@
   
   
   <entry>
+    <title>Core Java Advanced Features, Volume 2 12th Edition</title>
+    <link href="/2024/04/02/book/core-java-volume-2-twelfth-edition/"/>
+    <url>/2024/04/02/book/core-java-volume-2-twelfth-edition/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/we/wallhaven-werq8q.jpg"></p><p>This volume focuses on the advanced topics that a programmer needs to know for professional software development and includes authoritative coverage of enterprise programming, networking, databases, security, modularization, internationalization, code processing, and native methods, as well as complete chapters on the Streams, XML, and Date and Time APIs. In addition, the chapter on Advanced Swing and Graphics covers techniques that are applicable to both client-side user interfaces and server-side generation of graphics and images.</p><h2 id="Preview"><a href="#Preview" class="headerlink" title="Preview"></a>Preview</h2><div class="row">    <embed src="core-java-volume-2-twelfth-edition.pdf" width="100%" height="550" type="application/pdf"></div><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.amazon.com/dp/0137871074">amazon</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>book</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Core Java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Core Java Fundamentals, Volume 1 12th Edition</title>
+    <link href="/2024/04/02/book/core-java-volume-1-twelfth-edition/"/>
+    <url>/2024/04/02/book/core-java-volume-1-twelfth-edition/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/9d/wallhaven-9dy721.png"></p><p>Core Java, Volume I: Fundamentals, Twelfth Edition, is the definitive guide to writing robust, maintainable code. Whatever version of Java you are using—up to and including Java 17—this book will help you achieve a deep and practical understanding of the language and APIs. With hundreds of realistic examples, Cay S. Horstmann reveals the most powerful and effective ways to get the job done.</p><h2 id="Preview"><a href="#Preview" class="headerlink" title="Preview"></a>Preview</h2><div class="row">    <embed src="core-java-volume-1-twelfth-edition.pdf" width="100%" height="550" type="application/pdf"></div><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.amazon.com/dp/0137673620">amazon</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>book</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Core Java</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>System Design Interview – An insider&#39;s guide</title>
+    <link href="/2024/04/02/book/system-design-interview-an-insiders-guide-2/"/>
+    <url>/2024/04/02/book/system-design-interview-an-insiders-guide-2/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/x6/wallhaven-x6wjkv.png"></p><p>System design interviews are the most difficult to tackle of all technical interview questions. This book is Volume 1 of the System Design Interview - An insider’s guide series that provides a reliable strategy and knowledge base for approaching a broad range of system design questions. This book provides a step-by-step framework for how to tackle a system design question. It includes many real-world examples to illustrate the systematic approach, with detailed steps that you can follow.</p><h2 id="Preview"><a href="#Preview" class="headerlink" title="Preview"></a>Preview</h2><div class="row">    <embed src="system-design-interview-an-insiders-guide-2.pdf" width="100%" height="550" type="application/pdf"></div><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.amazon.com/System-Design-Interview-Insiders-Guide/dp/1736049119">amazon</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>book</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>System Design</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>OpenFeign使用注意事项</title>
+    <link href="/2024/04/02/java/OpenFeign%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
+    <url>/2024/04/02/java/OpenFeign%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/we/wallhaven-werdv6.png"></p><p>在使用 OpenFeign 作为声明性 REST 客户端进行微服务通信时，有一些注意事项以确保服务之间的顺畅交互和问题的最小化：</p><ul><li>服务端和客户端未启用<code>@EnableDiscoveryClient</code>注解,导致服务无法发现</li><li>在get请求中,当参数为一个对象时,会被feign误当作post请求处理,导致405</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>OpenFeign</tag>
+      
+      <tag>JAVA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>CGLIB</title>
+    <link href="/2024/04/01/java/CGLIB/"/>
+    <url>/2024/04/01/java/CGLIB/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/85/wallhaven-8586my.png"></p><p>CGLIB (Code Generation Library) 是一个强大的，高性能，高质量的 Code 生成库，它广泛用于 AOP（面向切面编程）框架，如 Spring，以及 ORM（对象关系映射）框架，如 Hibernate，来在运行时动态生成和扩展 Java 类。它基于 ASM（一个 Java 字节码操纵框架）来转换和操作字节码。</p><p>CGLIB 的主要应用之一是提供方法拦截功能，它可以在不修改源码的情况下，增强类的功能。这通常被称作动态代理或装饰器模式的实现。CGLIB 的工作原理可以概括如下：</p><ol><li><strong>动态生成子类：</strong> CGLIB 通过为目标对象的类创建一个子类，来实现对目标对象方法的增强。这个子类会重写父类中所有非 final 的方法。</li><li><strong>方法拦截：</strong> 在子类中重写的方法会首先调用 CGLIB 提供的一个拦截器（MethodInterceptor），这里可以插入自定义的逻辑，比如：方法调用前后的处理逻辑，可以实现 AOP 的各种功能，如日志打印、事务控制等。</li><li><strong>代码增强：</strong> 拦截器中的 intercept 方法提供了 4 个参数：代理对象，被拦截的方法，方法参数和方法代理（MethodProxy）。可以在这个方法里面调用原始方法之前或之后执行额外的操作，也可以完全替代原始方法的执行。</li><li><strong>实例化增强类：</strong> CGLIB 通过 Enhancer 类动态生成增强版的实例。通过调用 Enhancer 的 create() 方法，可以生成代理对象的实例，该实例可以被当作实际业务对象使用。</li></ol><p>CGLIB 优点：</p><ul><li>不需要接口：与 JDK 动态代理相比，CGLIB 不需要代理类实现接口。</li><li>高性能：生成的代理类性能通常很高。</li><li>灵活：可以在运行时扩展类及其方法，提供强大的运行时代码增强能力。</li></ul><p>CGLIB 缺点：</p><ul><li>只能代理未被 final 修饰的类和方法。</li><li>创建代理对象的速度比 JDK 动态代理慢，但执行速度快。</li><li>更复杂的使用和理解。</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>JAVA</tag>
+      
+      <tag>CGLIB</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>goploy</title>
+    <link href="/2024/03/26/go/goploy/"/>
+    <url>/2024/03/26/go/goploy/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/l8/wallhaven-l8vp7y.jpg"></p><h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2><p><a href="https://github.com/zhenorzz/goploy/blob/master/README.zh-CN.md">goploy</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>github project</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>FastAPI SQLAlchemy MySQL</title>
+    <link href="/2024/03/25/python/fastapi_sqlalchemy_mysql/"/>
+    <url>/2024/03/25/python/fastapi_sqlalchemy_mysql/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://w.wallhaven.cc/full/ex/wallhaven-ex136k.jpg"></p><h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2><p><a href="https://github.com/fastapi-practices/fastapi_sqlalchemy_mysql">fastapi_sqlalchemy_mysql</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>github project</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>mysql</tag>
+      
+      <tag>fastapi</tag>
+      
+      <tag>sqlalchemy</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Transactional源码分析</title>
+    <link href="/2024/03/14/spring/Transactional%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <url>/2024/03/14/spring/Transactional%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<h3 id="声明式事务使用和原理"><a href="#声明式事务使用和原理" class="headerlink" title="声明式事务使用和原理"></a>声明式事务使用和原理</h3><h4 id="声明式的主要步骤"><a href="#声明式的主要步骤" class="headerlink" title="声明式的主要步骤"></a>声明式的主要步骤</h4><ol><li> 使用@EnableTransactionManagement启用Spring 事务管理支持</li><li> 使用@Transactional标识需要事务的方法会自动开启事务</li><li> 注入数据源和事务管理器</li></ol><p>下面通过案例演示一下上面的效果。</p><h4 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h4><ol><li>使用@EnableTransactionManagement启用Spring 事务管理支持，配置类上需要有@Configuration注解<pre><code class="hljs"> @Configuration @ComponentScan @EnableTransactionManagement public class AppConfig &#123;&#125;</code></pre></li><li>使用@Transactional标识需要事务的方法会自动开启事务。<code>addUser</code>方法需要事务<pre><code class="hljs"> @Service public class UserService &#123;      @Autowired     private JdbcTemplate jdbcTemplate;      @Transactional     public void addUser() &#123;         System.out.println(&quot;执行前记录:&quot; + jdbcTemplate.queryForList(&quot;SELECT * from t_user&quot;));         jdbcTemplate.update(&quot;insert into t_user (name) values (?)&quot;, &quot;xx&quot;);         jdbcTemplate.update(&quot;insert into t_user (name) values (?)&quot;, &quot;oo&quot;);         System.out.println(&quot;执行后记录:&quot; + jdbcTemplate.queryForList(&quot;SELECT * from t_user&quot;));     &#125; &#125;</code></pre></li><li>注入数据源和事务管理器<pre><code class="hljs"> @Configuration @ComponentScan @EnableTransactionManagement public class AppConfig &#123;      /**      * 定义一个数据源      * @return      */     @Bean     public DataSource dataSource() &#123;         DruidDataSource dataSource = new DruidDataSource();         dataSource.setDriverClassName(&quot;&quot;);         dataSource.setDriverClassName(&quot;com.mysql.jdbc.Driver&quot;);         dataSource.setUrl(&quot;jdbc:mysql://192.168.25.24:3306/xxx?characterEncoding=UTF-8&quot;);         dataSource.setUsername(&quot;root&quot;);         dataSource.setPassword(&quot;xxx&quot;);         return dataSource;     &#125;      /**      * 定义一个JdbcTemplate来执行sql      * @param dataSource      * @return      */     @Bean     public JdbcTemplate jdbcTemplate(DataSource dataSource) &#123;         return new JdbcTemplate(dataSource);     &#125;      /**      * 定义一个管理器      * @param dataSource      * @return      */     @Bean     public PlatformTransactionManager transactionManager(DataSource dataSource) &#123;         return new DataSourceTransactionManager(dataSource);     &#125; &#125;</code></pre></li><li>测试程序<pre><code class="hljs"> public class DeclarativeTest &#123;     public static void main(String[] args) &#123;         AnnotationConfigApplicationContext context =                 new AnnotationConfigApplicationContext(AppConfig.class);         UserService userService = context.getBean(UserService.class);         userService.addUser();         context.close();     &#125; &#125;</code></pre> 输出结果如下：<pre><code class="hljs"> 执行前记录:[&#123;id=1, name=test1-1&#125;, &#123;id=2, name=test1-2&#125;, &#123;id=3, name=xx&#125;, &#123;id=4, name=oo&#125;, &#123;id=5, name=xx&#125;, &#123;id=6, name=oo&#125;] 执行后记录:[&#123;id=1, name=test1-1&#125;, &#123;id=2, name=test1-2&#125;, &#123;id=3, name=xx&#125;, &#123;id=4, name=oo&#125;, &#123;id=5, name=xx&#125;, &#123;id=6, name=oo&#125;, &#123;id=7, name=xx&#125;, &#123;id=8, name=oo&#125;]    </code></pre></li></ol><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>@EnableTransactionManagement注解会开启Spring自动管理事务的功能。开启之后在Spring容器启动的过程中，会拦截所有bean的创建过程，判断bean 是否需要让Spring来管理事务，如果需要那么通过aop的方式创建代理对象。代理中会添加一个拦截器<code>TransactionInterceptor</code>，拦截<code>@Trasaction</code>标识方法的执行，在方法执行前后添加事务的功能。</p><h3 id="EnableTransactionManagement-详解"><a href="#EnableTransactionManagement-详解" class="headerlink" title="@EnableTransactionManagement 详解"></a>@EnableTransactionManagement 详解</h3><p>@EnableTransactionManagement 会开启Spring的事务管理功能，查看下源码。</p><pre><code class="hljs">@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Import(TransactionManagementConfigurationSelector.class)public @interface EnableTransactionManagement &#123;   /**    * 指示是否创建基于子类(CGLIB)的代理(true)，而不是标准的基于Java接口的代理(false)。默认为false。    * 仅当mode()设置为AdviceMode.PROXY时适用。    */   boolean proxyTargetClass() default false;   /**    * 指示应该如何应用事务通知。 默认值是AdviceMode.PROXY。    * 请注意，代理模式只允许通过代理拦截调用。同一类内的本地调用不会被拦截;    * 在本地调用中，对这种方法的Transactional注释将被忽略，因为Spring的拦截器甚至不会在这样的运行时场景中起作用。    */   AdviceMode mode() default AdviceMode.PROXY;   /**    * 当在特定连接点上应用多个通知时，指示事务顾问程序的执行顺序。 默认值是Ordered.LOWEST_PRECEDENCE    */   int order() default Ordered.LOWEST_PRECEDENCE;&#125;</code></pre><h4 id="3个参数属性值"><a href="#3个参数属性值" class="headerlink" title="3个参数属性值"></a>3个参数属性值</h4><ul><li>  proxyTargetClass ： 指示是否创建基于子类(CGLIB)的代理(true)，而不是标准的基于Java接口的代理(false)</li><li>  mode：指示应该如何应用事务通知。 默认值是AdviceMode.PROXY。</li><li>  order： 当在特定连接点上应用多个通知时，指示事务顾问程序的执行顺序。 默认值是Ordered.LOWEST_PRECEDENCE，最后处理事务拦截器。</li></ul><h4 id="TransactionManagementConfigurationSelector"><a href="#TransactionManagementConfigurationSelector" class="headerlink" title="TransactionManagementConfigurationSelector"></a>TransactionManagementConfigurationSelector</h4><p>重点是<code>@Import(TransactionManagementConfigurationSelector.class)</code>，注入一些事务相关的bean到Spring容器中进行事务的管理控制。</p><p>根据EnableTransactionManagement的mode值选择应该使用AbstractTransactionManagementConfiguration的哪个实现。</p><pre><code class="hljs">package org.springframework.transaction.annotation;public class TransactionManagementConfigurationSelector extends AdviceModeImportSelector&lt;EnableTransactionManagement&gt; &#123;   /**    * 此处是AdviceMode的作用，默认是用代理，另外一个是ASPECTJ    */   @Override   protected String[] selectImports(AdviceMode adviceMode) &#123;      switch (adviceMode) &#123;         case PROXY:             // @1            return new String[] &#123;AutoProxyRegistrar.class.getName(),                  ProxyTransactionManagementConfiguration.class.getName()&#125;;         case ASPECTJ:            return new String[] &#123;determineTransactionAspectClass()&#125;;         default:            return null;      &#125;   &#125;   private String determineTransactionAspectClass() &#123;      return (ClassUtils.isPresent(&quot;javax.transaction.Transactional&quot;, getClass().getClassLoader()) ?            TransactionManagementConfigUtils.JTA_TRANSACTION_ASPECT_CONFIGURATION_CLASS_NAME :            TransactionManagementConfigUtils.TRANSACTION_ASPECT_CONFIGURATION_CLASS_NAME);   &#125;&#125;</code></pre><p>我们的mode是 AdviceMode.PROXY ，所以走@1位置，注入<code>AutoProxyRegistrar</code> 和 <code>ProxyTransactionManagementConfiguration</code>。</p><h4 id="AutoProxyRegistrar注入-InfrastructureAdvisorAutoProxyCreator"><a href="#AutoProxyRegistrar注入-InfrastructureAdvisorAutoProxyCreator" class="headerlink" title="AutoProxyRegistrar注入 InfrastructureAdvisorAutoProxyCreator"></a>AutoProxyRegistrar注入 InfrastructureAdvisorAutoProxyCreator</h4><p><code>AutoProxyRegistrar</code>的作用是注入一个<code>InfrastructureAdvisorAutoProxyCreator</code>，用于拦截bean的创建过程，为需要的事务控制的bean 创建代理对象，这个类非常关键，后面详细讲。</p><pre><code class="hljs">public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar &#123;   public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) &#123;      boolean candidateFound = false;      Set&lt;String&gt; annTypes = importingClassMetadata.getAnnotationTypes();      // 遍历所有注解，找到有mode和proxyTargetClass的注解      for (String annType : annTypes) &#123;         AnnotationAttributes candidate = AnnotationConfigUtils.attributesFor(importingClassMetadata, annType);         if (candidate == null) &#123;            continue;         &#125;         Object mode = candidate.get(&quot;mode&quot;);         Object proxyTargetClass = candidate.get(&quot;proxyTargetClass&quot;);         if (mode != null &amp;&amp; proxyTargetClass != null &amp;&amp; AdviceMode.class == mode.getClass() &amp;&amp;               Boolean.class == proxyTargetClass.getClass()) &#123;            candidateFound = true;            if (mode == AdviceMode.PROXY) &#123;               // 注册aop InfrastructureAdvisorAutoProxyCreator 不展开               AopConfigUtils.registerAutoProxyCreatorIfNecessary(registry);               // 强制设置proxyTargetClass=true后面使用cglib               if ((Boolean) proxyTargetClass) &#123;                  AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);                  return;               &#125;            &#125;         &#125;      &#125;   &#125;&#125;</code></pre><h4 id="ProxyTransactionManagementConfiguration"><a href="#ProxyTransactionManagementConfiguration" class="headerlink" title="ProxyTransactionManagementConfiguration"></a>ProxyTransactionManagementConfiguration</h4><pre><code class="hljs">@Configuration(proxyBeanMethods = false)@Role(BeanDefinition.ROLE_INFRASTRUCTURE)public class ProxyTransactionManagementConfiguration extends AbstractTransactionManagementConfiguration &#123;   @Bean(name = TransactionManagementConfigUtils.TRANSACTION_ADVISOR_BEAN_NAME)   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)   public BeanFactoryTransactionAttributeSourceAdvisor transactionAdvisor(         TransactionAttributeSource transactionAttributeSource, TransactionInterceptor transactionInterceptor) &#123;      BeanFactoryTransactionAttributeSourceAdvisor advisor = new BeanFactoryTransactionAttributeSourceAdvisor();      advisor.setTransactionAttributeSource(transactionAttributeSource);      advisor.setAdvice(transactionInterceptor);      if (this.enableTx != null) &#123;         advisor.setOrder(this.enableTx.&lt;Integer&gt;getNumber(&quot;order&quot;));      &#125;      return advisor;   &#125;   @Bean   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)   public TransactionAttributeSource transactionAttributeSource() &#123;      return new AnnotationTransactionAttributeSource();   &#125;   @Bean   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)   public TransactionInterceptor transactionInterceptor(TransactionAttributeSource transactionAttributeSource) &#123;      TransactionInterceptor interceptor = new TransactionInterceptor();      interceptor.setTransactionAttributeSource(transactionAttributeSource);      if (this.txManager != null) &#123;         interceptor.setTransactionManager(this.txManager);      &#125;      return interceptor;   &#125;&#125;</code></pre><p><code>ProxyTransactionManagementConfiguration</code> 代理事务配置，注册事务需要用的一些类，而且Role=ROLE_INFRASTRUCTURE都是属于内部级别的，如下：</p><ul><li>  <code>BeanFactoryTransactionAttributeSourceAdvisor</code> 事务属性通知器，存放事务注解的方法相关的属性</li><li>  <code>TransactionAttributeSource</code>事务属性源，就是事务注解的一些属性，也用来解析事务注解属性，实际是<code>AnnotationTransactionAttributeSource</code></li><li>  <code>TransactionInterceptor</code>事务拦截器，该类包含与Spring底层事务API的集成。<code>TransactionInterceptor</code>简单地以正确的顺序调用相关的超类方法，比如<code>invokeWithinTransaction</code>。这个类非常关键，负责事务相关的AOP增强的。</li></ul><h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>EnableTransactionManagement注解的作用主要注入了<code>InfrastructureAdvisorAutoProxyCreator</code>负责拦截bean的创建过程为特定的bean创建代理对象，并通过<code>TransactionInterceptor</code>事务拦截器来实现方法的事务控制。</p><h3 id="Transactional-详解"><a href="#Transactional-详解" class="headerlink" title="@Transactional 详解"></a>@Transactional 详解</h3><p>该注解用于描述单个方法或类上的事务属性。在类级别，该注释作为默认值应用于声明类及其子类的所有方法。注意，类级别它并不适用于类层次结构上的父类，也就是父类方法需要在本地重新声明，以便参与子类级别的注释。</p><p>注解的属性的语义的具体信息，由 <code>TransactionDefinition</code> 和 <code>TransactionAttribute</code> 提供。</p><pre><code class="hljs">package org.springframework.transaction.annotation;@Target(&#123;ElementType.TYPE, ElementType.METHOD&#125;)@Retention(RetentionPolicy.RUNTIME)@Inherited@Documentedpublic @interface Transactional &#123;   @AliasFor(&quot;transactionManager&quot;)   String value() default &quot;&quot;;   /**    * 用来确定目标事务管理器bean    */   @AliasFor(&quot;value&quot;)   String transactionManager() default &quot;&quot;;   /**    * 事务传播类型    */   Propagation propagation() default Propagation.REQUIRED;   /**    * 事务隔离级别    */   Isolation isolation() default Isolation.DEFAULT;   /**    * 事务超时    */   int timeout() default TransactionDefinition.TIMEOUT_DEFAULT;   /**    * 只读事务    */   boolean readOnly() default false;   /**    * 指定哪些异常类型必须导致事务回滚，指定Throwable的子类型；默认只回滚RuntimeException和Error    */   Class&lt;? extends Throwable&gt;[] rollbackFor() default &#123;&#125;;   /**    * 指示哪些异常类型必须导致事务回滚，这里异常类名称    */   String[] rollbackForClassName() default &#123;&#125;;   /**    * 指定哪些异常不进行回滚    */   Class&lt;? extends Throwable&gt;[] noRollbackFor() default &#123;&#125;;   /**    * 指定哪些异常类型不进行回滚，异常类型名称    */   String[] noRollbackForClassName() default &#123;&#125;;&#125;</code></pre><h3 id="Transactional注解如何解析成事务属性"><a href="#Transactional注解如何解析成事务属性" class="headerlink" title="@Transactional注解如何解析成事务属性"></a>@Transactional注解如何解析成事务属性</h3><h4 id="AnnotationTransactionAttributeSource类"><a href="#AnnotationTransactionAttributeSource类" class="headerlink" title="AnnotationTransactionAttributeSource类"></a>AnnotationTransactionAttributeSource类</h4><p><img src="https://img.erpweb.eu.org/imgs/2024/03/71a05a9cd16b582f.png"></p><p>从类图看我们关注<code>AnnotationTransactionAttributeSource</code>通过<code>SpringTransactionAnnotationParser</code>将<code>@Transcation</code>转成事务属性供Spring事务处理使用。</p><ol><li> 如果<code>@Transcation</code>注解配置了属性，转换成<code>RuleBasedTransactionAttribute</code></li><li> 如果<code>@Transcation</code>注解没有配置属性，转换成<code>DefaultTransactionAttribute</code>，只有在抛出<code>RuntimeException</code>和<code>Error</code>时候才回滚</li></ol><p>按照Spring源码设计设计的一般套路我们看下右侧的<code>TransactionAttributeSource</code> 接口和抽象类<code>AbstractFallbackTransactionAttributeSource</code></p><h4 id="TransactionAttributeSource-接口"><a href="#TransactionAttributeSource-接口" class="headerlink" title="TransactionAttributeSource 接口"></a>TransactionAttributeSource 接口</h4><pre><code class="hljs">public interface TransactionAttributeSource &#123;   /**确定给定的类是否是TransactionAttributeSource元数据格式的事务属性的候选类*/   default boolean isCandidateClass(Class&lt;?&gt; targetClass) &#123;      return true;   &#125;   /**解析给定方法的@Transaction事务属性，如果方法是非事务性的，则返回null*/   @Nullable   TransactionAttribute getTransactionAttribute(Method method, @Nullable Class&lt;?&gt; targetClass);&#125;</code></pre><h4 id="AbstractFallbackTransactionAttributeSource类"><a href="#AbstractFallbackTransactionAttributeSource类" class="headerlink" title="AbstractFallbackTransactionAttributeSource类"></a>AbstractFallbackTransactionAttributeSource类</h4><p>先看<code>getTransactionAttribute()</code>方法</p><pre><code class="hljs">public TransactionAttribute getTransactionAttribute(Method method, @Nullable Class&lt;?&gt; targetClass) &#123;   // 判断method所在的class是不是Object类型   if (method.getDeclaringClass() == Object.class) &#123;      return null;   &#125;   // First, see if we have a cached value.   // 构建缓存key   Object cacheKey = getCacheKey(method, targetClass);   // 从缓存中获取 @1   TransactionAttribute cached = this.attributeCache.get(cacheKey);   // 有缓存，不会每次computeTransactionAttribute   if (cached != null) &#123;      // Value will either be canonical value indicating there is no transaction attribute,      // or an actual transaction attribute.      // 判断缓存中的对象是不是空事务属性的对象      if (cached == NULL_TRANSACTION_ATTRIBUTE) &#123;         return null;      &#125;      else &#123;         // 存在就直接返回事务属性         return cached;      &#125;   &#125;   else &#123;      // We need to work it out.      // 查找我们的事务注解      TransactionAttribute txAttr = computeTransactionAttribute(method, targetClass);      // Put it in the cache.      // 若解析出来的事务注解属性为空      if (txAttr == null) &#123;         // 往缓存中存放空事务注解属性         this.attributeCache.put(cacheKey, NULL_TRANSACTION_ATTRIBUTE);      &#125;      else &#123;         // 我们执行方法的描述符:包名+类名+方法名         String methodIdentification = ClassUtils.getQualifiedMethodName(method, targetClass);         // 把方法描述设置到事务属性上去         if (txAttr instanceof DefaultTransactionAttribute) &#123;            ((DefaultTransactionAttribute) txAttr).setDescriptor(methodIdentification);         &#125;         if (logger.isTraceEnabled()) &#123;            logger.trace(&quot;Adding transactional method &#39;&quot; + methodIdentification + &quot;&#39; with attribute: &quot; + txAttr);         &#125;         // 加入缓存         this.attributeCache.put(cacheKey, txAttr);      &#125;      return txAttr;   &#125;&#125;</code></pre><p>缓存中有类对应方法的事务属性就直接返回，没有就先解析@1再缓存起来。</p><p><code>computeTransactionAttribute</code>方法</p><pre><code class="hljs">protected TransactionAttribute computeTransactionAttribute(Method method, @Nullable Class&lt;?&gt; targetClass) &#123;   // Don&#39;t allow no-public methods as required.   // 首先判断方法是否是public，默认是支持public的   if (allowPublicMethodsOnly() &amp;&amp; !Modifier.isPublic(method.getModifiers())) &#123;      return null;   &#125;   // The method may be on an interface, but we need attributes from the target class.   // If the target class is null, the method will be unchanged.   // method代表接口中的方法，specificMethod代表实现类中的方法   Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);   // First try is the method in the target class.   // 优先方法上解析的事务注解的属性，会去找父类或者接口的方法   TransactionAttribute txAttr = findTransactionAttribute(specificMethod);   if (txAttr != null) &#123;      return txAttr;   &#125;   // Second try is the transaction attribute on the target class.   // 如果没有，再尝试声明该方法的类上注解属性，会去父类或者接口找   txAttr = findTransactionAttribute(specificMethod.getDeclaringClass());   if (txAttr != null &amp;&amp; ClassUtils.isUserLevelMethod(method)) &#123;      return txAttr;   &#125;   // 如果指定方法不等于方法   if (specificMethod != method) &#123;      // Fallback is to look at the original method.      // 查找接口方法      txAttr = findTransactionAttribute(method);      if (txAttr != null) &#123;         return txAttr;      &#125;      // Last fallback is the class of the original method.      // 到接口中的类中去寻找      txAttr = findTransactionAttribute(method.getDeclaringClass());      if (txAttr != null &amp;&amp; ClassUtils.isUserLevelMethod(method)) &#123;         return txAttr;      &#125;   &#125;   return null;&#125;</code></pre><p>查找事务属性的查找顺序如下：</p><ol><li> 特定的目标方法，会去找父类或者接口的方法</li><li> 目标类，会去找父类或者接口</li><li> 声明的方法</li><li> 声明方法所在的类</li></ol><p><code>AnnotationTransactionAttributeSource#determineTransactionAttribute()</code> 方法委托给<code>SpringTransactionAnnotationParser</code>解析给定类或是方法上的<code>@Transactional</code>注解的事务属性</p><pre><code class="hljs">protected TransactionAttribute determineTransactionAttribute(AnnotatedElement element) &#123;   // 获取我们的注解解析器   for (TransactionAnnotationParser parser : this.annotationParsers) &#123;      // 通过注解解析器去解析我们的元素(方法或者类)上的注解      TransactionAttribute attr = parser.parseTransactionAnnotation(element);      if (attr != null) &#123;         return attr;      &#125;   &#125;   return null;&#125;</code></pre><p>接下来看下是如何解析和包装的<code>SpringTransactionAnnotationParser#parseTransactionAnnotation()</code>方法。</p><pre><code class="hljs">public TransactionAttribute parseTransactionAnnotation(AnnotatedElement element) &#123;   // 从element对象中获取@Transactional注解，然后把注解属性封装到了AnnotationAttributes   AnnotationAttributes attributes = AnnotatedElementUtils.findMergedAnnotationAttributes(         element, Transactional.class, false, false);   if (attributes != null) &#123;      // 解析出真正的事务属性对象      return parseTransactionAnnotation(attributes);   &#125;   else &#123;      return null;   &#125;&#125;</code></pre><p>分析2个点：</p><ul><li>  <code>AnnotatedElementUtils.findMergedAnnotationAttributes()</code>负责解析目标类或目标方法上的<code>@Transactional</code>，会向上找父类或是接口的</li><li>  <code>parseTransactionAnnotation()</code>方法包装成<code>TransactionAttribute</code></li></ul><p>看下是如何包装转换的。</p><pre><code class="hljs">protected TransactionAttribute parseTransactionAnnotation(AnnotationAttributes attributes) &#123;   // 创建一个基础规则的事务属性对象   RuleBasedTransactionAttribute rbta = new RuleBasedTransactionAttribute();   // 解析@Transactionl上的传播行为   Propagation propagation = attributes.getEnum(&quot;propagation&quot;);   rbta.setPropagationBehavior(propagation.value());   // 解析@Transactionl上的隔离级别   Isolation isolation = attributes.getEnum(&quot;isolation&quot;);   rbta.setIsolationLevel(isolation.value());   // 解析@Transactionl上的事务超时事件   rbta.setTimeout(attributes.getNumber(&quot;timeout&quot;).intValue());   // 解析readOnly   rbta.setReadOnly(attributes.getBoolean(&quot;readOnly&quot;));   // 解析@Transactionl上的事务管理器的名称   rbta.setQualifier(attributes.getString(&quot;value&quot;));   List&lt;RollbackRuleAttribute&gt; rollbackRules = new ArrayList&lt;&gt;();   // 解析针对哪种异常回滚   for (Class&lt;?&gt; rbRule : attributes.getClassArray(&quot;rollbackFor&quot;)) &#123;      rollbackRules.add(new RollbackRuleAttribute(rbRule));   &#125;   // 对哪种异常进行回滚   for (String rbRule : attributes.getStringArray(&quot;rollbackForClassName&quot;)) &#123;      rollbackRules.add(new RollbackRuleAttribute(rbRule));   &#125;   // 对哪种异常不回滚   for (Class&lt;?&gt; rbRule : attributes.getClassArray(&quot;noRollbackFor&quot;)) &#123;      rollbackRules.add(new NoRollbackRuleAttribute(rbRule));   &#125;   // 对哪种类型不回滚   for (String rbRule : attributes.getStringArray(&quot;noRollbackForClassName&quot;)) &#123;      rollbackRules.add(new NoRollbackRuleAttribute(rbRule));   &#125;   rbta.setRollbackRules(rollbackRules);   return rbta;&#125;</code></pre><p>至此，<code>@Transactional</code>是如何变成<code>RuleBasedTransactionAttribute</code>已经很清晰了。</p><h3 id="如何自动生成代理对象"><a href="#如何自动生成代理对象" class="headerlink" title="如何自动生成代理对象"></a>如何自动生成代理对象</h3><p>这部分和之前的声明式AOP的源码分析是一样的过程，通过类图过一下。</p><p><img src="https://img.erpweb.eu.org/imgs/2024/03/fcd039763544a50a.png"></p><ol><li>谁负责创建代理？ <code>InfrastructureAdvisorAutoProxyCreator</code>继承我们熟悉的<code>AbstractAdvisorAutoProxyCreator</code>类，是个<code>BeanPostProcessor</code>，在Spring容器启动的过程中，会拦截bean的创建过程，为需要事务支持的bean生成代理对象。</li><li>谁负责判断bean是否需要代理？ <code>BeanFactoryTransactionAttributeSourceAdvisor</code>是个Advisor，组合了切点和通知。哪些bean需要代理满足增强由切点<code>TransactionAttributeSourcePointcut</code>来通过<code>TransactionAttributeSource</code>来判定bean的类或是方法上是否有<code>@Transactional</code>注解。</li><li>谁负责实际的事务增强工作? TransactionInterceptor 继承<code>MethodInterceptor</code>是个拦截器，负责拦截代理对象目标方法，在前后增加事务控制的逻辑。这个类下面进行详细分析。</li></ol><h3 id="TransactionInterceptor-如何进行事务控制"><a href="#TransactionInterceptor-如何进行事务控制" class="headerlink" title="TransactionInterceptor 如何进行事务控制"></a>TransactionInterceptor 如何进行事务控制</h3><h4 id="TransactionInterceptor类"><a href="#TransactionInterceptor类" class="headerlink" title="TransactionInterceptor类"></a>TransactionInterceptor类</h4><p>Spring中声明式事务时通过AOP的方式实现的，事务方法的执行最终都会由<code>TransactionInterceptor</code> 的<code>invoke()</code>拦截增强的。</p><pre><code class="hljs">package org.springframework.transaction.interceptor;public class TransactionInterceptor extends TransactionAspectSupport implements MethodInterceptor, Serializable &#123;   public Object invoke(MethodInvocation invocation) throws Throwable &#123;      // Work out the target class: may be &#123;@code null&#125;.      // The TransactionAttributeSource should be passed the target class      // as well as the method, which may be from an interface.      // 获取我们的代理对象的class属性      Class&lt;?&gt; targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);      // Adapt to TransactionAspectSupport&#39;s invokeWithinTransaction...      /**       * 以事务的方式调用目标方法       * 在这埋了一个钩子函数 用来回调目标方法的       */      return invokeWithinTransaction(invocation.getMethod(), targetClass, invocation::proceed);   &#125;</code></pre><p>事务的实现是委托给<code>TransactionAspectSupport</code>父类实现的。</p><h4 id="TransactionAspectSupport类"><a href="#TransactionAspectSupport类" class="headerlink" title="TransactionAspectSupport类"></a>TransactionAspectSupport类</h4><h5 id="invokeWithinTransaction-方法"><a href="#invokeWithinTransaction-方法" class="headerlink" title="invokeWithinTransaction() 方法"></a>invokeWithinTransaction() 方法</h5><p>基于环绕通知的实现事务控制，委托给该类上的其他几个模板方法，其实里面主要内容就是编程式的事务控制了。这是个模板方法，主要功能点如下：</p><ul><li><p>  如何获取事务管理器对象</p></li><li><p>  通过事务管理器开启事务</p></li><li><p>  执行目标方法</p></li><li><p>  方法异常如何完成事务</p></li><li><p>正常返回如何完成事务提交</p><p>  @Nullable<br>  protected Object invokeWithinTransaction(Method method, @Nullable Class&lt;?&gt; targetClass,</p><pre><code class="hljs">    final InvocationCallback invocation) throws Throwable &#123; // 获取我们的事务属性源对象 TransactionAttributeSource tas = getTransactionAttributeSource(); // 通过事务属性源对象获取到当前方法的事务属性信息 final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null); // @1获取我们配置的事务管理器对象 final TransactionManager tm = determineTransactionManager(txAttr); PlatformTransactionManager ptm = asPlatformTransactionManager(tm); // 获取连接点的唯一标识  类名+方法名 final String joinpointIdentification = methodIdentification(method, targetClass, txAttr); // 声明式事务处理 if (txAttr == null || !(ptm instanceof CallbackPreferringPlatformTransactionManager)) &#123;    // @2创建TransactionInfo    TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);    Object retVal;    try &#123;       // 执行被增强方法,调用具体的处理逻辑       retVal = invocation.proceedWithInvocation();    &#125;    catch (Throwable ex) &#123;       //@3 异常回滚 如何走？可能只需提交，也可能只需回滚，这个取决于事务的配置       completeTransactionAfterThrowing(txInfo, ex);       throw ex;    &#125;    finally &#123;       //清除事务信息，恢复线程私有的老的事务信息       cleanupTransactionInfo(txInfo);    &#125;      //成功后提交，会进行资源储量，连接释放，恢复挂起事务等操作    commitTransactionAfterReturning(txInfo);    return retVal; &#125;</code></pre><p>  }</p></li></ul><h5 id="determineTransactionManager-事务管理器获取"><a href="#determineTransactionManager-事务管理器获取" class="headerlink" title="determineTransactionManager() 事务管理器获取"></a>determineTransactionManager() 事务管理器获取</h5><p>查找和获取的顺序是：</p><ol><li><p> 先看@Transactional中是否通过value或者transactionManager指定了事务管理器</p></li><li><p> TransactionInterceptor.transactionManagerBeanName是否有值，如果有，将通过这个值查找事务管理器</p></li><li><p> TransactionInterceptor.transactionManager是否有值，如果有则返回，这个是通过容器TransactionManagementConfigurer接口设置到TransactionInterceptor中的</p></li><li><p>如果上面3种都没有，将从Spring容器中查找TransactionManager类型的作为默认事务管理器</p><p> protected TransactionManager determineTransactionManager(@Nullable TransactionAttribute txAttr) {</p><pre><code class="hljs">// Do not attempt to lookup tx manager if no tx attributes are set// txAttr == null || this.beanFactory == null ，返回拦截器中配置的事务管理器if (txAttr == null || this.beanFactory == null) &#123;   return getTransactionManager();&#125;//qualifier就是@Transactional注解中通过value或者transactionManager来指定事务管理器的bean名称String qualifier = txAttr.getQualifier();if (StringUtils.hasText(qualifier)) &#123;   //从spring容器中查找[beanName:qualifier,type:TransactionManager]的bean   return determineQualifiedTransactionManager(this.beanFactory, qualifier);&#125;else if (StringUtils.hasText(this.transactionManagerBeanName)) &#123;   //从spring容器中查找[beanName:this.transactionManagerBeanName,type:TransactionManager]的bean   return determineQualifiedTransactionManager(this.beanFactory, this.transactionManagerBeanName);&#125;else &#123;   //最后通过类型TransactionManager在spring容器中找事务管理器   TransactionManager defaultTransactionManager = getTransactionManager();   if (defaultTransactionManager == null) &#123;      defaultTransactionManager = this.transactionManagerCache.get(DEFAULT_TRANSACTION_MANAGER_KEY);      if (defaultTransactionManager == null) &#123;         defaultTransactionManager = this.beanFactory.getBean(TransactionManager.class);         this.transactionManagerCache.putIfAbsent(               DEFAULT_TRANSACTION_MANAGER_KEY, defaultTransactionManager);      &#125;   &#125;   return defaultTransactionManager;&#125;</code></pre><p> }</p></li></ol><h5 id="createTransactionIfNecessary-创建并开启事务"><a href="#createTransactionIfNecessary-创建并开启事务" class="headerlink" title="createTransactionIfNecessary() 创建并开启事务"></a>createTransactionIfNecessary() 创建并开启事务</h5><pre><code class="hljs">protected TransactionInfo createTransactionIfNecessary(@Nullable PlatformTransactionManager tm,      @Nullable TransactionAttribute txAttr, final String joinpointIdentification) &#123;   // 如果没有名称指定则使用方法唯一标识，并使用DelegatingTransactionAttribute封装txAttr   if (txAttr != null &amp;&amp; txAttr.getName() == null) &#123;      txAttr = new DelegatingTransactionAttribute(txAttr) &#123;         @Override         public String getName() &#123;            return joinpointIdentification;         &#125;      &#125;;   &#125;   TransactionStatus status = null;   if (txAttr != null) &#123;      if (tm != null) &#123;         // @1获取TransactionStatus事务状态信息         status = tm.getTransaction(txAttr);      &#125;   &#125;   // @2根据指定的属性与status准备一个TransactionInfo，   return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);&#125;</code></pre><p>分析如下：</p><ul><li>  @1获取TransactionStatus事务状态信息，也就是是编程式事务的创建和开启。</li><li>  @2TransactionInfo生成</li></ul><p><code>prepareTransactionInfo()</code> 方法创建事务信息并绑定到当前线程</p><pre><code class="hljs">protected TransactionInfo prepareTransactionInfo(@Nullable PlatformTransactionManager tm,      @Nullable TransactionAttribute txAttr, String joinpointIdentification,      @Nullable TransactionStatus status) &#123;   // 创建事务信息   TransactionInfo txInfo = new TransactionInfo(tm, txAttr, joinpointIdentification);   if (txAttr != null) &#123;      // The transaction manager will flag an error if an incompatible tx already exists.      // 设置新事务状态      txInfo.newTransactionStatus(status);   &#125;   // 事务信息绑定到当前线程   txInfo.bindToThread();   return txInfo;&#125;</code></pre><p>事务信息是有哪些内容？简单过一下内部类<code>TransactionInfo</code></p><pre><code class="hljs">/** * 用于保存事务信息的不透明对象。子类必须将其传递回该类的方法，但不能看到其内部 */protected static final class TransactionInfo &#123;       /** 事务管理器 */   @Nullable   private final PlatformTransactionManager transactionManager;    /** 事务属性 */   @Nullable   private final TransactionAttribute transactionAttribute;    /** 切点标识名 */   private final String joinpointIdentification;    /** 事务状态 */   @Nullable   private TransactionStatus transactionStatus;       /** 旧的事务信息 */   @Nullable   private TransactionInfo oldTransactionInfo;        /**         * 绑定新事务到当前线程，旧的会被保存         */    private void bindToThread() &#123;        this.oldTransactionInfo = transactionInfoHolder.get();        transactionInfoHolder.set(this);    &#125;    /**         * 恢复线程中旧事务信息         */    private void restoreThreadLocalStatus() &#123;        transactionInfoHolder.set(this.oldTransactionInfo);    &#125;    &#125;</code></pre><h5 id="completeTransactionAfterThrowing-异常后完成事务"><a href="#completeTransactionAfterThrowing-异常后完成事务" class="headerlink" title="completeTransactionAfterThrowing() 异常后完成事务"></a>completeTransactionAfterThrowing() 异常后完成事务</h5><pre><code class="hljs">/** * 如果支持回滚的话就进行回滚，否则就处理提交，提交里面如果TransactionStatus.isRollbackOnly()=true的话也会进行回滚处理 */protected void completeTransactionAfterThrowing(@Nullable TransactionInfo txInfo, Throwable ex) &#123;   if (txInfo != null &amp;&amp; txInfo.getTransactionStatus() != null) &#123;      if (logger.isTraceEnabled()) &#123;         logger.trace(&quot;Completing transaction for [&quot; + txInfo.getJoinpointIdentification() +               &quot;] after exception: &quot; + ex);      &#125;      // @1判断事务是否需要回滚      if (txInfo.transactionAttribute != null &amp;&amp; txInfo.transactionAttribute.rollbackOn(ex)) &#123;         try &#123;            // 进行回滚            txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());         &#125;      &#125;      else &#123;         // We don&#39;t roll back on this exception.         // Will still roll back if TransactionStatus.isRollbackOnly() is true.         try &#123;            // @2通过事务管理器提交事务            txInfo.getTransactionManager().commit(txInfo.getTransactionStatus());         &#125;      &#125;   &#125;&#125;</code></pre><p>异常后如果匹配上我们<code>@Transaction</code>指定的异常类型，在调用事务管理器进行事务回滚，否则通过事务管理器进行提交事务。</p><h5 id="commitTransactionAfterReturning-正常完成事务"><a href="#commitTransactionAfterReturning-正常完成事务" class="headerlink" title="commitTransactionAfterReturning 正常完成事务"></a>commitTransactionAfterReturning 正常完成事务</h5><p>通过事务管理器进行事务提交。</p><pre><code class="hljs">protected void commitTransactionAfterReturning(@Nullable TransactionInfo txInfo) &#123;   if (txInfo != null &amp;&amp; txInfo.getTransactionStatus() != null) &#123;      txInfo.getTransactionManager().commit(txInfo.getTransactionStatus());   &#125;&#125;</code></pre><h5 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h5><p>TransactionInterceptor 对事务控制包括开启、提交、回滚等操作，其实都是通过事务管理器进行的，这和编程式事务管理是一样的。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文进行了Spring中@Transactional声明事务的源码解析，结合了声明式AOP的源码分析和编程式事务管理的源码分析。总结下过程是就是通过BeanPostProcessor拦截bean创建过程自动创建代理对象，通过TransactionInterceptor 环绕通知增强目标方法，在目标方法执行前后增加事务的控制逻辑。</p><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul><li><a href="https://www.cnblogs.com/kongbubihai/p/16082281.html">Spring系列28：@Transactional事务源码分析</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>IT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>spring</tag>
+      
+      <tag>源码</tag>
+      
+      <tag>Transactional</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Developing Apps With GPT-4 and ChatGPT</title>
     <link href="/2024/03/12/book/Developing%20Apps%20With%20GPT-4%20and%20ChatGPT/"/>
     <url>/2024/03/12/book/Developing%20Apps%20With%20GPT-4%20and%20ChatGPT/</url>
     
-    <content type="html"><![CDATA[<h2 id="Cover-picture"><a href="#Cover-picture" class="headerlink" title="Cover picture"></a>Cover picture</h2><p><img src="img.png"></p><h2 id="Preview"><a href="#Preview" class="headerlink" title="Preview"></a>Preview</h2><div class="row">    <embed src="DevelopingAppsWithGpt-4andChatGPT.pdf" width="100%" height="550" type="application/pdf"></div><p>This minibook is a comprehensive guide for Python developers who want to learn how to build applications with large language models. Authors Olivier Caelen and Marie-Alice Blete cover the main features and benefits of GPT-4 and ChatGPT and explain how they work. You’ll also get a step-by-step guide for developing applications using the GPT-4 and ChatGPT Python library, including text generation, Q&amp;A, and content summarization tools.</p><p>Written in clear and concise language, Developing Apps with GPT-4 and ChatGPT includes easy-to-follow examples to help you understand and apply the concepts to your projects. Python code examples are available in a GitHub repository, and the book includes a glossary of key terms. Ready to harness the power of large language models in your applications? This book is a must.</p><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.amazon.com/Developing-Apps-GPT-4-ChatGPT-Intelligent/dp/1098152484">amazon</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<h2 id="Cover-picture"><a href="#Cover-picture" class="headerlink" title="Cover picture"></a>Cover picture</h2><p><img src="https://w.wallhaven.cc/full/zy/wallhaven-zyr8gw.jpg"></p><p>This minibook is a comprehensive guide for Python developers who want to learn how to build applications with large language models. Authors Olivier Caelen and Marie-Alice Blete cover the main features and benefits of GPT-4 and ChatGPT and explain how they work. You’ll also get a step-by-step guide for developing applications using the GPT-4 and ChatGPT Python library, including text generation, Q&amp;A, and content summarization tools.</p><p>Written in clear and concise language, Developing Apps with GPT-4 and ChatGPT includes easy-to-follow examples to help you understand and apply the concepts to your projects. Python code examples are available in a GitHub repository, and the book includes a glossary of key terms. Ready to harness the power of large language models in your applications? This book is a must.</p><h2 id="Preview"><a href="#Preview" class="headerlink" title="Preview"></a>Preview</h2><div class="row">    <embed src="DevelopingAppsWithGpt-4andChatGPT.pdf" width="100%" height="550" type="application/pdf"></div><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul><li><a href="https://www.amazon.com/Developing-Apps-GPT-4-ChatGPT-Intelligent/dp/1098152484">amazon</a></li></ul>]]></content>
     
     
     <categories>
